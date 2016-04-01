@@ -1379,7 +1379,7 @@ h6 {
 }
 .button-bar__button:active,
 :active + .button-bar__button {
-  background-color: rgba(18,132,255,0.2);
+  /*background-color: rgba(18,132,255,0.2);*/
   border: 0px solid #1284ff;
   border-top: 1px solid #1284ff;
   border-bottom: 1px solid #1284ff;

@@ -1,11 +1,14 @@
-<ons-toolbar>
-    <div class="center">Page1</div>
-</ons-toolbar>
+<ons-page ng-controller="firstController">
+  <ons-toolbar class="header">
+      <div class="center">ソコキテ</div>
+  </ons-toolbar>
 
-<div style="text-align: center">
-    <br />
-    <ons-button 
-        ng-click="myNavigator.pushPage('new_page.html')">
-        Push New Page
-    </ons-button>
-</div>
+  <div class="contents" style="text-align: center">
+      {{pageName}}
+      <h1>ああああ</h1>
+      <ons-button
+          ng-click="myNavigator.pushPage('new_page.html')">
+          Push New Page
+      </ons-button>
+  </div>
+</ons-page>

@@ -1,0 +1,17 @@
+@font-face {
+    font-family: 'Noto700';
+    font-style: "bold";
+    font-weight:700;
+    src: url("../font/NotoSansMonoCJKjp-Bold.woff") format("woff");
+}
+/*@import url(http://fonts.googleapis.com/earlyaccess/notosansjapanese.css);*/
+ons-page .contents {
+  background-color: #fffffa;
+}
+.header {
+  border-bottom: 2px solid #4d4d4d;
+  font-family: 'Noto700';
+}
+h1 {
+  font-family: 'Noto700', serif;
+}
