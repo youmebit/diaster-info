@@ -1,5 +1,7 @@
 var app = angular.module('myApp', ['onsen']);
-app.controller('firstController', function($scope) {
+app.controller('bodyCtrl', function($scope) {
+    $scope.settings = {};
+    $scope.settings.isHiddenTab = false;
 });
 
 app.controller('tabCtrl', function($scope) {

@@ -7,14 +7,16 @@
     <script src="components/loader.js"></script>
     <link rel="stylesheet" href="components/loader.css">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/reset.css">
     <script src="js/init.js"></script>
+    <script src="js/top.js"></script>
 </head>
-<body>
-    <ons-tabbar>
+<body ng-controller="bodyCtrl">
+    <ons-tabbar var="tabbar" hide-tabs="{{settings.isHiddenTab}}">
         <ons-tabbar-item
             icon="home"
             label="HOME"
-            page="navigator.html"
+            page="top.html"
             active="true"></ons-tabbar-item>
         <ons-tabbar-item
             icon="comment"
@@ -34,4 +36,8 @@
                 page="page3.html" ng-hide="{{chk}}"></ons-tabbar-item>
     </ons-tabbar>
 </body>
+<ons-template id="navigator.html">
+    <ons-navigator var="myNavigator" page="top.html">
+    </ons-navigator> 
+</ons-template>
 </html>

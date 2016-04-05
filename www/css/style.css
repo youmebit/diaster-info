@@ -1,30 +1,33 @@
 @font-face {
     font-family: 'Noto350';
-    font-weight:350;
+    font-weight: 350;
     src: url("../font/NotoSansCJKjp-DemiLight.woff") format("woff");
 }
 
 @font-face {
     font-family: 'Noto400';
-    font-weight:500;
+    font-weight: 500;
     src: url("../font/NotoSansCJKjp-Regular.woff") format("woff");
 }
 
 @font-face {
     font-family: 'Noto500';
-    font-weight:500;
+    font-weight: 500;
     src: url("../font/NotoSansCJKjp-Medium.woff") format("woff");
 }
 
 @font-face {
     font-family: 'Noto700';
-    font-weight:700;
+    font-weight: 700;
     src: url("../font/NotoSansCJKjp-Bold.woff") format("woff");
 }
 
 ons-page .contents {
-  background-color: #fffffa;
+    background-color: #fffffa;
+    width: 87.5%;
+    margin: 0 auto;
 }
+
 .header {
     border-bottom: 2px solid #4d4d4d;
     font-family: 'Noto500';
@@ -33,22 +36,23 @@ ons-page .contents {
 .header .center {
     font-size: 18px;
 }
+
 h1 {
-  font-family: 'Noto700', serif;
+    font-family: 'Noto700', serif;
 }
 
 .noto400 {
-  font-family: 'Noto400', serif;
+    font-family: 'Noto400', serif;
 }
 
 .noto350 {
-  font-family: 'Noto350', serif;
+    font-family: 'Noto350', serif;
 }
 
 .noto500 {
-  font-family: 'Noto500', serif;
+    font-family: 'Noto500', serif;
 }
 
 .noto700 {
-  font-family: 'Noto700', serif;
+    font-family: 'Noto700', serif;
 }
