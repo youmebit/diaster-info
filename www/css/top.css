@@ -1,0 +1,22 @@
+h1 {
+    text-indent: -9999px;
+}
+
+div .list h2 {
+    padding-left: 5%;
+    padding-top: 1%;
+    padding-bottom: 1%;
+    background-color: #fdd37d;
+    display: block;
+    font-size: 1.3em;
+    border: 2px solid #666666;
+    border-left-width: 0;
+    border-right-width: 0;;
+}
+
+div .list h2:before {
+    font-family: 'FontAwesome';
+    content: '\f27e';
+    font-size: 1.2em;
+}
+

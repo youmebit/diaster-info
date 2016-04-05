@@ -1,27 +1,32 @@
-<ons-page>
+<ons-page ng-controller="topCtrl">
     <ons-toolbar fixed-style class="header">
         <div class="center">
             ソコキテ
         </div>
     </ons-toolbar>
-    <div class="contents" ng-controller="topCtrl">
+    <div class="contents">
         <h1>災害情報アプリトップページ</h1>
         <p>こんにちは。ゲストさん</p>
         <ons-button>投稿する</ons-button>
         <ons-button>情報を見る</ons-button>
         <p>登録すると投稿が簡単になったり、投稿した情報が探しやすくなります。</p>
         <ons-button>ログイン&frasl;会員登録</ons-button>
+    </div>
+    <div class="list">
         <h2>対応完了のお知らせ</h2>
         <ons-list>
             <ons-list-item modifier="chevron">
                 <ons-row>
-                    <ons-col>
-                        <p>2016/2/17 13:00</p>
-                        <p><ons-icon icon="fa-map-marker"></ons-icon>中筋山手5丁目1-1</p>
-                        <p>親譲りの無鉄砲で小供の時から損ばかりして</p>
+                    <ons-col class="info">
+                        <div class="date">2016/2/17 13:00</div>
+                        <div class="address">中筋山手5丁目1-1</div>
+                        <div class="comment">親譲りの無鉄砲で小供の時から損ばかり...</div>
                     </ons-col>
                 </ons-row>
             </ons-list-item>
         </ons-list>
     </div>
 </ons-page>
+<head>
+    <link rel="stylesheet" href="css/top.css">
+</head>
