@@ -1,25 +1,27 @@
 <ons-page>
-  <ons-toolbar fixed-style class="header">
-    <div class="center">
+    <ons-toolbar fixed-style class="header">
+        <div class="center">
             ソコキテ
-   </div>
-  </ons-toolbar>
-  <div class="contents" ng-controller="topCtrl">
-    <dl>
-        <dt>標準</dt>
-        <dd>この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。</dd>
-        <dt>350</dt>
-        <dd class="noto350">この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。</dd>
-        <dt>400</dt>
-        <dd class="noto400">この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。</dd>
-        <dt>500</dt>
-        <dd class="noto500">この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。</dd>
-        <dt>700</dt>
-        <dd class="noto700">この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。</dd>
-    </dl> 
-      <ons-button
-          ng-click="myNavigator.pushPage('new_page.html')">
-          Push New Page
-      </ons-button>
-  </div>
+        </div>
+    </ons-toolbar>
+    <div class="contents" ng-controller="topCtrl">
+        <h1>災害情報アプリトップページ</h1>
+        <p>こんにちは。ゲストさん</p>
+        <ons-button>投稿する</ons-button>
+        <ons-button>情報を見る</ons-button>
+        <p>登録すると投稿が簡単になったり、投稿した情報が探しやすくなります。</p>
+        <ons-button>ログイン&frasl;会員登録</ons-button>
+        <h2>対応完了のお知らせ</h2>
+        <ons-list>
+            <ons-list-item modifier="chevron">
+                <ons-row>
+                    <ons-col>
+                        <p>2016/2/17 13:00</p>
+                        <p><ons-icon icon="fa-map-marker"></ons-icon>中筋山手5丁目1-1</p>
+                        <p>親譲りの無鉄砲で小供の時から損ばかりして</p>
+                    </ons-col>
+                </ons-row>
+            </ons-list-item>
+        </ons-list>
+    </div>
 </ons-page>
