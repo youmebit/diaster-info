@@ -1,16 +1,26 @@
 <ons-page ng-controller="topCtrl">
     <ons-toolbar fixed-style class="header">
+        <h1>災害情報アプリトップページ</h1>
         <div class="center">
-            ソコキテ
+            <span class="subtitle">-災害情報共有アプリ-</span><span class="title">ソコキテ</span>
         </div>
     </ons-toolbar>
+    <div>
+        <div id="login_name">こんにちは。ゲストさん</div>
+    </div>
     <div class="contents">
-        <h1>災害情報アプリトップページ</h1>
-        <p>こんにちは。ゲストさん</p>
-        <ons-button>投稿する</ons-button>
-        <ons-button>情報を見る</ons-button>
-        <p>登録すると投稿が簡単になったり、投稿した情報が探しやすくなります。</p>
-        <ons-button>ログイン&frasl;会員登録</ons-button>
+        <ul id="func-navi">
+            <li>
+                <ons-button modifier="border orange"><ons-icon icon="fa-pencil" size="3x"></ons-icon><br>投稿する</ons-button>
+            </li>
+            <li>
+                <ons-button modifier="border"><ons-icon icon="fa-file-image-o" size="3x"></ons-icon><br>情報を見る</ons-button>
+            </li>
+        </ul>
+        <div id="login_navi">
+            <p class="arrow_box">登録すると投稿が簡単になったり、投稿した情報が探しやすくなります。</p>
+            <ons-button modifier="login">ログイン/会員登録</ons-button>
+        </div>
     </div>
     <div class="list">
         <h2>対応完了のお知らせ</h2>

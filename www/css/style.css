@@ -1,10 +1,4 @@
 @font-face {
-    font-family: 'Noto350';
-    font-weight: 350;
-    src: url("../font/NotoSansCJKjp-DemiLight.woff") format("woff");
-}
-
-@font-face {
     font-family: 'Noto400';
     font-weight: 400;
     src: url("../font/NotoSansCJKjp-Regular.woff") format("woff");
@@ -27,6 +21,8 @@ ons-page .contents {
     background-color: #fffffa;
     width: 90%;
     margin: 0 auto;
+    padding-top: 30px;
+    font-size: 1em;
 }
 
 .header {
@@ -34,16 +30,13 @@ ons-page .contents {
     font-family: 'Noto500';
 }
 
-.header .center {
-    font-size: 18px;
-}
-
 h1 {
     font-family: 'Noto700', sans-serif;
 }
 
 h2 {
-    font-family: 'Noto400', sans-serif;    
+    font-family: 'Noto400', sans-serif;
+    color: #333;
 }
 .noto400 {
     font-family: 'Noto400', serif;
@@ -95,4 +88,32 @@ ons-list-item {
 
 .info .comment {
     font-family: 'Noto400', sans-serif;
+}
+
+.button {
+    background-color: #36a284;
+    border-radius: 3px;
+    font-family: 'Noto500', sans-serif;
+    border: 1px solid #4d4d4d;
+    box-shadow: 0px 3px 8px -1px #444;
+    font-family: 'Noto500', sans-serif;
+    text-align: center;
+    padding: 2% 0;
+}
+
+.button--border {
+    background-color: #36a284;
+    box-sizing: border-box;
+    box-shadow: 0 0 0 1px #4d4d4d, 0px 3px 8px -1px #444;
+    border: 7px solid white;
+    border-radius: 3px;
+    font-size: 1.2em;
+}
+
+.button--orange {
+    background-color: #f7931e;
+}
+
+.button ons-icon {
+    padding-bottom: 5%;
 }
