@@ -1,4 +1,4 @@
-<ons-page ng-controller="topCtrl">
+ <ons-page ng-controller="topCtrl">
     <ons-toolbar fixed-style class="header">
         <h1>災害情報アプリトップページ</h1>
         <div class="center">
@@ -6,7 +6,9 @@
         </div>
     </ons-toolbar>
     <div>
-        <div id="login_name">こんにちは。ゲストさん</div>
+        <div id="login_name">こんにちは。{{username}}さん
+        {{hasLogin}}
+        </div>
     </div>
     <div class="contents">
         <ul id="func-navi">
@@ -17,7 +19,7 @@
                 <ons-button modifier="border"><ons-icon icon="fa-file-image-o" size="3x"></ons-icon><br>情報を見る</ons-button>
             </li>
         </ul>
-        <div id="login_navi">
+        <div id="login_navi" ng-show="{{angular.isDefined(user)}}">
             <p class="arrow_box">登録すると投稿が簡単になったり、投稿した情報が探しやすくなります。</p>
             <ons-button modifier="login">ログイン/会員登録</ons-button>
         </div>

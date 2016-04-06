@@ -9,8 +9,10 @@
     <link href="font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/reset.css">
+    <script src="components/ncmb/ncmb.min.js"></script>
     <script src="js/init.js"></script>
     <script src="js/top.js"></script>
+    <script src="js/user.js"></script>
 </head>
 <body ng-controller="bodyCtrl">
     <ons-tabbar var="tabbar" hide-tabs="{{settings.isHiddenTab}}">
@@ -30,7 +32,7 @@
         <ons-tabbar-item
             icon="sign-in"
             label="ログイン"
-            page="page3.html" ng-show="{{chk}}"></ons-tabbar-item>
+            page="user/user_regist.html"></ons-tabbar-item>
             <ons-tabbar-item
                 icon="sign-out"
                 label="ログアウト"
