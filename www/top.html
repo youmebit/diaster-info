@@ -19,7 +19,7 @@
                 <ons-button modifier="border"><ons-icon icon="fa-file-image-o" size="3x"></ons-icon><br>情報を見る</ons-button>
             </li>
         </ul>
-        <div id="login_navi" ng-show="{{angular.isDefined(user)}}">
+        <div id="login_navi" ng-hide="{{isLogin}}">
             <p class="arrow_box">登録すると投稿が簡単になったり、投稿した情報が探しやすくなります。</p>
             <ons-button modifier="login">ログイン/会員登録</ons-button>
         </div>
@@ -37,6 +37,9 @@
                 </ons-row>
             </ons-list-item>
         </ons-list>
+    </div>
+    <div id="logout_navi" class="contents" ng-show="{{isLogin}}">
+        <ons-button>ログアウト</ons-button>
     </div>
 </ons-page>
 <head>

@@ -26,10 +26,6 @@ h1 {
     font-family: 'Noto700', sans-serif;
 }
 
-ons-page .contents {
-    padding-bottom: 60px;
-}
-
 div .list h2 {
     padding-left: 5%;
     padding-top: 2%;
@@ -81,7 +77,7 @@ div .list h2:before {
     background-color: #fff;
 }
 
-.button--login {
+.button--login, #logout_navi .button{
     width: 100%;
 }
 
@@ -93,6 +89,7 @@ div .list h2:before {
 }
 
 #login_navi {
+    padding-bottom: 60px;
     width: 98%;
 }
 
