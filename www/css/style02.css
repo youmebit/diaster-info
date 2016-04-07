@@ -1,0 +1,51 @@
+/* This is a CSS file */
+p {
+    font-size: 11px;
+    font-family: 'Noto400';
+    padding-left: 4%;
+}
+.under {
+    border-bottom: solid 2px #f7931e;
+}
+.top_icon {
+    text-align: center;
+    padding-top: 10px;
+    font-size: 1.1em;
+    font-family: 'Noto700';
+    padding-bottom: 15px;
+}
+form {
+    font-size: 11px;
+    font-family: 'Noto400';
+    background-color: #f2f2f2;
+    border-top: solid 1px #808080;
+    height: 100%;/*←---------------------？？？*/
+}
+input {
+    width: 95%;
+    padding: 5px 0px;
+    border: solid 1px #808080;
+    border-radius: 3px;
+}
+.form_content {
+    padding: 10px 0px 0px 4%;
+}
+.pass_change {
+    padding-top: 5px;
+}
+.pass_change a {
+    color: #36a284;
+    padding-left: 4%;
+}
+.button--btn_orange {
+    background-color: #f7931e;
+}
+.button--btn_green {
+    background-color: #36a284;
+}
+.position_center {
+    text-align: center;
+}
+.btn {
+    width: 50%;
+}
