@@ -3,10 +3,11 @@ var app = angular.module('myApp', ['onsen']);
 app.controller('bodyCtrl', function($scope, mBaasService) {
     $scope.settings = {};
     $scope.settings.isHiddenTab = false;
-    $scope.isLogin = mBaasService.isLogin();
+    // ログイン機能仮置き
+//    mBaasService.login('saltory72@gmail.com', 'password');
 });
 
-app.service('mBaasService', function () {
+app.service('mBaasService', function ($rootScope) {
     var ncmb = null;
     this.getNcmb = function () {
         if (!ncmb) {
@@ -17,13 +18,24 @@ app.service('mBaasService', function () {
         return ncmb;
     }
     
-    this.isLogin = function() {
+    this.hasCurrent = function() {
         var user = this.getCurrentUser();
         return user != null;
     }
     
     this.getCurrentUser = function() {
         return this.getNcmb().User.getCurrentUser();
+    }
+    
+    this.login = function(address, password, success) {
+        var ncmb = this.getNcmb();
+        ncmb.User.loginWithMailAddress(address, password).then(function(data) {
+            $rootScope.$broadcast('auto_login', data.userName);
+        })
+        .catch(function(err){
+            alert('失敗..');
+            console.log(err);
+        });
     }
 });
 
