@@ -27,7 +27,7 @@ app.service('mBaasService', function ($rootScope) {
         return this.getNcmb().User.getCurrentUser();
     }
     
-    this.login = function(address, password, success) {
+    this.login = function(address, password) {
         var ncmb = this.getNcmb();
         ncmb.User.loginWithMailAddress(address, password).then(function(data) {
             $rootScope.$broadcast('auto_login', data.userName);
