@@ -4,7 +4,7 @@ app.controller('bodyCtrl', function($scope, mBaasService) {
     $scope.settings = {};
     $scope.settings.isHiddenTab = false;
     // ログイン機能仮置き
-//    mBaasService.login('saltory72@gmail.com', 'password');
+    mBaasService.login('saltory72@gmail.com', 'password');
 });
 
 app.service('mBaasService', function ($rootScope) {
