@@ -1,12 +1,12 @@
-    <ons-toolbar fixed-style class="header">
-        <h1>災害情報アプリトップページ</h1>
-        <div class="center">
-            <span class="subtitle">-災害情報共有アプリ-</span><span class="title">ソコキテ</span>
-        </div>
-    </ons-toolbar>
-    <div  ng-controller="topCtrl">
-        <div id="login_name">こんにちは。{{user.username}}さん
-        </div>
+<ons-toolbar fixed-style modifier="header">
+    <h1>災害情報アプリトップページ</h1>
+    <div class="center">
+            <span class="subtitle">-災害情報共有アプリ-</span>   <span class="title">ソコキテ</span>
+    </div>
+</ons-toolbar>
+<div ng-controller="topCtrl">
+<div class="wrapper">
+    <div id="login_name">こんにちは。{{user.username}}さん
     </div>
     <div class="contents">
         <ul id="func-navi">
@@ -39,6 +39,5 @@
     <div id="logout_navi" class="contents" ng-show="{{isLogin}}">
         <ons-button>ログアウト</ons-button>
     </div>
-<head>
-    <link rel="stylesheet" href="css/top.css">
-</head>
+</div>
+<link rel="stylesheet" href="css/top.css">

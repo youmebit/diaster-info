@@ -25,7 +25,7 @@ ons-page .contents {
     font-size: 1em;
 }
 
-.header {
+.navigation-bar--header {
     border-bottom: 2px solid #4d4d4d;
     font-family: 'Noto500';
 }
