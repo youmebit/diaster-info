@@ -1,16 +1,13 @@
- <ons-page ng-controller="topCtrl">
-    <ons-toolbar fixed-style class="header">
-        <h1>災害情報アプリトップページ</h1>
-        <div class="center">
-            <span class="subtitle">-災害情報共有アプリ-</span><span class="title">ソコキテ</span>
-        </div>
-    </ons-toolbar>
-    <div>
-        <div id="login_name">こんにちは。{{user.username}}さん
-        {{isLogin}}
-        </div>
+<ons-toolbar fixed-style modifier="header">
+    <div class="center top-padding">
+            <span class="subtitle">-災害情報共有アプリ-</span>   <span class="title">ソコキテ</span>
     </div>
-    <div class="contents">
+</ons-toolbar>
+<div ng-controller="topCtrl">
+<div class="wrapper">
+    <div id="login_name">こんにちは。{{user.username}}さん
+    </div>
+    <div class="contents ivory">
         <ul id="func-navi">
             <li>
                 <ons-button modifier="border orange"><ons-icon icon="fa-pencil" size="3x"></ons-icon><br>投稿する</ons-button>
@@ -21,7 +18,7 @@
         </ul>
         <div id="login_navi" ng-hide="{{isLogin}}">
             <p class="arrow_box">登録すると投稿が簡単になったり、投稿した情報が探しやすくなります。</p>
-            <ons-button modifier="login">ログイン/会員登録</ons-button>
+            <ons-button modifier="login" ng-click="myNavigator.pushPage('login.html')">ログイン/会員登録</ons-button>
         </div>
     </div>
     <div class="list">
@@ -41,7 +38,4 @@
     <div id="logout_navi" class="contents" ng-show="{{isLogin}}">
         <ons-button>ログアウト</ons-button>
     </div>
-</ons-page>
-<head>
-    <link rel="stylesheet" href="css/top.css">
-</head>
+</div>
