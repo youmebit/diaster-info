@@ -16,17 +16,23 @@
     src: url("../font/NotoSansCJKjp-Bold.woff") format("woff");
 }
 
-ons-page .contents {
+.contents {
     font-family: 'Noto400', sans-serif;
-    background-color: #fffffa;
     width: 90%;
     margin: 0 auto;
     padding-top: 30px;
     font-size: 1em;
 }
 
-.header {
+.navigation-bar {
     border-bottom: 2px solid #4d4d4d;
+}
+
+.navigation-bar .center {
+    line-height: 1.1;
+    padding-top:10px;
+    width: 50%;
+    font-size: 1.2em;
     font-family: 'Noto500';
 }
 
@@ -37,21 +43,6 @@ h1 {
 h2 {
     font-family: 'Noto400', sans-serif;
     color: #333;
-}
-.noto400 {
-    font-family: 'Noto400', serif;
-}
-
-.noto350 {
-    font-family: 'Noto350', serif;
-}
-
-.noto500 {
-    font-family: 'Noto500', serif;
-}
-
-.noto700 {
-    font-family: 'Noto700', serif;
 }
 
 ons-list-item {
@@ -117,3 +108,141 @@ ons-list-item {
 .button ons-icon {
     padding-bottom: 5%;
 }
+
+.navigation-bar--header {
+    height: 64px;
+}
+
+.page__status-bar-fill ~ ons-toolbar {
+  height: 80px;
+}
+
+.navigation-bar .top-padding {
+    padding-top: 3px;
+}
+.navigation-bar .center .subtitle {
+    font-size: 0.7em;
+}
+
+.navigation-bar .center .subtitle:after {
+    content: "\A";
+    white-space: pre;
+}
+
+.center .title {
+    font-size: 1.5em;
+    font-family: 'Noto700', sans-serif;
+}
+
+div .list h2 {
+    padding-left: 5%;
+    padding-top: 2%;
+    padding-bottom: 2%;
+    background-color: #fdd37d;
+    display: block;
+    font-size: 1.3em;
+    border: 2px solid #666666;
+    border-left-width: 0;
+    border-right-width: 0;
+}
+
+div .list h2:before {
+    font-family: 'FontAwesome';
+    content: '\f27e';
+    font-size: 1.1em;
+    padding-right: 10px;
+}
+
+#func-navi {
+    width: 100%;
+    overflow: hidden;
+    padding-bottom: 30px;
+}
+
+#func-navi li {
+    width: 44%;
+    padding: 5px;
+}
+
+#func-navi li:first-child {
+    float: left;
+}
+
+#func-navi li:last-child {
+    float: right;
+}
+
+#func-navi li ons-button {
+    width: 100%;
+    height: 44%;
+    padding: 15% 0 10%;
+    box-sizing: border-box;
+}
+
+#login_name {
+    padding-left: 6%;
+    border-bottom: 1px solid #999;
+    background-color:#fff;
+    padding-bottom: 15px;
+}
+
+.button--login, #logout_navi .button{
+    width: 100%;
+}
+
+.button--login:after {
+    content: '\f105';
+    font-family: 'FontAwesome';
+    font-size: 1.5em;
+    padding-left: 10px;
+}
+
+#login_navi {
+    padding-bottom: 60px;
+    width: 98%;
+}
+
+#login_navi .button {
+    margin-top: 13px;
+}
+
+.arrow_box {
+	position: relative;
+	background: #ffffff;
+	border: 2px solid #4d4d4d;
+    border-radius: 3px;
+    box-sizing: border-box;
+    padding: 7px;
+    font-size: 0.8em;
+    line-height: 1.2;
+}
+.arrow_box:after, .arrow_box:before {
+	top: 100%;
+	left: 10%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+.arrow_box:after {
+	border-color: rgba(255, 255, 255, 0);
+	border-top-color: #ffffff;
+	border-width: 10px;
+	margin-left: -10px;
+}
+.arrow_box:before {
+	border-color: rgba(77, 77, 77, 0);
+	border-top-color: #4d4d4d;
+	border-width: 13px;
+	margin-left: -13px;
+}
+
+.wrapper {
+    position: absolute;
+    top:35px;
+    width: 100%;
+}
+
