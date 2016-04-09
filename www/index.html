@@ -12,10 +12,13 @@
 <link rel="stylesheet" href="css/style02.css">
     <script src="components/ncmb/ncmb.min.js"></script>
     <script src="js/init.js"></script>
-    <script src="js/top.js"></script>
     <script src="js/user.js"></script>
 </head>
 <body ng-controller="bodyCtrl">
+    <div wc-overlay wc-overlay-delay="300" class="loading">
+      <span>Loading</span>
+        <img src="img/rolling.svg" alt="loading...">
+    </div>
     <ons-tabbar var="tabbar" hide-tabs="{{settings.isHiddenTab}}">
         <ons-tabbar-item
             icon="home"
@@ -39,9 +42,9 @@
                 label="ログアウト"
                 page="page3.html" ng-hide="{{chk}}"></ons-tabbar-item>
     </ons-tabbar>
-</body>
+    </body>
 <ons-template id="navigator.html">
     <ons-navigator var="myNavigator" page="top.html">
     </ons-navigator> 
-</ons-template>
+</ons-template>    
 </html>

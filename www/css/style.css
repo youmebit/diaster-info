@@ -124,7 +124,7 @@ ons-list-item {
     font-size: 0.7em;
 }
 
-.navigation-bar .center .subtitle:after {
+.navigation-bar .center .subtitle:after, .loading span:after {
     content: "\A";
     white-space: pre;
 }
@@ -244,5 +244,16 @@ div .list h2:before {
     position: absolute;
     top:35px;
     width: 100%;
+}
+
+.loading {
+    font-size: 1.5em;
+    font-family: sans-serif;
+    width: 40%;
+    text-align: center;
+    position: absolute;
+    top:25%;
+    left:30%;
+    padding:10px 5px;
 }
 
