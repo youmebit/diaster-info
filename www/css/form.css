@@ -1,0 +1,71 @@
+.page--shop-details__content {
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  top: 0px !important;
+  bottom: 0px;
+}
+
+.list {
+    border-top:none;
+}
+
+.list__item {
+    line-height: 0;
+    padding: 0;
+}
+
+.card {
+  background-color: white;
+  background-image: url(images/sushi-bg.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: white;
+  height: 250px;
+}
+
+.card-toolbar ons-back-button span {
+  color: white;
+}
+
+.action-col {
+    text-align: center;
+    color: #4d4d4d;
+    border-bottom: 5px solid #ffd37d;
+    padding: 5px;
+}
+
+.action-col:active {
+  opacity: 0.7;
+}
+
+.action-col ons-button {
+  padding: 0;
+  line-height: 1;
+}
+
+.action-col:first-of-type {
+    border-right: 1px solid #4d4d4d;
+}
+
+.action-icon {
+  padding-right: 5px;
+  font-size: 1.2em;
+}
+
+.action-label {
+    font-size: 1.3em;
+    color: #4d4d4d;
+    padding: 15px 0 3px;
+}
+
+.prop-desc {
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+.prop-desc ons-icon {
+  font-size: 14px;
+  vertical-align: -0px;
+  opacity: 0.5;
+}

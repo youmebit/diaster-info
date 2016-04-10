@@ -1,23 +1,22 @@
-   <ons-toolbar fixed-style class="header">
+<ons-toolbar fixed-style class="header">
     <div class="center">
-        画像選択画面
-   </div>
-  </ons-toolbar>
-  <div class="contents" style="text-align: center" ng-controller="postCtrl" ng-init="init()">
-    <dl>
-        <dt>標準</dt>
-        <dd>この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。</dd>
-        <dt>350</dt>
-        <dd class="noto350">この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。</dd>
-        <dt>400</dt>
-        <dd class="noto400">この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。</dd>
-        <dt>500</dt>
-        <dd class="noto500">この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。</dd>
-        <dt>700</dt>
-        <dd class="noto700">この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。</dd>
-    </dl> 
-      <ons-button
-          ng-click="myNavigator.pushPage('new_page.html')">
-          Push New Page
-      </ons-button>
-  </div>
+        画像選択
+    </div>
+</ons-toolbar>
+<div ng-controller="postCtrl">
+    <ons-list>
+        <ons-list-item>
+            <ons-row class="action">
+
+                <ons-col class="action-col">
+                    <div class="action-label"><ons-icon class="action-icon" icon="fa-camera"></ons-icon>カメラ</div>
+                </ons-col>
+
+                <ons-col class="action-col">
+                    <div class="action-label"><ons-icon class="action-icon" icon="fa-image"></ons-icon>ギャラリー</div>
+                </ons-col>
+            </ons-row>
+        </ons-list-item>
+    </ons-list>
+</div>
+<link rel="stylesheet" href="css/form.css">
