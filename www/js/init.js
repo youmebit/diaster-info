@@ -8,7 +8,7 @@ app.controller('bodyCtrl', function($scope, mBaasService) {
     $scope.topInit = function() {
         $scope.settings.isHiddenTab = true;
         $scope.user = {};
-        $scope.isLogin = false;
+        $scope.settings.isLogin = false;
         var current = mBaasService.getCurrentUser();
         if (current) {
             var ncmb = mBaasService.getNcmb();
@@ -17,7 +17,7 @@ app.controller('bodyCtrl', function($scope, mBaasService) {
                 $scope.$apply(function () {
                     $scope.user.username = data;
                     ncmb.User.logout();
-                    $scope.isLogin = true;
+                    $scope.settings.isLogin = true;
                 });
             });
         } else {

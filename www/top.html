@@ -1,8 +1,15 @@
+<!--
 <ons-toolbar fixed-style modifier="header">
     <div class="center top-padding">
-            <span class="subtitle">-災害情報共有アプリ-</span>   <span class="title">ソコキテ</span>
     </div>
 </ons-toolbar>
+-->
+<header>
+   <div>
+        <span class="subtitle">-災害情報共有アプリ-</span>
+        <span class="title">ソコキテ</span>
+   </div>
+</header>
 <div ng-init="topInit()">
 <div class="wrapper">
     <div id="login_name">こんにちは。{{user.username}}さん
@@ -10,7 +17,9 @@
     <div class="contents">
         <ul id="func-navi">
             <li>
-                <ons-button modifier="border orange"><ons-icon icon="fa-pencil" size="3x"></ons-icon><br>投稿する</ons-button>
+                <ons-button modifier="border orange" ng-click="myNavigator.pushPage('post/img_select.html')">
+                    <ons-icon icon="fa-pencil" size="3x"></ons-icon><br>投稿する
+                </ons-button>
             </li>
             <li>
                 <ons-button modifier="border"><ons-icon icon="fa-file-image-o" size="3x"></ons-icon><br>情報を見る</ons-button>

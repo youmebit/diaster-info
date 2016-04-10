@@ -36,6 +36,15 @@
     font-family: 'Noto500';
 }
 
+.navigation-bar .left {
+    background-color: #dbaf7d;
+    border-bottom: 2px solid #4d4d4d;
+}
+
+.navigation-bar .back {
+    display: block;
+}
+
 h1 {
     font-family: 'Noto700', sans-serif;
 }
@@ -109,27 +118,28 @@ ons-list-item {
     padding-bottom: 5%;
 }
 
-.navigation-bar--header {
-    height: 64px;
-}
-
-.page__status-bar-fill ~ ons-toolbar {
-  height: 80px;
-}
-
 .navigation-bar .top-padding {
     padding-top: 3px;
 }
-.navigation-bar .center .subtitle {
-    font-size: 0.7em;
+
+header div {
+    padding: 7px 0;
+    border-bottom: 2px solid #444;
+    background-color: #fdd37d;
+    text-align: center;    
 }
 
-.navigation-bar .center .subtitle:after, .loading span:after {
+header div .subtitle {
+    font-size: 0.7em;
+    font-family: 'Noto400';
+}
+
+header div .subtitle:after, .loading span:after {
     content: "\A";
     white-space: pre;
 }
 
-.center .title {
+header .title {
     font-size: 1.5em;
     font-family: 'Noto700', sans-serif;
 }
@@ -183,7 +193,7 @@ div .list h2:before {
     padding-left: 6%;
     border-bottom: 1px solid #999;
     background-color:#fff;
-    padding-bottom: 15px;
+    padding: 15px 0;
 }
 
 .button--login, #logout_navi .button{
@@ -238,12 +248,6 @@ div .list h2:before {
 	border-top-color: #4d4d4d;
 	border-width: 13px;
 	margin-left: -13px;
-}
-
-.wrapper {
-    position: absolute;
-    top:35px;
-    width: 100%;
 }
 
 .loading {

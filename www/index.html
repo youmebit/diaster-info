@@ -36,11 +36,11 @@
         <ons-tabbar-item
             icon="sign-in"
             label="ログイン"
-            page="user/user_regist.html"></ons-tabbar-item>
+            page="user/user_regist.html" ng-hide="{{settings.isLogin}}"></ons-tabbar-item>
             <ons-tabbar-item
                 icon="sign-out"
                 label="ログアウト"
-                page="page3.html" ng-hide="{{chk}}"></ons-tabbar-item>
+                page="page3.html" ng-show="{{settings.isLogin}}"></ons-tabbar-item>
     </ons-tabbar>
     </body>
 <ons-template id="navigator.html">
