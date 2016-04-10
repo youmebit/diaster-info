@@ -193,7 +193,7 @@ div .list h2:before {
     padding-left: 6%;
     border-bottom: 1px solid #999;
     background-color:#fff;
-    padding: 15px 0;
+    padding: 13px 0;
 }
 
 .button--login, #logout_navi .button{
@@ -205,6 +205,10 @@ div .list h2:before {
     font-family: 'FontAwesome';
     font-size: 1.5em;
     padding-left: 10px;
+}
+
+.button--login {
+    padding: 7px 0;    
 }
 
 #login_navi {

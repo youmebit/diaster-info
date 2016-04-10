@@ -7,6 +7,7 @@ app.controller('postCtrl', function($scope) {
            sourceType : Camera.PictureSourceType.CAMERA,
             saveToPhotoAlbum : true,
             correntOrientation : true,
+            cameraDirection : Camera.Direction.BACK
         }
         
         var onSuccess = function(imageURI) {

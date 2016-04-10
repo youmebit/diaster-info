@@ -1,16 +1,15 @@
-#gallery li {
-    display: inline-block;
-    width: 25%;
+.contents .info {
+    font-size: 1.3em;
+    padding: 0 0 30px;
+    margin: 0;
 }
-#gallery img {
-    box-sizing: border-box;
+.contents {
+    position: absolute;
+    top:15%;
+    left:5%;
+}
+.contents .button{
     width: 100%;
-    vertical-align: bottom;
-    border: 2px solid #666;
-}
-
-#gallery {
-    border: 2px solid #666;
-    border-left: 0;
-    border-right: 0;
+    margin-bottom: 30px;
+    padding:7px 0 0; 
 }
