@@ -1,14 +1,16 @@
 'use strict';
 var app = angular.module('myApp', ['onsen']);
-app.controller('bodyCtrl', function($scope, mBaasService) {
+app.controller('bodyCtrl', function($scope, mBaasService, tabService) {
     $scope.settings = {};
-    $scope.settings.isHiddenTab = false;
     // ログイン機能仮置き
 //    mBaasService.login('saltory72@gmail.com', 'password');
+    tabService.setActiveTab(0);
+
+    // トップ画面初期化
     $scope.topInit = function() {
-        $scope.settings.isHiddenTab = true;
         $scope.user = {};
         $scope.settings.isLogin = false;
+        
         var current = mBaasService.getCurrentUser();
         if (current) {
             var ncmb = mBaasService.getNcmb();
@@ -24,8 +26,17 @@ app.controller('bodyCtrl', function($scope, mBaasService) {
             $scope.user.username = 'ゲスト';
         }
     }
+    
+    $scope.toLoginPage = function() {
+        tabService.setActiveTab(3);
+    }
+    
+    $scope.toPostPage = function() {
+        tabService.setActiveTab(1);
+    }
 });
 
+// ｍBaaS接続サービス
 app.service('mBaasService', function ($rootScope) {
     var ncmb = null;
     this.getNcmb = function () {
@@ -58,8 +69,10 @@ app.service('mBaasService', function ($rootScope) {
     }
 });
 
-app.controller('tabCtrl', function($scope) {
-    $scope.init = function () {
-      $scope.tabs = [];
+app.service('tabService', function(){
+    this.setActiveTab = function(index) {
+        setImmediate(function() {
+            tabbar.setActiveTab(index);
+        });
     }
 });

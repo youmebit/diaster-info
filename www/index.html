@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="css/style02.css">
     <script src="components/ncmb/ncmb.min.js"></script>
     <script src="js/init.js"></script>
+    <script src="js/post.js"></script>
     <script src="js/user.js"></script>
 </head>
 <body ng-controller="bodyCtrl">
@@ -19,16 +20,15 @@
       <span>Loading</span>
         <img src="img/rolling.svg" alt="loading...">
     </div>
-    <ons-tabbar var="tabbar" hide-tabs="{{settings.isHiddenTab}}">
+    <ons-tabbar var="tabbar">
         <ons-tabbar-item
             icon="home"
             label="HOME"
-            page="navigator.html"
-            active="true"></ons-tabbar-item>
+            page="navigator.html"></ons-tabbar-item>
         <ons-tabbar-item
             icon="comment"
-            label="Comments"
-            page="page2.html"></ons-tabbar-item>
+            label="投稿する"
+            page="post/img_select.html"></ons-tabbar-item>
         <ons-tabbar-item
             icon="gear"
             label="Settings"
@@ -36,7 +36,7 @@
         <ons-tabbar-item
             icon="sign-in"
             label="ログイン"
-            page="user/user_regist.html" ng-hide="{{settings.isLogin}}"></ons-tabbar-item>
+            page="login.html" ng-hide="{{settings.isLogin}}"></ons-tabbar-item>
             <ons-tabbar-item
                 icon="sign-out"
                 label="ログアウト"

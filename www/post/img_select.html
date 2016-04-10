@@ -1,12 +1,9 @@
-  <ons-toolbar fixed-style class="header">
-    <div class="left">
-        <ons-toolbar-button ng-click="myNavigator.popPage()" class="back">戻る</ons-toolbar-button>
-    </div>
+   <ons-toolbar fixed-style class="header">
     <div class="center">
-        ソコキテ
+        画像選択画面
    </div>
   </ons-toolbar>
-  <div class="contents" style="text-align: center">
+  <div class="contents" style="text-align: center" ng-controller="postCtrl" ng-init="init()">
     <dl>
         <dt>標準</dt>
         <dd>この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。</dd>
