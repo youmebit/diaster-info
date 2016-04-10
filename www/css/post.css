@@ -1,0 +1,17 @@
+#gallery li {
+    display: inline-block;
+    width: 25%;
+}
+#gallery img {
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    vertical-align: bottom;
+    border: 2px solid #666;
+}
+
+#gallery {
+    border: 2px solid #666;
+    border-left: 0;
+    border-right: 0;
+}
