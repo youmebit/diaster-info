@@ -1,6 +1,24 @@
 app.controller('postCtrl', function($scope) {
     $scope.showCamera = function() {
         $scope.isCamera = true;
+        var options = {
+            quality : 75,
+           destinationType : Camera.DestinationType.FILE_URI,
+           sourceType : Camera.PictureSourceType.CAMERA,
+            saveToPhotoAlbum : true,
+            correntOrientation : true,
+        }
+        
+        var onSuccess = function(imageURI) {
+            console.log(imageURI);
+        }
+        
+        var onFail = function() {
+            console.log('写真失敗');
+        }
+        navigator.camera.getPicture(function(imageURI) {
+            onSuccess(imageURI);
+        }, onFail, options);
     }
     
     $scope.showGallery = function() {
