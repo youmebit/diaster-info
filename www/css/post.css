@@ -1,0 +1,15 @@
+.contents .info {
+    font-size: 1.3em;
+    padding: 0 0 30px;
+    margin: 0;
+}
+.contents {
+    position: absolute;
+    top:15%;
+    left:5%;
+}
+.contents .button{
+    width: 100%;
+    margin-bottom: 30px;
+    padding:7px 0 0; 
+}

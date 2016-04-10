@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html ng-app="myApp">
+<html lang="ja" ng-app="myApp">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -12,20 +12,23 @@
 <link rel="stylesheet" href="css/style02.css">
     <script src="components/ncmb/ncmb.min.js"></script>
     <script src="js/init.js"></script>
-    <script src="js/top.js"></script>
+    <script src="js/post.js"></script>
     <script src="js/user.js"></script>
 </head>
 <body ng-controller="bodyCtrl">
-    <ons-tabbar var="tabbar" hide-tabs="{{settings.isHiddenTab}}">
+    <div wc-overlay wc-overlay-delay="300" class="loading">
+      <span>Loading</span>
+        <img src="img/rolling.svg" alt="loading...">
+    </div>
+    <ons-tabbar var="tabbar">
         <ons-tabbar-item
             icon="home"
             label="HOME"
-            page="navigator.html"
-            active="true"></ons-tabbar-item>
+            page="navigator.html"></ons-tabbar-item>
         <ons-tabbar-item
             icon="comment"
-            label="Comments"
-            page="page2.html"></ons-tabbar-item>
+            label="投稿する"
+            page="post/img_select.html"></ons-tabbar-item>
         <ons-tabbar-item
             icon="gear"
             label="Settings"
@@ -33,15 +36,15 @@
         <ons-tabbar-item
             icon="sign-in"
             label="ログイン"
-            page="user/user_regist.html"></ons-tabbar-item>
+            page="login.html" ng-hide="{{settings.isLogin}}"></ons-tabbar-item>
             <ons-tabbar-item
                 icon="sign-out"
                 label="ログアウト"
-                page="page3.html" ng-hide="{{chk}}"></ons-tabbar-item>
+                page="page3.html" ng-show="{{settings.isLogin}}"></ons-tabbar-item>
     </ons-tabbar>
-</body>
+    </body>
 <ons-template id="navigator.html">
     <ons-navigator var="myNavigator" page="top.html">
     </ons-navigator> 
-</ons-template>
+</ons-template>    
 </html>
