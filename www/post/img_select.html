@@ -9,7 +9,7 @@
             <ons-row class="action">
 
                 <ons-col class="action-col">
-                <a ng-click="showCamera()">
+                <a ng-click="showCamera()" ng-class="{active_tab : isCamera}">
                     <div class="action-label">
                         <ons-icon class="action-icon" icon="fa-camera"></ons-icon>カメラ
                     </div>
@@ -17,7 +17,7 @@
                 </ons-col>
 
                 <ons-col class="action-col">
-                <a ng-click="showGallery()">
+                <a ng-click="showGallery()" ng-class="{active_tab : isCamera == false}">
                     <div class="action-label"><ons-icon class="action-icon" icon="fa-image"></ons-icon>ギャラリー</div>
                 </a>
                 </ons-col>
@@ -27,8 +27,12 @@
     <div ng-show="isCamera">
         camera
     </div>
-    <div ng-hide="isCamera">
-        gallery
+    <div id="gallery"ng-hide="isCamera">
+       <ul>
+           <li ng-repeat="img in images"><img src="{{img}}"></li>
+       </ul>
+        
     </div>
 </div>
 <link rel="stylesheet" href="css/form.css">
+<link rel="stylesheet" href="css/post.css">
