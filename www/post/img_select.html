@@ -3,20 +3,32 @@
         画像選択
     </div>
 </ons-toolbar>
-<div ng-controller="postCtrl">
+<div ng-controller="postCtrl" ng-init="showCamera()">
     <ons-list>
         <ons-list-item>
             <ons-row class="action">
 
                 <ons-col class="action-col">
-                    <div class="action-label"><ons-icon class="action-icon" icon="fa-camera"></ons-icon>カメラ</div>
+                <a ng-click="showCamera()">
+                    <div class="action-label">
+                        <ons-icon class="action-icon" icon="fa-camera"></ons-icon>カメラ
+                    </div>
+                </a>
                 </ons-col>
 
                 <ons-col class="action-col">
+                <a ng-click="showGallery()">
                     <div class="action-label"><ons-icon class="action-icon" icon="fa-image"></ons-icon>ギャラリー</div>
+                </a>
                 </ons-col>
             </ons-row>
         </ons-list-item>
     </ons-list>
+    <div ng-show="isCamera">
+        camera
+    </div>
+    <div ng-hide="isCamera">
+        gallery
+    </div>
 </div>
 <link rel="stylesheet" href="css/form.css">

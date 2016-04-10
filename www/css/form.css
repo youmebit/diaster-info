@@ -32,7 +32,6 @@
     text-align: center;
     color: #4d4d4d;
     border-bottom: 5px solid #ffd37d;
-    padding: 5px;
 }
 
 .action-col:active {
@@ -48,6 +47,10 @@
     border-right: 1px solid #4d4d4d;
 }
 
+.action-col a {
+    display: block;
+    width: 100%;
+}
 .action-icon {
   padding-right: 5px;
   font-size: 1.2em;
@@ -56,7 +59,7 @@
 .action-label {
     font-size: 1.3em;
     color: #4d4d4d;
-    padding: 15px 0 3px;
+    padding: 18px 0 10px;
 }
 
 .prop-desc {
