@@ -1,4 +1,4 @@
-app.controller('postCtrl', function($scope) {
+app.controller('imgSelectCtrl', function($scope) {
     $scope.showCamera = function() {
         var options = {
             quality : 75,
@@ -10,8 +10,7 @@ app.controller('postCtrl', function($scope) {
         }
         
         var onSuccess = function(imageURI) {
-            console.log(imageURI);
-            myNavigator.pushPage('post/post.html');
+            myNavigator.pushPage('post.html', {image: imageURI});
         }
         
         var onFail = function() {
@@ -23,6 +22,11 @@ app.controller('postCtrl', function($scope) {
     }
     
     $scope.showGallery = function() {
-        $scope.images = ['http://lorempixel.com/100/100/animals', 'http://lorempixel.com/100/100/cats', 'http://lorempixel.com/100/100/fashion', 'http://lorempixel.com/100/100/people', 'http://lorempixel.com/100/100/city', 'http://lorempixel.com/100/100/nightlife', 'http://lorempixel.com/100/100/food','http://lorempixel.com/100/100/sports'];
+//        $scope.images = ['http://lorempixel.com/100/100/animals', 'http://lorempixel.com/100/100/cats', 'http://lorempixel.com/100/100/fashion', 'http://lorempixel.com/100/100/people', 'http://lorempixel.com/100/100/city', 'http://lorempixel.com/100/100/nightlife', 'http://lorempixel.com/100/100/food','http://lorempixel.com/100/100/sports'];
     }
+});
+
+app.controller('postCtrl', function($scope) {
+    var options = $scope.myNavigator.getCurrentPage().options;
+    $scope.imageURI = options.image;
 });
