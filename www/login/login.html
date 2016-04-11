@@ -1,0 +1,53 @@
+<ons-toolbar fixed-style>
+    <div class="center">
+        ログイン画面
+    </div>
+</ons-toolbar>
+    
+<div class="top_icon">
+    <ons-icon icon="fa-sign-in" size="4x"></ons-icon><br>
+    ログイン
+</div>
+    
+<div class="form_back">
+    <form class="contents">
+        <dl>
+            <dt>
+                <ons-icon icon="fa-envelope-o"></ons-icon>
+                メールアドレス
+            </dt>
+            <dd>
+                <input type="email" name="email"/>   
+        	</dd>
+            
+            <dt style="padding-top: 20px;">
+                <ons-icon icon="fa-key" rotate="90"></ons-icon>
+                パスワード
+            </dt>
+            <dd>
+                <input type="password" name="password"/>
+            </dd>
+            
+            <dt class="pass_change">
+                <a href="#">
+                    パスワードを忘れた方はこちら
+                    <ons-icon icon="fa-chevron-right"></ons-icon>    
+                </a>
+            </dt>
+        </dl>
+        
+        <div class="position_center">
+            <ons-button class="btn" style="margin-bottom: 25px;"
+                modifier="orange"
+                onclick="">
+                ログイン
+            </ons-button>
+            <ons-button class="btn"
+                onclick="myNavigator.pushPage('user/user_regist.html')">
+                会員登録
+            </ons-button>
+        </div>
+    </form>
+</div>
+    
+<link rel="stylesheet" href="css/login.css">

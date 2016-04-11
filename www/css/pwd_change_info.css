@@ -1,0 +1,15 @@
+/* This is a CSS file */
+
+.top_icon {
+    text-align: center;
+    padding-top: 10px;
+    font-size: 1.1em;
+    font-family: 'Noto700';
+    padding-bottom: 15px;
+}
+.position_center {
+    text-align: center;
+}
+.btn {
+    width: 50%;
+}
