@@ -1,7 +1,7 @@
 app.controller('postCtrl', function($scope) {
     $scope.showCamera = function() {
         $scope.isCamera = true;
-        navigator.pushPage('post/post.html');
+        myNavigator.pushPage('post/post.html');
 
 //        var options = {
 //            quality : 75,
