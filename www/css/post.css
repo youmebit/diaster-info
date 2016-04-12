@@ -14,7 +14,9 @@
     padding:7px 0 0; 
 }
 
-#post_form img {
-    width: 320px;
-    height: auto;
+.img-resize {
+    max-width: 320px;
+    max-height: 320px;
+    width: expression(this.width >= this.height ? "320px" : "auto");
+	height: expression(this.width <= this.height ? "320px" : "auto");
 }
