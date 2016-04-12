@@ -25,24 +25,32 @@
 }
 
 .navigation-bar {
+    height: 48px;
     border-bottom: 2px solid #4d4d4d;
 }
 
 .navigation-bar .center {
-    line-height: 1.1;
-    padding-top:10px;
-    width: 50%;
     font-size: 1.2em;
     font-family: 'Noto500';
+    display: table-cell;
+    vertical-align: middle;
 }
 
 .navigation-bar .left {
+    height: 100%;
+    width: 20%;
     background-color: #dbaf7d;
-    border-bottom: 2px solid #4d4d4d;
 }
 
-.navigation-bar .back {
-    display: block;
+.with-back > .center {
+    width: 60%;
+}
+
+.toolbar-button--back {
+    text-align: left;
+    font-family: 'Noto400';
+/*    display: block;*/
+/*    height: 100%;*/
 }
 
 h1 {

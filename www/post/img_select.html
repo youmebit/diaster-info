@@ -1,7 +1,7 @@
 <ons-navigator page="img_select.html" var="myNavigator"></ons-navigator>
 <ons-template id="img_select.html">
    <ons-page ng-controller="imgSelectCtrl">
-       <ons-toolbar fixed-style class="header">
+       <ons-toolbar fixed-style>
         <div class="center">
             画像選択
         </div>
@@ -18,9 +18,9 @@
 </ons-template>
 <ons-template id="post.html">
     <ons-page ng-controller="postCtrl">
-        <ons-toolbar fixed-style class="header">
+        <ons-toolbar fixed-style class="with-back">
             <div class="left">
-                <ons-toolbar-button>戻る</ons-toolbar-button>
+                <ons-back-button modifier="back">戻る</ons-back-button>
             </div>
             <div class="center">
                 投稿フォーム
