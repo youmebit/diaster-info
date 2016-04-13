@@ -12,7 +12,7 @@ app.controller('bodyCtrl', function($scope, mBaasService, tabService) {
         $scope.user = {};
         $scope.settings.isLogin = false;
         
-        var current = mBaasService.getCurrentUser();
+        var current = null;
         if (current) {
             var ncmb = mBaasService.getNcmb();
             mBaasService.login(current.mailAddress, current.password);
@@ -44,7 +44,8 @@ app.service('mBaasService', function ($rootScope) {
         if (!ncmb) {
             var APP_KEY = '536ea833c07c98ed2cf1b836739a9729ad7544fc3a9e282e875f99e93bd8eb47';
             var CLIENT_KEY = 'c47f0f99bc98940357aeb142158515adbca19f165f49b579f1cce020a3135583';
-            ncmb = new NCMB(APP_KEY, CLIENT_KEY);
+//            ncmb = new NCMB(APP_KEY, CLIENT_KEY);
+            NCMB.initialize(APP_KEY, CLIENT_KEY);
         }
         return ncmb;
     }

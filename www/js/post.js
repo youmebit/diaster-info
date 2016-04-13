@@ -1,5 +1,23 @@
 app.controller('imgSelectCtrl', function ($scope, mBaasService) {
-    $scope.showCamera = function () {
+    $scope.$watch('file', function(file) {
+        if (!file) {
+            return;
+        }
+        upload();
+    });
+    
+        var upload = function() {
+            mBaasService.getNcmb();
+        var ncmbFile = new NCMB.File(Date.now() + $scope.file.name, $scope.file);
+        ncmbFile.save().then(function() {
+            // アップロード成功
+            alert('アップロードしました！');
+        }, function(error) {
+            // アップロード失敗
+            alert(error);
+        });
+    }
+$scope.showCamera = function () {
         var options = {
             quality: 70,
             destinationType: Camera.DestinationType.DATA_URL,
@@ -93,4 +111,19 @@ app.controller('imgSelectCtrl', function ($scope, mBaasService) {
 app.controller('postCtrl', function ($scope) {
     var options = $scope.myNavigator.getCurrentPage().options;
     $scope.imageURI = options.image;
+});
+
+app.directive('fileModel',function($parse){
+    return{
+        restrict: 'A',
+        link: function(scope,element,attrs){
+            var model = $parse(attrs.fileModel);
+            element.bind('change',function(){
+                scope.$apply(function(){
+                    model.assign(scope,element[0].files[0]);
+                    
+                });
+            });
+        }
+    };
 });
