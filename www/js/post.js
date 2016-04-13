@@ -1,23 +1,5 @@
 app.controller('imgSelectCtrl', function ($scope, mBaasService) {
-    $scope.$watch('file', function(file) {
-        if (!file) {
-            return;
-        }
-        upload();
-    });
-    
-        var upload = function() {
-            mBaasService.getNcmb();
-        var ncmbFile = new NCMB.File(Date.now() + $scope.file.name, $scope.file);
-        ncmbFile.save().then(function() {
-            // アップロード成功
-            alert('アップロードしました！');
-        }, function(error) {
-            // アップロード失敗
-            alert(error);
-        });
-    }
-$scope.showCamera = function () {
+    $scope.showCamera = function () {
         var options = {
             quality: 70,
             destinationType: Camera.DestinationType.DATA_URL,
@@ -28,14 +10,7 @@ $scope.showCamera = function () {
             cameraDirection: Camera.Direction.BACK
         }
 
-        var onSuccess = function (imageURI) {
-            console.log(imageURI);
-            myNavigator.pushPage('post.html', {
-                image: imageURI
-            });
-        }
-
-        getPicture(options, onSuccess);
+        getPicture(options);
     }
 
     $scope.showGallery = function () {
@@ -46,11 +21,16 @@ $scope.showCamera = function () {
             encodingType: Camera.EncodingType.JPEG
         }
 
-        var onSuccess = function (imageURI) {
+        getPicture(options);
+    }
 
+    // ギャラリーorカメラから画像を投稿フォームに表示する。
+    function getPicture(options) {
+
+        var onSuccess = function (imageURI) {
             var blob = toBlob(imageURI);
             var ncmb = mBaasService.getNcmb();
-            ncmb.File.upload('aa.jpg', blob).then(
+            ncmb.File.upload(Date.now() + '.jpg', blob).then(
                 function (data) {
                     console.log('できたー');
                     myNavigator.pushPage('post.html', {
@@ -60,13 +40,7 @@ $scope.showCamera = function () {
             ).catch(function (err) {
                 console.error(err);
             });
-
         }
-        getPicture(options, onSuccess);
-    }
-
-    // ギャラリーorカメラから画像を投稿フォームに表示する。
-    function getPicture(options, onSuccess) {
 
         var onFail = function () {
             console.error('画像の取得失敗');
@@ -90,12 +64,12 @@ $scope.showCamera = function () {
                 type: 'image/jpg'
             });
         } catch (e) {
-            window.BlobBuilder = window.BlobBuilder || 
-                                     window.WebKitBlobBuilder || 
-                                     window.MozBlobBuilder || 
-                                     window.MSBlobBuilder;
-            if(e.name == 'TypeError' && window.BlobBuilder){
-                var bb = new (window.BlobBuilder)();
+            window.BlobBuilder = window.BlobBuilder ||
+                window.WebKitBlobBuilder ||
+                window.MozBlobBuilder ||
+                window.MSBlobBuilder;
+            if (e.name == 'TypeError' && window.BlobBuilder) {
+                var bb = new(window.BlobBuilder)();
                 console.log(buffer[0]);
                 bb.append([buffer]);
                 blob = bb.getBlob("image/jpg");
@@ -111,19 +85,4 @@ $scope.showCamera = function () {
 app.controller('postCtrl', function ($scope) {
     var options = $scope.myNavigator.getCurrentPage().options;
     $scope.imageURI = options.image;
-});
-
-app.directive('fileModel',function($parse){
-    return{
-        restrict: 'A',
-        link: function(scope,element,attrs){
-            var model = $parse(attrs.fileModel);
-            element.bind('change',function(){
-                scope.$apply(function(){
-                    model.assign(scope,element[0].files[0]);
-                    
-                });
-            });
-        }
-    };
 });
