@@ -17,7 +17,7 @@
     </ons-page>
 </ons-template>
 <ons-template id="post.html">
-    <ons-page ng-controller="postCtrl">
+    <ons-page ng-controller="postCtrl" ng-init="init()">
         <ons-toolbar fixed-style class="with-back">
             <div class="left">
                 <ons-back-button modifier="back">戻る</ons-back-button>
@@ -28,7 +28,8 @@
         </ons-toolbar>
         <main>
            <form id="post_form" action="">
-                <img class="img-resize" ng-src="{{imageURI}}" alt="">
+               <img id="upload_img" ng-src="{{imageURI}}">
+               <ons-button ng-click="upload()">Upload</ons-button>
            </form>
         </main>
         <link rel="stylesheet" href="css/post.css">

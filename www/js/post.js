@@ -28,17 +28,20 @@ app.controller('imgSelectCtrl', function ($scope, mBaasService) {
     function getPicture(options) {
 
         var onSuccess = function (imageURI) {
-            var blob = toBlob(imageURI);
-            var ncmb = mBaasService.getNcmb();
-            ncmb.File.upload(Date.now() + '.jpg', blob).then(
-                function (data) {
-                    console.log('できたー');
-                    myNavigator.pushPage('post.html', {
-                        image: data.uri
-                    });
-                }
-            ).catch(function (err) {
-                console.error(err);
+            //            var blob = toBlob(imageURI);
+            //            var ncmb = mBaasService.getNcmb();
+            //            ncmb.File.upload(Date.now() + '.jpg', blob).then(
+            //                function (data) {
+            //                    console.log('できたー');
+            //                    myNavigator.pushPage('post.html', {
+            //                        image: data.uri
+            //                    });
+            //                }
+            //            ).catch(function (err) {
+            //                console.error(err);
+            //            });
+            myNavigator.pushPage('post.html', {
+                image: "data:image/jpeg;base64," + imageURI
             });
         }
 
@@ -51,38 +54,75 @@ app.controller('imgSelectCtrl', function ($scope, mBaasService) {
         }, onFail, options);
     }
 
-    function toBlob(base64) {
-        base64 = "data:image/jpeg;base64," + base64;
+});
+
+app.controller('postCtrl', function ($scope) {
+    // 画像縮小処理
+    $scope.init = function () {
+        var image = new Image();
+        image.onload = function(e) {
+            $scope.$apply(function() {
+                var imgWidth = image.naturalWidth;
+                var imgHeight = image.naturalHeight;
+                var rate = 0;
+                if (imgWidth >= imgHeight) {
+                    rate = 320 / imgWidth;
+                } else {
+                    rate = 320 / imgHeight;
+                }
+                var canvas = document.createElement('canvas');
+                var drawWidth = imgWidth * rate;
+                var drawHeight = imgHeight * rate;
+                canvas.width = drawWidth;
+                canvas.height = drawHeight;
+                var ctx = canvas.getContext('2d');
+                ctx.drawImage(image, 0, 0, imgWidth, imgHeight, 0, 0, drawWidth, drawHeight);
+                $scope.imageURI = canvas.toDataURL();
+            })
+        }
+        
+        var options = $scope.myNavigator.getCurrentPage().options;
+        image.src = options.image;
+    }
+
+    $scope.resize = function() {
+    }
+    $scope.upload = function () {
+        var img = document.getElementById('upload_img');
+        alert(img.width);
+    }
+});
+
+app.directive('imgOnload', ['$parse', function ($parse) {
+    return {
+      link: function(scope, element, attrs) {
+        element.bind("load" , function(e) {
+          var func = $parse(attrs.imgOnload);
+          func(scope);
+        });
+      }
+    }
+  }]);
+
+// base64形式の画像データをBlobオブジェクトに変換する。
+function toBlob(base64) {
+    base64 = "data:image/jpeg;base64," + base64;
+    var canvas = document.createElement('canvas');
+    if (canvas && canvas.getContext) {
+        canvas.width = image.width;
+        canvas.height = image.height;
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(image, 0, 0, image.width, image.height);
+        var base64 = canvas.toDataURL(imageType);
         var bin = atob(base64.replace(/^.*,/, ''));
         var buffer = new Uint8Array(bin.length);
         for (var i = 0; i < bin.length; i++) {
             buffer[i] = bin.charCodeAt(i);
         }
-        // Blobを作成
-        try {
-            var blob = new Blob([buffer], {
-                type: 'image/jpg'
-            });
-        } catch (e) {
-            window.BlobBuilder = window.BlobBuilder ||
-                window.WebKitBlobBuilder ||
-                window.MozBlobBuilder ||
-                window.MSBlobBuilder;
-            if (e.name == 'TypeError' && window.BlobBuilder) {
-                var bb = new(window.BlobBuilder)();
-                console.log(buffer[0]);
-                bb.append([buffer]);
-                blob = bb.getBlob("image/jpg");
-            } else {
-                console.error(err);
-                return false;
-            }
-        }
-        return blob;
-    }
-});
 
-app.controller('postCtrl', function ($scope) {
-    var options = $scope.myNavigator.getCurrentPage().options;
-    $scope.imageURI = options.image;
-});
+        return new Blob([buffer.buffer], {
+            type: 'image/jpg'
+        });
+    }
+    return null;
+}
