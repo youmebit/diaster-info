@@ -5,7 +5,7 @@ app.controller('imgSelectCtrl', function ($scope, mBaasService) {
             destinationType: Camera.DestinationType.DATA_URL,
             sourceType: Camera.PictureSourceType.CAMERA,
             saveToPhotoAlbum: true,
-            correntOrientation: true,
+            correntOrientation: false,
             encodingType: Camera.EncodingType.JPEG,
             cameraDirection: Camera.Direction.BACK
         }
@@ -70,14 +70,25 @@ app.controller('postCtrl', function ($scope) {
                 } else {
                     rate = 320 / imgHeight;
                 }
-                var canvas = document.createElement('canvas');
-                var drawWidth = imgWidth * rate;
-                var drawHeight = imgHeight * rate;
-                canvas.width = drawWidth;
-                canvas.height = drawHeight;
-                var ctx = canvas.getContext('2d');
-                ctx.drawImage(image, 0, 0, imgWidth, imgHeight, 0, 0, drawWidth, drawHeight);
-                $scope.imageURI = canvas.toDataURL();
+
+                EXIF.getData(image, function() {
+                    var canvas = document.createElement('canvas');
+                    var drawWidth = imgWidth * rate;
+                    var drawHeight = imgHeight * rate;
+                    canvas.width = drawWidth;
+                    canvas.height = drawHeight;
+                    var ctx = canvas.getContext('2d');
+                    var orientation = EXIF.getTag(image, "Orientation");
+                    console.log(orientation);
+                    if (orientation >= 5) {
+                        ctx.translate(drawWidth / 2, drawHeight / 2);
+                        ctx.rotate((90 * Math.PI) / 180);
+                        ctx.translate(-drawWidth / 2, -drawHeight / 2);
+                    }
+                    ctx.drawImage(image, 0, 0, imgWidth, imgHeight, 0, 0, drawWidth, drawHeight);
+                    $scope.imageURI = canvas.toDataURL();
+                });
+
             })
         }
         
@@ -105,14 +116,9 @@ app.directive('imgOnload', ['$parse', function ($parse) {
   }]);
 
 // base64形式の画像データをBlobオブジェクトに変換する。
-function toBlob(base64) {
-    base64 = "data:image/jpeg;base64," + base64;
-    var canvas = document.createElement('canvas');
+function toBlob(canvas) {
     if (canvas && canvas.getContext) {
-        canvas.width = image.width;
-        canvas.height = image.height;
-        var ctx = canvas.getContext('2d');
-        ctx.drawImage(image, 0, 0, image.width, image.height);
+        var imageType = 'image/jpg';
         var base64 = canvas.toDataURL(imageType);
         var bin = atob(base64.replace(/^.*,/, ''));
         var buffer = new Uint8Array(bin.length);
@@ -121,8 +127,24 @@ function toBlob(base64) {
         }
 
         return new Blob([buffer.buffer], {
-            type: 'image/jpg'
-        });
+            type: imageType});
     }
     return null;
+}
+
+function b64ToBlob(base64) {
+    var bin = atob(base64.replace(/^.*,/, ''));
+    var buffer = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) {
+        buffer[i] = bin.charCodeAt(i);
+    }
+    // Blobを作成
+    try{
+        var blob = new Blob([buffer.buffer], {
+            type: 'image/jpg'
+        });
+    }catch (e){
+        return false;
+    }
+    return blob;
 }
