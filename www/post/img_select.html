@@ -6,7 +6,7 @@
             画像選択
         </div>
         </ons-toolbar>
-        <main class="contents">
+        <main class="contents image_wrapper">
            <p class="info">
                アップロードする画像を選択してください。
            </p>
@@ -28,10 +28,26 @@
         </ons-toolbar>
         <main>
            <form id="post_form" action="">
-               <img id="upload_img" class="img-resize" ng-src="{{imageURI}}">
-               <ons-button ng-click="upload()">Upload</ons-button>
+              <div id="thumbnail">
+                   <img id="upload_img" class="img-resize" ng-src="{{imageURI}}">
+              </div>
+              <div class="contents">
+                   <dl>
+                       <dt class="map_marker">住所</dt>
+                       <dd></dd>
+                       <dt class="user">名前</dt>
+                       <dd><input type="text"></dd>
+                       <dt class="comment">コメント</dt>
+                       <dd><textarea name="" id="" cols="30" rows="10"></textarea></dd>
+                   </dl>
+                   <div class="position_center">
+                       <ons-button ng-click="upload()" modifier="orange post">登録する</ons-button>
+                   </div>
+              </div>
            </form>
         </main>
+        <link rel="stylesheet" href="css/page_back_color.css">
+        <link rel="stylesheet" href="css/form.css">
         <link rel="stylesheet" href="css/post.css">
     </ons-page>
 </ons-template>

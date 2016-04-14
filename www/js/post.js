@@ -46,7 +46,6 @@ app.controller('imgSelectCtrl', function ($scope, mBaasService) {
         }
 
         var onFail = function () {
-            console.error('画像の取得失敗');
         }
 
         navigator.camera.getPicture(function (imageURI) {
