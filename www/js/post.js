@@ -55,10 +55,10 @@ app.controller('imgSelectCtrl', function ($scope, mBaasService) {
 
 });
 
-app.controller('postCtrl', function ($scope) {
+app.controller('postCtrl', function ($scope, mBaasService) {
     // 画像縮小処理
     $scope.init = function () {
-        $scope.post = {};
+        $scope.piece = {};
         var image = new Image();
         image.onload = function (e) {
             $scope.$apply(function () {
@@ -79,7 +79,6 @@ app.controller('postCtrl', function ($scope) {
                     canvas.height = drawHeight;
                     var ctx = canvas.getContext('2d');
                     var orientation = EXIF.getTag(image, "Orientation");
-                    console.log(orientation);
                     var angles = {
                         '3': 180,
                         '6': 90,
@@ -89,33 +88,33 @@ app.controller('postCtrl', function ($scope) {
                     ctx.rotate((angles[orientation] * Math.PI) / 180);
                     ctx.translate(-drawWidth / 2, -drawHeight / 2);
                     ctx.drawImage(image, 0, 0, imgWidth, imgHeight, 0, 0, drawWidth, drawHeight);
-                    $scope.post.imageURI = canvas.toDataURL();
+                    $scope.piece.imageURI = canvas.toDataURL();
                 });
             })
         }
         var options = $scope.myNavigator.getCurrentPage().options;
         image.src = options.image;
         
-        $scope.post.address = '小林1丁目6-20';
+        $scope.piece.address = '小林1丁目6-20';
     }
 
-    $scope.post = function () {
-        alert($scope.post.name + ":" + $scope.post.comment);
-//        var blob = b64ToBlob($scope.imageURI);
-//        var ncmb = mBaasService.getNcmb();
-//        ncmb.File.upload(Date.now() + '.jpg', blob).then(
-//            function (data) {
-//                console.log('できたー');
-//                myNavigator.pushPage('post.html', {
-//                    image: data.uri
-//                });
-//            }
-//        ).catch(function (err) {
-//            console.error(err);
-//        });
+    $scope.post = function (piece) {
+        if(window.confirm('投稿してもよろしいですか？')) {
+            var blob = b64ToBlob(piece.imageURI);
+            var ncmb = mBaasService.getNcmb();
+            ncmb.File.upload(getFileName(), blob).then(
+                function (data) {
+                    myNavigator.pushPage('post_info.html');
+                }
+            ).catch(function (err) {
+                console.error(err);
+                alert('申し訳ありませんが、電波の届くところでもう一度投稿してください。');
+            });
+        }
     }
 });
 
+// ファイル名を取得する
 function getFileName() {
     var date = new Date();
     var y = date.getFullYear();
@@ -127,6 +126,7 @@ function getFileName() {
     return y + padZero(m) + padZero(d) + padZero(h) + padZero(mi) + padZero(s) + ".jpg";
 }
 
+// 数字を0埋めする。
 function padZero(value) {
     return ('0' + value).slice(-2);
 }

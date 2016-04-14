@@ -1,18 +1,20 @@
 <ons-navigator page="img_select.html" var="myNavigator"></ons-navigator>
 <ons-template id="img_select.html">
-   <ons-page ng-controller="imgSelectCtrl">
-       <ons-toolbar fixed-style>
-        <div class="center">
-            画像選択
-        </div>
+    <ons-page ng-controller="imgSelectCtrl">
+        <ons-toolbar fixed-style>
+            <div class="center">
+                画像選択
+            </div>
         </ons-toolbar>
         <main class="contents image_wrapper">
-           <p class="info">
-               アップロードする画像を選択してください。
-           </p>
-            <ons-button ng-click="showCamera()"><ons-icon icon="fa-camera"></ons-icon> カメラで撮影する</ons-button>
-            <ons-button ng-click="showGallery()"><ons-icon icon="fa-image"></ons-icon> ギャラリーから選ぶ</ons-button>
-         </main>
+            <p class="info">
+                アップロードする画像を選択してください。
+            </p>
+            <ons-button ng-click="showCamera()">
+                <ons-icon icon="fa-camera"></ons-icon> カメラで撮影する</ons-button>
+            <ons-button ng-click="showGallery()">
+                <ons-icon icon="fa-image"></ons-icon> ギャラリーから選ぶ</ons-button>
+        </main>
         <link rel="stylesheet" href="css/post.css">
     </ons-page>
 </ons-template>
@@ -27,27 +29,41 @@
             </div>
         </ons-toolbar>
         <main>
-           <form id="post_form" action="">
-              <div id="thumbnail">
-                   <img id="upload_img" class="img-resize" ng-src="{{post.imageURI}}">
-              </div>
-              <div class="contents">
-                   <dl>
-                       <dt class="map_marker">住所</dt>
-                       <dd><span ng-bind="post.address"></span></dd>
-                       <dt class="user">名前</dt>
-                       <dd><input type="text" ng-model="post.name" hide-tabbar></dd>
-                       <dt class="comment">コメント</dt>
-                       <dd><textarea name="" id="" cols="30" rows="10" ng-model="post.comment" hide-tabbar></textarea></dd>
-                   </dl>
-                   <div class="position_center">
-                       <ons-button ng-click="post()" modifier="orange post">登録する</ons-button>
-                   </div>
-              </div>
-           </form>
+            <div id="thumbnail">
+                <img id="upload_img" class="img-resize" ng-src="{{piece.imageURI}}">
+            </div>
+            <div class="contents">
+                <dl>
+                    <dt class="map_marker">住所</dt>
+                    <dd><span ng-bind="piece.address"></span></dd>
+                    <dt class="user">名前</dt>
+                    <dd>
+                        <input type="text" ng-model="piece.name" hide-tabbar>
+                    </dd>
+                    <dt class="comment">コメント</dt>
+                    <dd>
+                        <textarea name="" id="" cols="30" rows="10" ng-model="piece.comment" hide-tabbar></textarea>
+                    </dd>
+                </dl>
+                <div class="position_center">
+                    <ons-button ng-click="post(piece)" modifier="orange post">登録する</ons-button>
+                </div>
+            </div>
         </main>
         <link rel="stylesheet" href="css/page_back_color.css">
         <link rel="stylesheet" href="css/form.css">
         <link rel="stylesheet" href="css/post.css">
+    </ons-page>
+</ons-template>
+<ons-template id="post_info.html">
+    <ons-page>
+        <ons-toolbar fixed-style>
+            <div class="center">
+                画像選択
+            </div>
+        </ons-toolbar>
+        <main>
+            <h1>投稿が完了しました</h1>
+        </main>
     </ons-page>
 </ons-template>
