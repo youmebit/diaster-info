@@ -33,21 +33,25 @@
                 <img id="upload_img" class="img-resize" ng-src="{{piece.imageURI}}">
             </div>
             <div class="contents">
-                <dl>
-                    <dt class="map_marker">住所</dt>
-                    <dd><span ng-bind="piece.address"></span></dd>
-                    <dt class="user">名前</dt>
-                    <dd>
-                        <input type="text" ng-model="piece.name" hide-tabbar>
-                    </dd>
-                    <dt class="comment">コメント</dt>
-                    <dd>
-                        <textarea name="" id="" cols="30" rows="10" ng-model="piece.comment" hide-tabbar></textarea>
-                    </dd>
-                </dl>
-                <div class="position_center">
-                    <ons-button ng-click="post(piece)" modifier="orange post">登録する</ons-button>
-                </div>
+                <form name="postForm" novalidate>
+                    <dl>
+                        <dt class="map_marker">住所</dt>
+                        <dd><span ng-bind="piece.address"></span></dd>
+                        <dt class="user">名前</dt>
+                        <dd>
+                            <input type="text" name="name" ng-model="piece.name" required ng-maxlength="8" hide-tabbar>
+                            <span ng-show="postForm.name.$error.required">必ず入力してください</span>
+                            <span ng-show="postForm.name.$error.maxlength">8文字以下で入力してください</span>
+                        </dd>
+                        <dt class="comment">コメント</dt>
+                        <dd>
+                            <textarea name="piece.comment" cols="30" rows="10" ng-model="piece.comment" hide-tabbar></textarea>
+                        </dd>
+                    </dl>
+                    <div class="position_center">
+                        <ons-button ng-click="post(piece)" modifier="orange post">登録する</ons-button>
+                    </div>
+                </form>
             </div>
         </main>
         <link rel="stylesheet" href="css/page_back_color.css">

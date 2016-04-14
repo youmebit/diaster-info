@@ -139,8 +139,6 @@ app.controller('postCtrl', function ($scope, mBaasService) {
         ).catch(function (err) {
             onFail(err);
         });
-
-        
     }
 });
 
@@ -160,21 +158,6 @@ function getFileName() {
 function padZero(value) {
     return ('0' + value).slice(-2);
 }
-//function toBlob(canvas) {
-//    if (canvas && canvas.getContext) {
-//        var imageType = 'image/jpg';
-//        var base64 = canvas.toDataURL(imageType);
-//        var bin = atob(base64.replace(/^.*,/, ''));
-//        var buffer = new Uint8Array(bin.length);
-//        for (var i = 0; i < bin.length; i++) {
-//            buffer[i] = bin.charCodeAt(i);
-//        }
-//
-//        return new Blob([buffer.buffer], {
-//            type: imageType});
-//    }
-//    return null;
-//}
 
 // base64形式の画像データをBlobオブジェクトに変換する。
 function b64ToBlob(base64) {
