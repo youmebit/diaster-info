@@ -6,7 +6,8 @@ app.controller('bodyCtrl', function($scope, mBaasService, tabService) {
     // ログイン機能仮置き
 //    mBaasService.login('saltory72@gmail.com', 'password');
     tabService.setActiveTab(0);
-
+    $scope.settings.isHideTabbar = false;
+    
     // トップ画面初期化
     $scope.topInit = function() {
         $scope.user = {};
@@ -70,10 +71,28 @@ app.service('mBaasService', function ($rootScope) {
     }
 });
 
+// タブバーの番号を設定するとそのページに遷移する。
 app.service('tabService', function(){
     this.setActiveTab = function(index) {
         setImmediate(function() {
             tabbar.setActiveTab(index);
         });
+    }
+});
+
+app.directive('hideTabbar', function($timeout) {
+    return {
+        link : function(scope, element, attrs) {
+            element.bind('focus', function(e) {
+                $timeout(function(){
+                    scope.$apply(tabbar.setTabbarVisibility(false));
+                });
+            });
+            element.bind('blur', function(e) {
+                $timeout(function(){
+                    scope.$apply(tabbar.setTabbarVisibility(true));
+                });
+            });
+        }
     }
 });

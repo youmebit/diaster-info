@@ -29,19 +29,19 @@
         <main>
            <form id="post_form" action="">
               <div id="thumbnail">
-                   <img id="upload_img" class="img-resize" ng-src="{{imageURI}}">
+                   <img id="upload_img" class="img-resize" ng-src="{{post.imageURI}}">
               </div>
               <div class="contents">
                    <dl>
                        <dt class="map_marker">住所</dt>
-                       <dd></dd>
+                       <dd><span ng-bind="post.address"></span></dd>
                        <dt class="user">名前</dt>
-                       <dd><input type="text"></dd>
+                       <dd><input type="text" ng-model="post.name" hide-tabbar></dd>
                        <dt class="comment">コメント</dt>
-                       <dd><textarea name="" id="" cols="30" rows="10"></textarea></dd>
+                       <dd><textarea name="" id="" cols="30" rows="10" ng-model="post.comment" hide-tabbar></textarea></dd>
                    </dl>
                    <div class="position_center">
-                       <ons-button ng-click="upload()" modifier="orange post">登録する</ons-button>
+                       <ons-button ng-click="post()" modifier="orange post">登録する</ons-button>
                    </div>
               </div>
            </form>

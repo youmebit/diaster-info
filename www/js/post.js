@@ -58,6 +58,7 @@ app.controller('imgSelectCtrl', function ($scope, mBaasService) {
 app.controller('postCtrl', function ($scope) {
     // 画像縮小処理
     $scope.init = function () {
+        $scope.post = {};
         var image = new Image();
         image.onload = function (e) {
             $scope.$apply(function () {
@@ -88,17 +89,18 @@ app.controller('postCtrl', function ($scope) {
                     ctx.rotate((angles[orientation] * Math.PI) / 180);
                     ctx.translate(-drawWidth / 2, -drawHeight / 2);
                     ctx.drawImage(image, 0, 0, imgWidth, imgHeight, 0, 0, drawWidth, drawHeight);
-                    $scope.imageURI = canvas.toDataURL();
+                    $scope.post.imageURI = canvas.toDataURL();
                 });
-
             })
         }
         var options = $scope.myNavigator.getCurrentPage().options;
         image.src = options.image;
+        
+        $scope.post.address = '小林1丁目6-20';
     }
 
-    $scope.upload = function () {
-        alert(getFileName());
+    $scope.post = function () {
+        alert($scope.post.name + ":" + $scope.post.comment);
 //        var blob = b64ToBlob($scope.imageURI);
 //        var ncmb = mBaasService.getNcmb();
 //        ncmb.File.upload(Date.now() + '.jpg', blob).then(
