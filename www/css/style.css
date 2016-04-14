@@ -25,24 +25,30 @@
 }
 
 .navigation-bar {
+    height: 48px;
     border-bottom: 2px solid #4d4d4d;
 }
 
 .navigation-bar .center {
-    line-height: 1.1;
-    padding-top:10px;
-    width: 50%;
     font-size: 1.2em;
     font-family: 'Noto500';
+    display: table-cell;
+    vertical-align: middle;
 }
 
 .navigation-bar .left {
+    height: 100%;
+    width: 20%;
     background-color: #dbaf7d;
-    border-bottom: 2px solid #4d4d4d;
 }
 
-.navigation-bar .back {
-    display: block;
+.with-back > .center {
+    width: 60%;
+}
+
+.toolbar-button--back {
+    text-align: left;
+    font-family: 'Noto400';
 }
 
 h1 {
@@ -98,7 +104,7 @@ ons-list-item {
     box-shadow: 0px 3px 8px -1px #444;
     font-family: 'Noto500', sans-serif;
     text-align: center;
-    padding: 2% 0;
+    padding: 7px 0;    
 }
 
 .button--border {
@@ -207,10 +213,6 @@ div .list h2:before {
     padding-left: 10px;
 }
 
-.button--login {
-    padding: 7px 0;    
-}
-
 #login_navi {
     padding-bottom: 60px;
     width: 98%;
@@ -265,3 +267,22 @@ div .list h2:before {
     padding:10px 5px;
 }
 
+/*地図マーカー*/
+.map_marker:before {
+    content: '\f041';
+    font-family: 'FontAwesome';
+    padding-right: 5px;
+}
+
+/*ユーザー*/
+.user:before {
+    content: '\f007';
+    font-family: 'FontAwesome';
+    padding-right: 5px;
+}
+
+.comment:before {
+    content: '\f27b';
+    font-family: 'FontAwesome';
+    padding-right: 5px;
+}

@@ -1,15 +1,43 @@
-.contents .info {
-    font-size: 1.3em;
-    padding: 0 0 30px;
-    margin: 0;
-}
 .contents {
+    padding-top: 20px;
+}
+.contents .info {
+    padding: 0 0 15px 0;
+    margin: 0;
+    width: 100%;
+    font-size: 1.2em;
+    font-family: sans-serif;
+}
+.image_wrapper {
     position: absolute;
-    top:15%;
+    top:10%;
     left:5%;
 }
-.contents .button{
+.image_wrapper .button{
     width: 100%;
     margin-bottom: 30px;
-    padding:7px 0 0; 
+    padding-bottom: 0px;
+}
+
+/*画像サムネイル*/
+#thumbnail {
+    background-color: #333;
+    padding: 3px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.img-resize {
+    max-width: 280px;
+    max-height: 280px;
+    width: expression(this.width >= this.height ? "280px" : "auto");
+	height: expression(this.width <= this.height ? "280px" : "auto");
+    margin: 0 auto;
+    display: block;
+}
+
+.button--post {
+    width: 60%;
+    margin: 0 auto 70px;
 }
