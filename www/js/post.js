@@ -80,11 +80,10 @@ app.controller('postCtrl', function ($scope) {
                     var ctx = canvas.getContext('2d');
                     var orientation = EXIF.getTag(image, "Orientation");
                     console.log(orientation);
-                    if (orientation >= 5) {
-                        ctx.translate(drawWidth / 2, drawHeight / 2);
-                        ctx.rotate((90 * Math.PI) / 180);
-                        ctx.translate(-drawWidth / 2, -drawHeight / 2);
-                    }
+                    var angles = {'3':180, '6':90, '8': 270};
+                    ctx.translate(drawWidth / 2, drawHeight / 2);
+                    ctx.rotate((angles[orientation] * Math.PI) / 180);
+                    ctx.translate(-drawWidth / 2, -drawHeight / 2);
                     ctx.drawImage(image, 0, 0, imgWidth, imgHeight, 0, 0, drawWidth, drawHeight);
                     $scope.imageURI = canvas.toDataURL();
                 });
