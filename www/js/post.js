@@ -98,19 +98,49 @@ app.controller('postCtrl', function ($scope, mBaasService) {
         $scope.piece.address = '小林1丁目6-20';
     }
 
+//    ファイルアップロード→データストア登録の順で登録する。
     $scope.post = function (piece) {
-        if(window.confirm('投稿してもよろしいですか？')) {
-            var blob = b64ToBlob(piece.imageURI);
-            var ncmb = mBaasService.getNcmb();
-            ncmb.File.upload(getFileName(), blob).then(
-                function (data) {
-                    myNavigator.pushPage('post_info.html');
-                }
-            ).catch(function (err) {
-                console.error(err);
-                alert('申し訳ありませんが、電波の届くところでもう一度投稿してください。');
+        if(!window.confirm('投稿してもよろしいですか？')) {
+            return false;
+        }
+        var blob = b64ToBlob(piece.imageURI);
+        var ncmb = mBaasService.getNcmb();
+        var fileName = getFileName();
+        
+        // データストア登録成功
+        var saveSuccess = function() {
+            myNavigator.pushPage('post_info.html');
+        }
+
+        // ファイルアップロード成功
+        var uploadSuccess = function() {
+            var Posts = ncmb.DataStore("Posts");
+            var data = new Posts();
+            data.set("username", piece.name);
+            data.set("photo", fileName);
+            data.set("address", piece.address);
+            data.set("comment", piece.comment);
+            data.save().then(function(data) {
+                saveSuccess();
+            }).catch(function(err) {
+                onFail(err);
             });
         }
+                     
+        var onFail = function(err) {
+            console.error(err);
+            alert('申し訳ありませんが、電波の届くところでもう一度投稿してください。');
+        }
+            
+        ncmb.File.upload(fileName, blob).then(
+            function (data) {
+                uploadSuccess();
+            }
+        ).catch(function (err) {
+            onFail(err);
+        });
+
+        
     }
 });
 
