@@ -40,13 +40,15 @@
                         <dt class="user">名前</dt>
                         <dd>
                             <input type="text" name="name" ng-model="piece.name" required ng-maxlength="8" hide-tabbar>
-                            <span ng-show="postForm.name.$error.required">必ず入力してください</span>
-                            <span ng-show="postForm.name.$error.maxlength">8文字以下で入力してください</span>
+                            <div class="error">
+                                <span ng-show="postForm.name.$error.required">必ず入力してください</span>
+                                <span ng-show="postForm.name.$error.maxlength">8文字以下で入力してください</span>
+                            </div>
                         </dd>
                         <dt class="comment">コメント</dt>
                         <dd>
                             <textarea name="comment" cols="30" rows="10" ng-model="piece.comment" hide-tabbar required ng-maxlength="100"></textarea>
-                            <div>
+                            <div class="error">
                                 <span ng-show="postForm.comment.$error.required">必ず入力してください</span>
                                 <span ng-show="postForm.comment.$error.maxlength">100文字以下で入力してください</span>
                             </div>

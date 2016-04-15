@@ -281,8 +281,14 @@ div .list h2:before {
     padding-right: 5px;
 }
 
+/*コメント*/
 .comment:before {
     content: '\f27b';
     font-family: 'FontAwesome';
     padding-right: 5px;
+}
+
+div .error {
+    font-size: 0.8em;
+    color: #ea553a;
 }
