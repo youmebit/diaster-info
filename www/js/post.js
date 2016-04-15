@@ -28,25 +28,12 @@ app.controller('imgSelectCtrl', function ($scope, mBaasService) {
     function getPicture(options) {
 
         var onSuccess = function (imageURI) {
-            //            var blob = toBlob(imageURI);
-            //            var ncmb = mBaasService.getNcmb();
-            //            ncmb.File.upload(Date.now() + '.jpg', blob).then(
-            //                function (data) {
-            //                    console.log('できたー');
-            //                    myNavigator.pushPage('post.html', {
-            //                        image: data.uri
-            //                    });
-            //                }
-            //            ).catch(function (err) {
-            //                console.error(err);
-            //            });
             myNavigator.pushPage('post.html', {
                 image: "data:image/jpeg;base64," + imageURI
             });
         }
 
-        var onFail = function () {
-        }
+        var onFail = function () {}
 
         navigator.camera.getPicture(function (imageURI) {
             onSuccess(imageURI);
@@ -94,44 +81,63 @@ app.controller('postCtrl', function ($scope, mBaasService) {
         }
         var options = $scope.myNavigator.getCurrentPage().options;
         image.src = options.image;
-        
-        $scope.piece.address = '小林1丁目6-20';
+
+        var geoOptions = {
+            maximumAge: 3000,
+            timeout: 4000,
+            enableHighAccuracy: true
+        };
+        navigator.geolocatioon.getCurrentPosition(
+            function (position) {
+                $scope.piece.address = position.coords.latitude + ":" + position.coords.longitude;
+            },
+            function (error) {
+                var errorMessage = {
+                    0: "原因不明のエラーが発生しました。",
+                    1: "位置情報の取得が許可されませんでした。",
+                    2: "電波状況などで位置情報が取得できませんでした。",
+                    3: "位置情報の取得に時間がかかり過ぎてタイムアウトしました。",
+                };
+
+                // エラーコードに合わせたエラー内容をアラート表示
+                alert(errorMessage[error.code]);
+            }, geoOptions);
     }
 
-//    ファイルアップロード→データストア登録の順で登録する。
+    //    ファイルアップロード→データストア登録の順で登録する。
     $scope.post = function (piece) {
-        if(!window.confirm('投稿してもよろしいですか？')) {
+        if (!window.confirm('投稿してもよろしいですか？')) {
             return false;
         }
         var blob = b64ToBlob(piece.imageURI);
         var ncmb = mBaasService.getNcmb();
         var fileName = getFileName();
-        
+
         // データストア登録成功
-        var saveSuccess = function() {
+        var saveSuccess = function () {
             myNavigator.pushPage('post_info.html');
         }
 
         // ファイルアップロード成功
-        var uploadSuccess = function() {
+        var uploadSuccess = function () {
             var Posts = ncmb.DataStore("Posts");
             var data = new Posts();
             data.set("username", piece.name);
             data.set("photo", fileName);
             data.set("address", piece.address);
             data.set("comment", piece.comment);
-            data.save().then(function(data) {
+            data.save().then(function (data) {
                 saveSuccess();
-            }).catch(function(err) {
+            }).catch(function (err) {
                 onFail(err);
             });
         }
-                     
-        var onFail = function(err) {
+
+        var onFail = function (err) {
             console.error(err);
             alert('申し訳ありませんが、電波の届くところでもう一度投稿してください。');
         }
-            
+
         ncmb.File.upload(fileName, blob).then(
             function (data) {
                 uploadSuccess();
