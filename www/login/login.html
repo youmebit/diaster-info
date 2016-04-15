@@ -1,54 +1,56 @@
-<ons-toolbar fixed-style>
-    <div class="center">
-        ログイン画面
-    </div>
-</ons-toolbar>
-    
-<h1 class="top_icon">
+<ons-navigator var="myNavigator" page="login.html"></ons-navigator>
+<ons-template id="login.html">
+    <ons-page>
+        <ons-toolbar fixed-style>
+            <div class="center">
+                ログイン画面
+            </div>
+        </ons-toolbar>
+
+        <h1 class="top_icon">
     <ons-icon icon="fa-sign-in" class="top"></ons-icon><br>
     ログイン
 </h1>
-    
-<div class="form_contents">
-    <form class="contents">
-        <dl>
-            <dt>
+
+        <div class="form_contents">
+            <form class="contents">
+                <dl>
+                    <dt>
                 <ons-icon icon="fa-envelope-o" size="1em"></ons-icon>
                 メールアドレス
             </dt>
-            <dd>
-                <input type="email" name="email"/>   
-        	</dd>
-            
-            <dt>
+                    <dd>
+                        <input type="email" name="email" />
+                    </dd>
+
+                    <dt>
                 <ons-icon icon="fa-key" rotate="90" size="1em"></ons-icon>
                 パスワード
             </dt>
-            <dd>
-                <input type="password" name="password"/>
-            </dd>
-            
-            <dt class="pass_change">
-                <a href="pwd/mail.html">
+                    <dd>
+                        <input type="password" name="password" />
+                    </dd>
+
+                    <dt class="pass_change">
+                <a ng-click="myNavigator.pushPage('reset/mail.html')" href="#">
                     パスワードを忘れた方はこちら
                     <ons-icon icon="fa-chevron-right" size="1em"></ons-icon>    
                 </a>
             </dt>
-        </dl>
-        
-        <div class="position_center">
-            <ons-button class="btn" style="margin-bottom: 20px;"
-                modifier="orange"
-                ng-click="">
-                ログイン
-            </ons-button>
-            <ons-button class="btn"
-                ng-click="myNavigator.pushPage('user/user_regist.html')">
-                会員登録
-            </ons-button>
-        </div>
-    </form>
-</div>
+                </dl>
 
-<link rel="stylesheet" href="css/form.css">
-<link rel="stylesheet" href="css/page_back_color.css">
+                <div class="position_center">
+                    <ons-button class="btn" style="margin-bottom: 20px;" modifier="orange" ng-click="">
+                        ログイン
+                    </ons-button>
+                    <ons-button class="btn" ng-click="myNavigator.pushPage('user/user_regist.html')">
+                        会員登録
+                    </ons-button>
+                </div>
+            </form>
+        </div>
+
+        <link rel="stylesheet" href="css/form.css">
+        <link rel="stylesheet" href="css/page_back_color.css">
+    </ons-page>
+</ons-template>
