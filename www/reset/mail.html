@@ -1,0 +1,40 @@
+<ons-toolbar fixed-style>
+    <div class="center">
+        パスワード変更
+    </div>
+</ons-toolbar>
+
+    <div class="top_icon">
+        <span class="fa-stack" style="font-size: 40px;">
+            <i class="fa fa-circle-thin fa-stack-2x"></i>
+            <i class="fa fa-key fa-stack-1x fa-rotate-90"></i>
+        </span><br>
+        パスワード変更
+    </div>
+    
+    <p style="margin-top: -5px;">
+        登録したメールアドレス宛に確認メールを送信します。
+        メール内のURLからパスワードを再設定してください。
+    </p>
+    
+    <form class="contents">
+        <dl>
+            <dt>
+                <ons-icon icon="fa-envelope-o" size="1em"></ons-icon>
+                メールアドレス
+            </dt>
+            <dd>
+                <input type="email" name="email"/>
+            </dd>
+        </dl>
+        
+        <div class="position_center">
+            <ons-button style="margin-top: 20px;"
+                class="btn"
+                onclick="">
+                メールを送信する
+            </ons-button>
+        </div>
+    </form>
+    
+    <link rel="stylesheet" href="css/form.css">
