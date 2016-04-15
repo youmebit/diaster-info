@@ -75,7 +75,7 @@ app.service('mBaasService', function ($rootScope) {
     }
 });
 
-// タブバーの番号を設定するとそのページに遷移する。
+// タブバーの番号を設定するとそのページに遷移するサービス
 app.service('tabService', function(){
     this.setActiveTab = function(index) {
         setImmediate(function() {
@@ -84,6 +84,73 @@ app.service('tabService', function(){
     }
 });
 
+app.service('geoService', function() {
+    this.loadAddress = function(latitude, longitude, onSuccess) {
+        var geocoder = new google.maps.Geocoder();
+        // 入力された緯度経度取得
+        var latlng = new google.maps.LatLng(latitude, longitude);
+        geocoder.geocode({
+            'latLng': latlng
+        }, function (results, status) {
+
+            // ステータスがOK（成功）
+            if (status == google.maps.GeocoderStatus.OK) {
+                onSuccess(latitude, longitude, results[0].address_components);
+            } else {
+                console.log('位置情報取得ステータス:' + status);
+                alert("位置情報の取得に失敗しました。申し訳ありませんがもう一度送信してください。");
+            }
+        });
+    },
+    this.currentPosition = function(onSuccess) {
+                    // 住所を取得する
+        var geoOptions = {
+            maximumAge: 3000,
+            timeout: 4000,
+            enableHighAccuracy: true
+        };
+
+        // 現在位置を取得する。
+        navigator.geolocation.getCurrentPosition(function (position) {
+            var onGeoSuccess = function(latitude, longitude, components) {
+                var longAddress = "";
+                var isAppend = true;
+                angular.forEach(components, function (address) {
+                    if (address.long_name.indexOf('市') != -1) {
+                        isAppend = false;
+                    }
+                    if (isAppend) {
+                        longAddress = address.long_name + longAddress;
+                    }
+                });
+
+                myNavigator.pushPage('post.html', {
+                    image: "data:image/jpeg;base64," + imageURI,
+                    address: longAddress,
+                    latitude: latitude,
+                    longitude: longitude
+                });
+            }
+
+            // 住所を取得する。
+            geoService.loadAddress(position.coords.latitude, position.coords.longitude, onGeoSuccess);
+            },
+            function (error) {
+                var errorMessage = {
+                    0: "原因不明のエラーが発生しました。",
+                    1: "位置情報の取得が許可されませんでした。",
+                    2: "電波状況などで位置情報が取得できませんでした。",
+                    3: "位置情報の取得に時間がかかり過ぎてタイムアウトしました。",
+                };
+
+                // エラーコードに合わせたエラー内容をアラート表示
+                alert(errorMessage[error.code]);
+            }, geoOptions);
+    }
+});
+
+
+// htmlタグに'hide-tabbar'をつけるとタップした時にタブバーを非表示にする。
 app.directive('hideTabbar', function($timeout) {
     return {
         link : function(scope, element, attrs) {

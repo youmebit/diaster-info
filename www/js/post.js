@@ -1,4 +1,4 @@
-app.controller('imgSelectCtrl', function ($scope, mBaasService) {
+app.controller('imgSelectCtrl', function ($scope, mBaasService, geoService) {
     $scope.showCamera = function () {
         var options = {
             quality: 70,
@@ -35,37 +35,28 @@ app.controller('imgSelectCtrl', function ($scope, mBaasService) {
                 enableHighAccuracy: true
             };
 
-            navigator.geolocation.getCurrentPosition(
-                function (position) {
-                    var geocoder = new google.maps.Geocoder();
-                    // 入力された緯度経度取得
-                    latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-                    geocoder.geocode({
-                        'latLng': latlng
-                    }, function (results, status) {
-
-                        // ステータスがOK（成功）
-                        if (status == google.maps.GeocoderStatus.OK) {
-                            // 住所の取り方その２（範囲チェック用の文字列に使ってください）
-                            var longAddress = "";
-                            var isAppend = true;
-                            angular.forEach(results[0].address_components, function(address){
-                                if (address.long_name.indexOf('市') != -1) {
-                                    isAppend = false;
-                                }
-                                if (isAppend) {
-                                    longAddress = address.long_name + longAddress;
-                                }
-                            });
-
-                            myNavigator.pushPage('post.html', {
-                                image: "data:image/jpeg;base64," + imageURI, address:longAddress
-                            , latitude:position.coords.latitude, longitude:position.coords.longitude});
-                        } else {
-                            console.log('位置情報取得ステータス:' + status);
-                            alert("位置情報の取得に失敗しました。申し訳ありませんがもう一度送信してください。");
+            navigator.geolocation.getCurrentPosition(function (position) {
+                var onGeoSuccess = function(latitude, longitude, components) {
+                    var longAddress = "";
+                    var isAppend = true;
+                    angular.forEach(components, function (address) {
+                        if (address.long_name.indexOf('市') != -1) {
+                            isAppend = false;
+                        }
+                        if (isAppend) {
+                            longAddress = address.long_name + longAddress;
                         }
                     });
+
+                    myNavigator.pushPage('post.html', {
+                        image: "data:image/jpeg;base64," + imageURI,
+                        address: longAddress,
+                        latitude: latitude,
+                        longitude: longitude
+                    });
+                }
+                
+                geoService.loadAddress(position.coords.latitude, position.coords.longitude, onGeoSuccess);
                 },
                 function (error) {
                     var errorMessage = {
