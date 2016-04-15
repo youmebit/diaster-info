@@ -55,7 +55,7 @@
                         </dd>
                     </dl>
                     <div class="position_center">
-                        <ons-button ng-click="post(piece)" modifier="orange post">登録する</ons-button>
+                        <ons-button ng-click="post(piece)" modifier="orange post" ng-disabled="postForm.$invalid">登録する</ons-button>
                     </div>
                 </form>
             </div>
