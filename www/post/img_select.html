@@ -7,6 +7,7 @@
             </div>
         </ons-toolbar>
         <main class="contents image_wrapper">
+           <div>
             <p class="info">
                 アップロードする画像を選択してください。
             </p>
@@ -14,6 +15,13 @@
                 <ons-icon icon="fa-camera"></ons-icon> カメラで撮影する</ons-button>
             <ons-button ng-click="showGallery()">
                 <ons-icon icon="fa-image"></ons-icon> ギャラリーから選ぶ</ons-button>
+           </div>
+                       <ons-modal var="modal">
+                <ons-icon icon="ion-load-c" spin="true"></ons-icon>
+                <br>
+                <br>Please wait.
+                <br>Closing in 2 seconds.
+            </ons-modal>
         </main>
         <link rel="stylesheet" href="css/post.css">
     </ons-page>

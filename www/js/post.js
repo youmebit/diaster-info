@@ -1,4 +1,4 @@
-app.controller('imgSelectCtrl', function ($scope, mBaasService, geoService) {
+app.controller('imgSelectCtrl', function ($scope, mBaasService, geoService, $timeout) {
     $scope.showCamera = function () {
         var options = {
             quality: 70,
@@ -26,8 +26,9 @@ app.controller('imgSelectCtrl', function ($scope, mBaasService, geoService) {
 
     // ギャラリーorカメラから画像を投稿フォームに表示する。
     function getPicture(options) {
-
         var onSuccess = function (imageURI) {
+            // 読み込み中の画面表示
+            modal.show();
             // 住所を取得する
             var geoOptions = {
                 maximumAge: 3000,
@@ -114,6 +115,7 @@ app.controller('postCtrl', function ($scope, mBaasService) {
                     ctx.translate(-drawWidth / 2, -drawHeight / 2);
                     ctx.drawImage(image, 0, 0, imgWidth, imgHeight, 0, 0, drawWidth, drawHeight);
                     $scope.piece.imageURI = canvas.toDataURL();
+                    modal.hide();
                 });
             })
         }
@@ -122,7 +124,6 @@ app.controller('postCtrl', function ($scope, mBaasService) {
         $scope.piece.latitude = options.latitude;
         $scope.piece.longitude = options.longitude;
         image.src = options.image;
-
     }
 
     // ファイルアップロード→データストア登録の順で登録する。
