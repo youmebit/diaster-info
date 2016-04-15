@@ -19,8 +19,7 @@
                        <ons-modal var="modal">
                 <ons-icon icon="ion-load-c" spin="true"></ons-icon>
                 <br>
-                <br>Please wait.
-                <br>Closing in 2 seconds.
+                <br>読み込み中
             </ons-modal>
         </main>
         <link rel="stylesheet" href="css/post.css">
@@ -77,11 +76,19 @@
     <ons-page>
         <ons-toolbar fixed-style>
             <div class="center">
-                画像選択
+                投稿完了
             </div>
         </ons-toolbar>
-        <main>
-            <h1>投稿が完了しました</h1>
-        </main>
+        <h1 class="top_icon">
+            <ons-icon icon="fa-smile-o" size="2em"></ons-icon><br>
+            投稿が完了しました
+        </h1>
+        <div class="contents position_center">
+            <ons-button ng-click="toPostPage()" class="btn" modifier="orange" style="margin-bottom: 25px;">
+                続けて投稿する</ons-button>
+            <ons-button class="btn" ng-click="">
+                ギャラリーから選ぶ</ons-button>
+        </div>
+        <link rel="stylesheet" href="css/post.css">
     </ons-page>
 </ons-template>

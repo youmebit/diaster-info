@@ -3,8 +3,6 @@
 var app = angular.module('myApp', ['onsen.directives']);
 app.controller('bodyCtrl', function($scope, mBaasService, tabService) {
     $scope.settings = {};
-    // ログイン機能仮置き
-//    mBaasService.login('saltory72@gmail.com', 'password');
     tabService.setActiveTab(0);
     $scope.settings.isHideTabbar = false;
     

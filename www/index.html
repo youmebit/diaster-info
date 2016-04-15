@@ -18,8 +18,9 @@
 </head>
 <body ng-controller="bodyCtrl">
     <div wc-overlay wc-overlay-delay="300" class="loading">
-      <span>Loading</span>
         <img src="img/rolling.svg" alt="loading...">
+           <br>
+        <span>読み込み中</span>
     </div>
     <ons-tabbar var="tabbar" ng-hide="{{settings.isHideTabbar}}">
         <ons-tabbar-item

@@ -267,6 +267,10 @@ div .list h2:before {
     padding:10px 5px;
 }
 
+.loading span {
+    display: block;
+    margin-top: 10px;
+}
 /*地図マーカー*/
 .map_marker:before {
     content: '\f041';
