@@ -60,7 +60,7 @@ app.controller('imgSelectCtrl', function ($scope, mBaasService) {
 
                             myNavigator.pushPage('post.html', {
                                 image: "data:image/jpeg;base64," + imageURI, address:longAddress
-                            });
+                            , latitude:position.coords.latitude, longitude:position.coords.longitude});
                         } else {
                             console.log('位置情報取得ステータス:' + status);
                             alert("位置情報の取得に失敗しました。申し訳ありませんがもう一度送信してください。");
@@ -128,11 +128,13 @@ app.controller('postCtrl', function ($scope, mBaasService) {
         }
         var options = $scope.myNavigator.getCurrentPage().options;
         $scope.piece.address = options.address;
+        $scope.piece.latitude = options.latitude;
+        $scope.piece.longitude = options.longitude;
         image.src = options.image;
 
     }
 
-    //    ファイルアップロード→データストア登録の順で登録する。
+    // ファイルアップロード→データストア登録の順で登録する。
     $scope.post = function (piece) {
         if (!window.confirm('投稿してもよろしいですか？')) {
             return false;
@@ -154,6 +156,8 @@ app.controller('postCtrl', function ($scope, mBaasService) {
             data.set("photo", fileName);
             data.set("address", piece.address);
             data.set("comment", piece.comment);
+            var geopoint = new ncmb.GeoPoint(piece.latitude, piece.longitude);
+            data.set("point", geopoint);
             data.save().then(function (data) {
                 saveSuccess();
             }).catch(function (err) {
