@@ -34,7 +34,11 @@ app.controller('bodyCtrl', function($scope, mBaasService, tabService) {
     }
     
     $scope.toPostPage = function() {
-        tabService.setActiveTab(1);
+        if (!navigator.geolocation) {
+            alert('位置情報が取得できないため、この機能は使用できません。');
+        } else {
+            tabService.setActiveTab(1);
+        }
     }
 });
 

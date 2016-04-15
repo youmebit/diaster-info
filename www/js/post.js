@@ -28,10 +28,57 @@ app.controller('imgSelectCtrl', function ($scope, mBaasService) {
     function getPicture(options) {
 
         var onSuccess = function (imageURI) {
-            myNavigator.pushPage('post.html', {
-                image: "data:image/jpeg;base64," + imageURI
-            });
-        }
+            // 住所を取得する
+            var geoOptions = {
+                maximumAge: 3000,
+                timeout: 4000,
+                enableHighAccuracy: true
+            };
+
+            navigator.geolocation.getCurrentPosition(
+                function (position) {
+                    var geocoder = new google.maps.Geocoder();
+                    // 入力された緯度経度取得
+                    latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+                    geocoder.geocode({
+                        'latLng': latlng
+                    }, function (results, status) {
+
+                        // ステータスがOK（成功）
+                        if (status == google.maps.GeocoderStatus.OK) {
+                            // 住所の取り方その２（範囲チェック用の文字列に使ってください）
+                            var longAddress = "";
+                            var isAppend = true;
+                            angular.forEach(results[0].address_components, function(address){
+                                if (address.long_name.indexOf('市') != -1) {
+                                    isAppend = false;
+                                }
+                                if (isAppend) {
+                                    longAddress = address.long_name + longAddress;
+                                }
+                            });
+
+                            myNavigator.pushPage('post.html', {
+                                image: "data:image/jpeg;base64," + imageURI, address:longAddress
+                            });
+                        } else {
+                            console.log('位置情報取得ステータス:' + status);
+                            alert("位置情報の取得に失敗しました。申し訳ありませんがもう一度送信してください。");
+                        }
+                    });
+                },
+                function (error) {
+                    var errorMessage = {
+                        0: "原因不明のエラーが発生しました。",
+                        1: "位置情報の取得が許可されませんでした。",
+                        2: "電波状況などで位置情報が取得できませんでした。",
+                        3: "位置情報の取得に時間がかかり過ぎてタイムアウトしました。",
+                    };
+
+                    // エラーコードに合わせたエラー内容をアラート表示
+                    alert(errorMessage[error.code]);
+                }, geoOptions);
+            }
 
         var onFail = function () {}
 
@@ -80,28 +127,9 @@ app.controller('postCtrl', function ($scope, mBaasService) {
             })
         }
         var options = $scope.myNavigator.getCurrentPage().options;
+        $scope.piece.address = options.address;
         image.src = options.image;
 
-        var geoOptions = {
-            maximumAge: 3000,
-            timeout: 4000,
-            enableHighAccuracy: true
-        };
-        navigator.geolocatioon.getCurrentPosition(
-            function (position) {
-                $scope.piece.address = position.coords.latitude + ":" + position.coords.longitude;
-            },
-            function (error) {
-                var errorMessage = {
-                    0: "原因不明のエラーが発生しました。",
-                    1: "位置情報の取得が許可されませんでした。",
-                    2: "電波状況などで位置情報が取得できませんでした。",
-                    3: "位置情報の取得に時間がかかり過ぎてタイムアウトしました。",
-                };
-
-                // エラーコードに合わせたエラー内容をアラート表示
-                alert(errorMessage[error.code]);
-            }, geoOptions);
     }
 
     //    ファイルアップロード→データストア登録の順で登録する。
