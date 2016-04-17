@@ -1,4 +1,26 @@
 app.controller('imgSelectCtrl', function ($scope, mBaasService, geoService, $timeout) {
+    $scope.$watch('file', function(file) {
+        if (!file) {
+            return;
+        }
+        preview(file);
+    });
+    
+    function preview(file) {
+        var reader = new FileReader();
+        reader.onload = function() {
+        EXIF.getData(file, function() {
+            console.log(EXIF.getTag(file, "Orientation"));
+        });
+
+        $scope.$apply(function() {
+                $scope.imageFileSrc = reader.result;
+            });
+        };
+        reader.readAsDataURL(file);
+        $scope.file_name = file.name;
+    }
+    
     $scope.showCamera = function () {
         var options = {
             quality: 70,
@@ -82,7 +104,7 @@ app.controller('imgSelectCtrl', function ($scope, mBaasService, geoService, $tim
 
 });
 
-app.controller('postCtrl', function ($scope, mBaasService) {
+app.controller('postCtrl', function ($scope, mBaasService, mobile) {
     // 画像縮小処理
     $scope.init = function () {
         $scope.piece = {};
@@ -105,17 +127,10 @@ app.controller('postCtrl', function ($scope, mBaasService) {
                     canvas.width = drawWidth;
                     canvas.height = drawHeight;
                     var ctx = canvas.getContext('2d');
-                    var orientation = EXIF.getTag(image, "Orientation");
-                    if (orientation) {
-                        var angles = {
-                            '3': 180,
-                            '6': 90,
-                            '8': 270
-                        };
-                        ctx.translate(drawWidth / 2, drawHeight / 2);
-                        ctx.rotate((angles[orientation] * Math.PI) / 180);
-                        ctx.translate(-drawWidth / 2, -drawHeight / 2);
-                    }
+                    var angle = mobile._getOrientation(image);
+                    ctx.translate(drawWidth / 2, drawHeight / 2);
+                    ctx.rotate((angle * Math.PI) / 180);
+                    ctx.translate(-drawWidth / 2, -drawHeight / 2);
                     ctx.drawImage(image, 0, 0, imgWidth, imgHeight, 0, 0, drawWidth, drawHeight);
                     $scope.piece.imageURI = canvas.toDataURL();
                     modal.hide();
@@ -173,6 +188,21 @@ app.controller('postCtrl', function ($scope, mBaasService) {
             onFail(err);
         });
     }
+});
+
+app.directive('fileModel',function($parse){
+    return{
+        restrict: 'A',
+        link: function(scope,element,attrs){
+            var model = $parse(attrs.fileModel);
+            element.bind('change',function(){
+                scope.$apply(function(){
+                    var file = element[0].files[0];
+                    model.assign(scope, file);
+                });
+            });
+        }
+    };
 });
 
 // ファイル名を取得する
