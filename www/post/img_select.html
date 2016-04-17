@@ -16,7 +16,14 @@
             <ons-button ng-click="showGallery()">
                 <ons-icon icon="fa-image"></ons-icon> ギャラリーから選ぶ</ons-button>
            </div>
-                       <ons-modal var="modal">
+            <div id="upload" class="button">
+            画像を選択する
+            <form action="">
+                <input type="file" id="image-file" name="image" file-model="file"/>
+            </form>
+            </div>
+             <img ng-if="imageFileSrc" ng-src="{{imageFileSrc}}" class="img-resize"/>
+            <ons-modal var="modal">
                 <ons-icon icon="ion-load-c" spin="true"></ons-icon>
                 <br>
                 <br>読み込み中

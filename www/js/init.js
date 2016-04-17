@@ -82,6 +82,7 @@ app.service('tabService', function(){
     }
 });
 
+// 位置情報から住所を取得するサービス
 app.service('geoService', function() {
     this.loadAddress = function(latitude, longitude, onSuccess) {
         var geocoder = new google.maps.Geocoder();
