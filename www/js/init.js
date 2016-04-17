@@ -45,8 +45,8 @@ app.service('mBaasService', function ($rootScope) {
     var ncmb = null;
     this.getNcmb = function () {
         if (!ncmb) {
-            var APP_KEY = '';
-            var CLIENT_KEY = '';
+            var APP_KEY = '536ea833c07c98ed2cf1b836739a9729ad7544fc3a9e282e875f99e93bd8eb47';
+            var CLIENT_KEY = 'c47f0f99bc98940357aeb142158515adbca19f165f49b579f1cce020a3135583';
             ncmb = new NCMB(APP_KEY, CLIENT_KEY);
         }
         return ncmb;
@@ -143,6 +143,7 @@ app.service('geoService', function() {
 
                 // エラーコードに合わせたエラー内容をアラート表示
                 alert(errorMessage[error.code]);
+                modal.hide();
             }, geoOptions);
     }
 });

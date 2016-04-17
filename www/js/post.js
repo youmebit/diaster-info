@@ -31,8 +31,8 @@ app.controller('imgSelectCtrl', function ($scope, mBaasService, geoService, $tim
             modal.show();
             // 住所を取得する
             var geoOptions = {
-                maximumAge: 3000,
-                timeout: 4000,
+                maximumAge: 5000,
+                timeout: 6000,
                 enableHighAccuracy: true
             };
 
@@ -69,6 +69,7 @@ app.controller('imgSelectCtrl', function ($scope, mBaasService, geoService, $tim
 
                     // エラーコードに合わせたエラー内容をアラート表示
                     alert(errorMessage[error.code]);
+                modal.hide();
                 }, geoOptions);
             }
 
@@ -105,14 +106,16 @@ app.controller('postCtrl', function ($scope, mBaasService) {
                     canvas.height = drawHeight;
                     var ctx = canvas.getContext('2d');
                     var orientation = EXIF.getTag(image, "Orientation");
-                    var angles = {
-                        '3': 180,
-                        '6': 90,
-                        '8': 270
-                    };
-                    ctx.translate(drawWidth / 2, drawHeight / 2);
-                    ctx.rotate((angles[orientation] * Math.PI) / 180);
-                    ctx.translate(-drawWidth / 2, -drawHeight / 2);
+                    if (orientation) {
+                        var angles = {
+                            '3': 180,
+                            '6': 90,
+                            '8': 270
+                        };
+                        ctx.translate(drawWidth / 2, drawHeight / 2);
+                        ctx.rotate((angles[orientation] * Math.PI) / 180);
+                        ctx.translate(-drawWidth / 2, -drawHeight / 2);
+                    }
                     ctx.drawImage(image, 0, 0, imgWidth, imgHeight, 0, 0, drawWidth, drawHeight);
                     $scope.piece.imageURI = canvas.toDataURL();
                     modal.hide();
