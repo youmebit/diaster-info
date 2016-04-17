@@ -267,6 +267,10 @@ div .list h2:before {
     padding:10px 5px;
 }
 
+.loading span {
+    display: block;
+    margin-top: 10px;
+}
 /*地図マーカー*/
 .map_marker:before {
     content: '\f041';
@@ -281,8 +285,14 @@ div .list h2:before {
     padding-right: 5px;
 }
 
+/*コメント*/
 .comment:before {
     content: '\f27b';
     font-family: 'FontAwesome';
     padding-right: 5px;
+}
+
+div .error {
+    font-size: 0.8em;
+    color: #ea553a;
 }
