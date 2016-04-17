@@ -5,7 +5,7 @@ app.controller('imgSelectCtrl', function ($scope, mBaasService, geoService, $tim
             destinationType: Camera.DestinationType.DATA_URL,
             sourceType: Camera.PictureSourceType.CAMERA,
             saveToPhotoAlbum: true,
-            correntOrientation: false,
+            correntOrientation: true,
             encodingType: Camera.EncodingType.JPEG,
             cameraDirection: Camera.Direction.BACK
         }
