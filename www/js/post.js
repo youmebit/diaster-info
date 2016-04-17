@@ -1,4 +1,14 @@
-app.controller('imgSelectCtrl', function ($scope, mBaasService, geoService, $timeout) {
+app.controller('imgSelectCtrl', function ($scope, mBaasService, geoService, $window) {
+    // カメラの向きを取得するイベント(端末の自動回転がOFFなら無効)
+    $scope.orientation = 1;
+//    angular.element($window).bind('orientationchange', function () {
+//        if ($window.innerWidth < $window.innerHeight) {
+//            $scope.orientation = 1;
+//        } else {
+//            $scope.orientation = 6;
+//        }
+//    });
+    
     $scope.$watch('file', function(file) {
         if (!file) {
             return;
@@ -8,17 +18,10 @@ app.controller('imgSelectCtrl', function ($scope, mBaasService, geoService, $tim
     
     function preview(file) {
         var reader = new FileReader();
-        reader.onload = function() {
-        EXIF.getData(file, function() {
-            console.log(EXIF.getTag(file, "Orientation"));
-        });
-
-        $scope.$apply(function() {
-                $scope.imageFileSrc = reader.result;
-            });
+        reader.onload = function(e) {
+            toInputPage(e.target.result);
         };
         reader.readAsDataURL(file);
-        $scope.file_name = file.name;
     }
     
     $scope.showCamera = function () {
@@ -27,12 +30,17 @@ app.controller('imgSelectCtrl', function ($scope, mBaasService, geoService, $tim
             destinationType: Camera.DestinationType.DATA_URL,
             sourceType: Camera.PictureSourceType.CAMERA,
             saveToPhotoAlbum: true,
-            correntOrientation: false,
+            correntOrientation: true,
             encodingType: Camera.EncodingType.JPEG,
             cameraDirection: Camera.Direction.BACK
         }
 
-        getPicture(options);
+        var onFail = function () {}
+
+        
+        navigator.camera.getPicture(function (imageURI) {
+            toInputPage("data:image/jpeg;base64," + imageURI);
+        }, onFail, options);
     }
 
     $scope.showGallery = function () {
@@ -42,72 +50,73 @@ app.controller('imgSelectCtrl', function ($scope, mBaasService, geoService, $tim
             sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
             encodingType: Camera.EncodingType.JPEG
         }
-
-        getPicture(options);
     }
+    
+    function toInputPage(imageURI) {
+        angular.element($window).unbind('orientationchange');
+        console.log($scope.orientation);
+        // 読み込み中の画面表示
+        modal.show();
+        // 住所を取得する
+        var geoOptions = {
+            maximumAge: 5000,
+            timeout: 6000,
+            enableHighAccuracy: true
+        };
 
-    // ギャラリーorカメラから画像を投稿フォームに表示する。
-    function getPicture(options) {
-        var onSuccess = function (imageURI) {
-            // 読み込み中の画面表示
-            modal.show();
-            // 住所を取得する
-            var geoOptions = {
-                maximumAge: 5000,
-                timeout: 6000,
-                enableHighAccuracy: true
-            };
+        navigator.geolocation.getCurrentPosition(function (position) {
+            var onGeoSuccess = function(latitude, longitude, components) {
+                var longAddress = "";
+                var isAppend = true;
+                angular.forEach(components, function (address) {
+                    if (address.long_name.indexOf('市') != -1) {
+                        isAppend = false;
+                    }
+                    if (isAppend) {
+                        longAddress = address.long_name + longAddress;
+                    }
+                });
 
-            navigator.geolocation.getCurrentPosition(function (position) {
-                var onGeoSuccess = function(latitude, longitude, components) {
-                    var longAddress = "";
-                    var isAppend = true;
-                    angular.forEach(components, function (address) {
-                        if (address.long_name.indexOf('市') != -1) {
-                            isAppend = false;
-                        }
-                        if (isAppend) {
-                            longAddress = address.long_name + longAddress;
-                        }
-                    });
-
-                    myNavigator.pushPage('post.html', {
-                        image: "data:image/jpeg;base64," + imageURI,
-                        address: longAddress,
-                        latitude: latitude,
-                        longitude: longitude
-                    });
-                }
-                
-                geoService.loadAddress(position.coords.latitude, position.coords.longitude, onGeoSuccess);
-                },
-                function (error) {
-                    var errorMessage = {
-                        0: "原因不明のエラーが発生しました。",
-                        1: "位置情報の取得が許可されませんでした。",
-                        2: "電波状況などで位置情報が取得できませんでした。",
-                        3: "位置情報の取得に時間がかかり過ぎてタイムアウトしました。",
-                    };
-
-                    // エラーコードに合わせたエラー内容をアラート表示
-                    alert(errorMessage[error.code]);
-                modal.hide();
-                }, geoOptions);
+                var blob = b64ToBlob(imageURI);
+                EXIF.getData(blob, function() {
+                    var o = EXIF.getTag(blob, "Orientation");
+                    if (o) {
+                        $scope.orientation = o;
+                    }
+                    console.log($scope.orientation);
+                myNavigator.pushPage('post.html', {
+                    image: imageURI,
+                    address: longAddress,
+                    latitude: latitude,
+                    longitude: longitude,
+                    orientation : $scope.orientation
+                });
+            });
             }
 
-        var onFail = function () {}
+            geoService.loadAddress(position.coords.latitude, position.coords.longitude, onGeoSuccess);
+            },
+            function (error) {
+                var errorMessage = {
+                    0: "原因不明のエラーが発生しました。",
+                    1: "位置情報の取得が許可されませんでした。",
+                    2: "電波状況などで位置情報が取得できませんでした。",
+                    3: "位置情報の取得に時間がかかり過ぎてタイムアウトしました。",
+                };
 
-        navigator.camera.getPicture(function (imageURI) {
-            onSuccess(imageURI);
-        }, onFail, options);
+                // エラーコードに合わせたエラー内容をアラート表示
+                alert(errorMessage[error.code]);
+            modal.hide();
+            }, geoOptions);
     }
-
 });
 
-app.controller('postCtrl', function ($scope, mBaasService, mobile) {
-    // 画像縮小処理
+app.controller('postCtrl', function ($scope, mBaasService) {
+
+// 画像縮小処理
     $scope.init = function () {
         $scope.piece = {};
+        var options = $scope.myNavigator.getCurrentPage().options;
         var image = new Image();
         image.onload = function (e) {
             $scope.$apply(function () {
@@ -120,27 +129,32 @@ app.controller('postCtrl', function ($scope, mBaasService, mobile) {
                     rate = 540 / imgHeight;
                 }
 
-                EXIF.getData(image, function () {
-                    var canvas = document.createElement('canvas');
-                    var drawWidth = imgWidth * rate;
-                    var drawHeight = imgHeight * rate;
-                    canvas.width = drawWidth;
-                    canvas.height = drawHeight;
-                    var ctx = canvas.getContext('2d');
-                    var angle = mobile._getOrientation(image);
-                    ctx.translate(drawWidth / 2, drawHeight / 2);
-                    ctx.rotate((angle * Math.PI) / 180);
-                    ctx.translate(-drawWidth / 2, -drawHeight / 2);
-                    ctx.drawImage(image, 0, 0, imgWidth, imgHeight, 0, 0, drawWidth, drawHeight);
-                    $scope.piece.imageURI = canvas.toDataURL();
-                    modal.hide();
-                });
+                var canvas = document.createElement('canvas');
+                var drawWidth = imgWidth * rate;
+                var drawHeight = imgHeight * rate;
+                canvas.width = drawWidth;
+                canvas.height = drawHeight;
+                var ctx = canvas.getContext('2d');
+                
+                var angles = {
+                    '1': 0,
+                    '3': 180,
+                    '6': 90,
+                    '8': 270
+                };
+                var orientation = options.orientation;
+                ctx.translate(drawWidth / 2, drawHeight / 2);
+                ctx.rotate((angles[orientation] * Math.PI) / 180);
+                ctx.translate(-drawWidth / 2, -drawHeight / 2);
+                ctx.drawImage(image, 0, 0, imgWidth, imgHeight, 0, 0, drawWidth, drawHeight);
+                $scope.piece.imageURI = canvas.toDataURL();
+                modal.hide();
             })
         }
-        var options = $scope.myNavigator.getCurrentPage().options;
         $scope.piece.address = options.address;
         $scope.piece.latitude = options.latitude;
         $scope.piece.longitude = options.longitude;
+        
         image.src = options.image;
     }
 
