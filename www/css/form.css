@@ -60,6 +60,12 @@
     padding-bottom: 15px;
     background-color: #ffffff;
 }
+
+.top_icon .top {
+    font-size: 4.3em;
+    padding: 15px 0 10px;
+}
+
 p {
     font-family: 'Noto500', sans-serif;
     width: 90%;
@@ -75,20 +81,28 @@ p {
     width: 100%;
     border-top: solid 1px #808080;
 }
+
+.contents {
+    padding-top: 15px;
+}
 form dt {
-    line-height: 1.5;
+   padding-bottom: 5px;
+}
+
+form dd {
+    padding-bottom: 10px;
 }
 .pad_bottom {
     padding-bottom: 20px;
 }
 input {
     width: 100%;
-    padding: 8px 0px;
+    padding: 8px 0px 8px 2px;
     border: solid 1px #808080;
     border-radius: 3px;
 }
 .pass_change {
-    padding: 10px 0px 35px;
+    padding: 0px 0px 20px;
 }
 .pass_change a {
     color: #36a284;
@@ -97,5 +111,5 @@ input {
     text-align: center;
 }
 .btn {
-    width: 50%;
+    width: 60%;
 }
