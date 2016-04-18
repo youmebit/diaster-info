@@ -46,10 +46,10 @@
                         <dd><span ng-bind="piece.address"></span></dd>
                         <dt class="user">名前</dt>
                         <dd>
-                            <input type="text" name="name" ng-model="piece.name" required ng-maxlength="8" hide-tabbar>
+                            <input type="text" name="name" ng-model="piece.name" required ng-maxlength="16" hide-tabbar>
                             <div class="error">
                                 <span ng-show="postForm.name.$error.required">必ず入力してください</span>
-                                <span ng-show="postForm.name.$error.maxlength">8文字以下で入力してください</span>
+                                <span ng-show="postForm.name.$error.maxlength">16文字以下で入力してください</span>
                             </div>
                         </dd>
                         <dt class="comment">コメント</dt>

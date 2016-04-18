@@ -1,6 +1,14 @@
 'use strict';
 
 var app = angular.module('myApp', ['onsen.directives']);
+
+//app.provider('auth', function(){
+//    this.$get = funtion() {
+//        return {
+//            
+//        }
+//    }
+//});
 app.controller('bodyCtrl', function($scope, mBaasService, tabService) {
     $scope.settings = {};
     tabService.setActiveTab(0);
@@ -67,7 +75,7 @@ app.service('mBaasService', function ($rootScope) {
             $rootScope.$broadcast('auto_login', data.userName);
         })
         .catch(function(err){
-            alert('失敗..');
+            alert('ログインに失敗しました。');
             console.log(err);
         });
     }
@@ -100,7 +108,7 @@ app.service('geoService', function() {
                 alert("位置情報の取得に失敗しました。申し訳ありませんがもう一度送信してください。");
             }
         });
-    },
+    }
     this.currentPosition = function(onSuccess) {
                     // 住所を取得する
         var geoOptions = {
@@ -167,3 +175,24 @@ app.directive('hideTabbar', function($timeout) {
         }
     }
 });
+
+var compareTo = function() {
+    return {
+        require: "ngModel",
+        scope: {
+            otherModelValue: "=compareTo"
+        },
+        link: function(scope, element, attributes, ngModel) {
+             
+            ngModel.$validators.compareTo = function(modelValue) {
+                return modelValue == scope.otherModelValue;
+            };
+ 
+            scope.$watch("otherModelValue", function() {
+                ngModel.$validate();
+            });
+        }
+    };
+};
+ 
+app.directive("compareTo", compareTo);

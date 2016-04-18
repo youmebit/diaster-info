@@ -1,54 +1,70 @@
-<ons-toolbar fixed-style>
-    <div class="center">
-        会員登録
-    </div>
-</ons-toolbar>
-
-<p>
-    会員の登録を行います。<br>
-    <span class="under">全ての項目を入力してください。</span>
-</p>
-    
-<div class="form_contents">
-    <form class="contents">
-        <dl>
-            <dt>
+<ons-page>
+    <ons-toolbar fixed-style>
+        <div class="center">
+            会員登録
+        </div>
+    </ons-toolbar>
+    <div class="form_contents" ng-controller="userCtrl">
+        <form class="contents" name="signUpForm" novalidate>
+            <dl>
+                <dt>
                 <ons-icon icon="fa-user"></ons-icon>
                 名前
             </dt>
-            <dd class="pad_bottom">
-                <input type="text" name="name" style="width: 50%;"/>
-            </dd>
-        
-            <dt>
+                <dd class="pad_bottom">
+                    <input type="text" name="username" style="width: 50%;" required ng-maxlength="16" ng-model="signup.username"/>
+                    <div class="error">
+                        <span ng-show="signUpForm.username.$error.required">必ず入力してください</span>
+                        <span ng-show="signUpForm.username.$error.maxlength">16文字以下で入力してください</span>
+                    </div>
+                </dd>
+
+                <dt>
                 <ons-icon icon="fa-envelope-o"></ons-icon>
                 メールアドレス
             </dt>
-            <dd class="pad_bottom">
-                <input type="email" name="email"/>
-            </dd>
-        
-            <dt>
+                <dd class="pad_bottom">
+                    <input type="email" name="email" ng-model="signup.email" required ng-maxlength="256"/>
+                    <div class="error">
+                        <span ng-show="signUpForm.email.$error.required">必ず入力してください</span>
+                        <span ng-show="signUpForm.email.$error.maxlength">256文字以下で入力してください</span>
+                        <span ng-show="signUpForm.email.$error.email">メールアドレスではありません</span>
+                    </div>
+                </dd>
+
+                <dt>
                 <ons-icon icon="fa-key" rotate="90"></ons-icon>
                 パスワード
             </dt>
-            <dd class="pad_bottom">
-                <input type="password" name="password"/>
-            </dd>
-        
-            <dt>確認のため同じパスワードを入力してください。</dt>
-            <dd class="pad_bottom"><input type="password" name="password-02"/></dd>
-        </dl>
-        
-        <div class="position_center">
-            <ons-button style="margin-top: 15px;"
-                modifier="orange"
-                class="btn"
-                ng-click="">
-                登録する
-            </ons-button>
-        </div>
-    </form>
+                <dd class="pad_bottom">
+                    <input type="password" name="password" ng-model="signup.password" required ng-maxlength="16" ng-minlength="6"/>
+                    <div class="error">
+                        <span ng-show="signUpForm.password.$error.required">必ず入力してください</span>
+                        <span ng-show="signUpForm.password.$error.maxlength">16文字以下で入力してください</span>
+                        <span ng-show="signUpForm.password.$error.minlength">6文字以上で入力してください</span>
+                    </div>
+                </dd>
+
+                <dt><ons-icon icon="fa-key" rotate="90"></ons-icon>
+パスワード(確認)</dt>
+                <dd class="pad_bottom">
+                    <input type="password" name="confirm" ng-model="signup.confirm" required ng-maxlength="16" ng-minlength="6" compare-to="signup.password"/>
+                    <div class="error">
+                        <span ng-show="signUpForm.confirm.$error.required">必ず入力してください</span>
+                        <span ng-show="signUpForm.confirm.$error.maxlength">16文字以下で入力してください</span>
+                        <span ng-show="signUpForm.confirm.$error.minlength">6文字以上で入力してください</span>
+                        <div ng-show="signUpForm.confirm.$error.compareTo" ng-if="signUpForm.confirm.$dirty">パスワードが一致しません</div>
+                    </div>
+                </dd>
+            </dl>
+
+            <div class="position_center">
+                <ons-button style="margin-top: 15px;" modifier="orange" class="btn" ng-click="">
+                    登録する
+                </ons-button>
+            </div>
+        </form>
     </div>
-    
+
     <link rel="stylesheet" href="css/form.css">
+</ons-page>
