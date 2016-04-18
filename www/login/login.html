@@ -1,6 +1,6 @@
 <ons-navigator var="myNavigator" page="login.html"></ons-navigator>
 <ons-template id="login.html">
-    <ons-page>
+    <ons-page ng-controller="loginCtrl">
         <ons-toolbar fixed-style>
             <div class="center">
                 ログイン画面
@@ -12,7 +12,7 @@
     ログイン
 </h1>
 
-        <div class="form_contents">
+        <div class="form_contents" name="loginForm" novalidate>
             <form class="contents">
                 <dl>
                     <dt>
@@ -20,7 +20,7 @@
                 メールアドレス
             </dt>
                     <dd>
-                        <input type="email" name="email" />
+                        <input type="email" name="email" ng-model="login.email"/>
                     </dd>
 
                     <dt>
@@ -28,7 +28,7 @@
                 パスワード
             </dt>
                     <dd>
-                        <input type="password" name="password" />
+                        <input type="password" name="password" ng-model="login.password"/>
                     </dd>
 
                 </dl>
@@ -41,7 +41,7 @@
             </div>
 
                 <div class="position_center">
-                    <ons-button class="btn" style="margin-bottom: 20px;" modifier="orange" ng-click="">
+                    <ons-button class="btn" style="margin-bottom: 20px;" modifier="orange" ng-click="signIn()">
                         ログイン
                     </ons-button>
                     <ons-button class="btn" ng-click="myNavigator.pushPage('user/user_regist.html')">
