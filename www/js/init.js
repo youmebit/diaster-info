@@ -1,16 +1,22 @@
 'use strict';
 
-var app = angular.module('myApp', ['onsen.directives']);
+var app = angular.module('myApp', ['onsen.directives', 'ngMessages']);
 
 //app.provider('auth', function(){
 //    this.$get = funtion() {
 //        return {
-//            
+//
 //        }
 //    }
 //});
 app.controller('bodyCtrl', function($scope, mBaasService, tabService) {
     $scope.settings = {};
+    $scope.errors = [
+      { key: 'required', msg: '必ず入力してください' },
+      { key: 'email', msg: 'メールアドレスではありません' },
+        {key: 'compareTo', msg: 'パスワードが一致しません'},
+        {key: 'halfSize', msg:'パスワード形式ではありません'}
+    ];
     tabService.setActiveTab(0);
     $scope.settings.isHideTabbar = false;
     
@@ -176,7 +182,8 @@ app.directive('hideTabbar', function($timeout) {
     }
 });
 
-var compareTo = function() {
+// 入力値2つを比較するバリデーション
+app.directive("compareTo", function() {
     return {
         require: "ngModel",
         scope: {
@@ -193,6 +200,24 @@ var compareTo = function() {
             });
         }
     };
-};
- 
-app.directive("compareTo", compareTo);
+});
+
+app.directive('halfSize',function(){
+    return{
+        restrict: "A",
+        require: "ngModel",
+        link: function(scope,element,attrs,ngModel){
+            ngModel.$validators.halfSize = function(modelValue){
+                if (modelValue) {
+                    var flag = /^[0-9a-zA-Z]+$/.test(modelValue);
+                    console.log(flag);
+                    return flag;
+                }
+            };
+            
+            scope.$watch("modelValue", function() {
+                ngModel.$validate();
+            });
+        }
+    }
+});

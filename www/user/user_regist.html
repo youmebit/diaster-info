@@ -12,23 +12,25 @@
                 名前
             </dt>
                 <dd class="pad_bottom">
-                    <input type="text" name="username" style="width: 50%;" required ng-maxlength="16" ng-model="signup.username"/>
-                    <div class="error">
-                        <span ng-show="signUpForm.username.$error.required">必ず入力してください</span>
+                    <input type="text" name="username" style="width: 50%;" required ng-maxlength="16" ng-model="signup.username" />
+                    <div class="error" ng-messages="signUpForm.username.$error" ng-messages-multiple>
+                      <div ng-repeat="error in errors">
+                        <span ng-message-exp="error.key">{{error.msg}}</span>
+                      </div>
                         <span ng-show="signUpForm.username.$error.maxlength">16文字以下で入力してください</span>
                     </div>
                 </dd>
-
                 <dt>
                 <ons-icon icon="fa-envelope-o"></ons-icon>
                 メールアドレス
             </dt>
                 <dd class="pad_bottom">
-                    <input type="email" name="email" ng-model="signup.email" required ng-maxlength="256"/>
-                    <div class="error">
-                        <span ng-show="signUpForm.email.$error.required">必ず入力してください</span>
+                    <input type="email" name="email" ng-model="signup.email" required ng-maxlength="256" />
+                    <div class="error" ng-messages="signUpForm.email.$error" ng-messages-multiple>
+                      <div ng-repeat="error in errors">
+                        <span ng-message-exp="error.key">{{error.msg}}</span>
+                      </div>
                         <span ng-show="signUpForm.email.$error.maxlength">256文字以下で入力してください</span>
-                        <span ng-show="signUpForm.email.$error.email">メールアドレスではありません</span>
                     </div>
                 </dd>
 
@@ -37,9 +39,11 @@
                 パスワード
             </dt>
                 <dd class="pad_bottom">
-                    <input type="password" name="password" ng-model="signup.password" required ng-maxlength="16" ng-minlength="6"/>
-                    <div class="error">
-                        <span ng-show="signUpForm.password.$error.required">必ず入力してください</span>
+                    <input type="password" name="password" ng-model="signup.password" required ng-maxlength="16" ng-minlength="6" />
+                    <div class="error" ng-messages="signUpForm.password.$error" ng-messages-multiple>
+                      <div ng-repeat="error in errors">
+                        <span ng-message-exp="error.key">{{error.msg}}</span>
+                      </div>
                         <span ng-show="signUpForm.password.$error.maxlength">16文字以下で入力してください</span>
                         <span ng-show="signUpForm.password.$error.minlength">6文字以上で入力してください</span>
                     </div>
@@ -48,13 +52,15 @@
                 <dt><ons-icon icon="fa-key" rotate="90"></ons-icon>
 パスワード(確認)</dt>
                 <dd class="pad_bottom">
-                    <input type="password" name="confirm" ng-model="signup.confirm" required ng-maxlength="16" ng-minlength="6" compare-to="signup.password"/>
-                    <div class="error">
-                        <span ng-show="signUpForm.confirm.$error.required">必ず入力してください</span>
+                    <input type="password" name="confirm" ng-model="signup.confirm" required ng-maxlength="16" ng-minlength="6" compare-to="signup.password" half-size/>
+                    <div class="error" ng-messages="signUpForm.confirm.$error" ng-messages-multiple>
+                      <div ng-repeat="error in errors">
+                        <span ng-message-exp="error.key">{{error.msg}}</span>
+                      </div>
                         <span ng-show="signUpForm.confirm.$error.maxlength">16文字以下で入力してください</span>
                         <span ng-show="signUpForm.confirm.$error.minlength">6文字以上で入力してください</span>
-                        <div ng-show="signUpForm.confirm.$error.compareTo" ng-if="signUpForm.confirm.$dirty">パスワードが一致しません</div>
                     </div>
+
                 </dd>
             </dl>
 
