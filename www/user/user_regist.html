@@ -1,76 +1,60 @@
-<ons-page>
-    <ons-toolbar fixed-style>
-        <div class="center">
-            会員登録
-        </div>
-    </ons-toolbar>
-    <div class="form_contents" ng-controller="userCtrl">
-        <form class="contents" name="signUpForm" novalidate>
-            <dl>
-                <dt>
-                <ons-icon icon="fa-user"></ons-icon>
-                名前
-            </dt>
-                <dd class="pad_bottom">
-                    <input type="text" name="username" style="width: 50%;" required ng-maxlength="16" ng-model="signup.username" />
-                    <div class="error" ng-messages="signUpForm.username.$error" ng-messages-multiple>
-                      <div ng-repeat="error in errors">
-                        <span ng-message-exp="error.key">{{error.msg}}</span>
-                      </div>
-                        <span ng-show="signUpForm.username.$error.maxlength">16文字以下で入力してください</span>
-                    </div>
-                </dd>
-                <dt>
-                <ons-icon icon="fa-envelope-o"></ons-icon>
-                メールアドレス
-            </dt>
-                <dd class="pad_bottom">
-                    <input type="email" name="email" ng-model="signup.email" required ng-maxlength="256" />
-                    <div class="error" ng-messages="signUpForm.email.$error" ng-messages-multiple>
-                      <div ng-repeat="error in errors">
-                        <span ng-message-exp="error.key">{{error.msg}}</span>
-                      </div>
-                        <span ng-show="signUpForm.email.$error.maxlength">256文字以下で入力してください</span>
-                    </div>
-                </dd>
-
-                <dt>
-                <ons-icon icon="fa-key" rotate="90"></ons-icon>
-                パスワード
-            </dt>
-                <dd class="pad_bottom">
-                    <input type="password" name="password" ng-model="signup.password" required ng-maxlength="16" ng-minlength="6" />
-                    <div class="error" ng-messages="signUpForm.password.$error" ng-messages-multiple>
-                      <div ng-repeat="error in errors">
-                        <span ng-message-exp="error.key">{{error.msg}}</span>
-                      </div>
-                        <span ng-show="signUpForm.password.$error.maxlength">16文字以下で入力してください</span>
-                        <span ng-show="signUpForm.password.$error.minlength">6文字以上で入力してください</span>
-                    </div>
-                </dd>
-
-                <dt><ons-icon icon="fa-key" rotate="90"></ons-icon>
-パスワード(確認)</dt>
-                <dd class="pad_bottom">
-                    <input type="password" name="confirm" ng-model="signup.confirm" required ng-maxlength="16" ng-minlength="6" compare-to="signup.password" half-size/>
-                    <div class="error" ng-messages="signUpForm.confirm.$error" ng-messages-multiple>
-                      <div ng-repeat="error in errors">
-                        <span ng-message-exp="error.key">{{error.msg}}</span>
-                      </div>
-                        <span ng-show="signUpForm.confirm.$error.maxlength">16文字以下で入力してください</span>
-                        <span ng-show="signUpForm.confirm.$error.minlength">6文字以上で入力してください</span>
-                    </div>
-
-                </dd>
-            </dl>
-
-            <div class="position_center">
-                <ons-button style="margin-top: 15px;" modifier="orange" class="btn" ng-click="">
-                    登録する
-                </ons-button>
-            </div>
-        </form>
+<ons-toolbar fixed-style class="with-back">
+    <div class="left">
+        <ons-back-button modifier="back">戻る</ons-back-button>
     </div>
+    <div class="center">
+        会員登録
+    </div>
+</ons-toolbar>
+<div class="form_contents" ng-controller="userCtrl">
+    <form class="contents" name="signUpForm" novalidate>
+        <dl>
+            <dt class="user">名前</dt>
+            <dd class="pad_bottom">
+                <input type="text" name="username" style="width: 50%;" required name-length ng-model="signup.username" hide-tabbar/>
+                <div class="error" ng-messages="signUpForm.username.$error" ng-messages-multiple ng-if="signUpForm.username.$touched">
+                  <div ng-repeat="error in errors">
+                    <span ng-message-exp="error.key">{{error.msg}}</span>
+                  </div>
+                </div>
+            </dd>
+            <dt class="email">メールアドレス</dt>
+            <dd class="pad_bottom">
+                <input type="email" name="email" ng-model="signup.email" hide-tabbar required email-length />
+                <div class="error" ng-messages="signUpForm.email.$error" ng-messages-multiple ng-if="signUpForm.email.$touched">
+                  <div ng-repeat="error in errors">
+                    <span ng-message-exp="error.key">{{error.msg}}</span>
+                  </div>
+                </div>
+            </dd>
 
-    <link rel="stylesheet" href="css/form.css">
-</ons-page>
+            <dt class="key">パスワード</dt>
+            <dd class="pad_bottom">
+                <input type="password" name="password" ng-model="signup.password" hide-tabbar required  pass-type pass-length />
+                <div class="error" ng-messages="signUpForm.password.$error" ng-messages-multiple ng-if="signUpForm.password.$touched">
+                  <div ng-repeat="error in errors">
+                    <span ng-message-exp="error.key">{{error.msg}}</span>
+                  </div>
+                </div>
+            </dd>
+
+            <dt class="key">パスワード(確認)</dt>
+            <dd class="pad_bottom">
+                <input type="password" name="confirm" ng-model="signup.confirm" hide-tabbar required compare-to="signup.password" pass-type pass-length/>
+                <div class="error" ng-messages="signUpForm.confirm.$error" ng-messages-multiple ng-if="signUpForm.confirm.$touched">
+                  <div ng-repeat="error in errors">
+                    <span ng-message-exp="error.key">{{error.msg}}</span>
+                  </div>
+                </div>
+            </dd>
+        </dl>
+
+        <div class="position_center">
+            <ons-button style="margin-top: 15px;" modifier="orange" class="btn" ng-click="signUp()">
+                登録する
+            </ons-button>
+        </div>
+    </form>
+</div>
+
+<link rel="stylesheet" href="css/form.css">

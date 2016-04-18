@@ -1,18 +1,26 @@
 'use strict';
-app.controller('userCtrl', function ($scope) {
+app.controller('userCtrl', function ($scope, mBaasService) {
     $scope.user = {};
-    $scope.addUser = function () {
-        var user = new $scope.ncmb.User();
-        user.set("userName", $scope.user.name)
-            .set("password", $scope.user.password)
-            .set("mailAddress", $scope.user.address);
+    $scope.signUp = function () {
+        if (!confirm('登録してもよろしいですか?')) {
+            return false;
+        }
+        var ncmb = mBaasService.getNcmb();
+        var user = new ncmb.User();
+        user.set("userName", $scope.signup.username)
+            .set("password", $scope.signup.password)
+            .set("mailAddress", $scope.signup.email);
 
         user.signUpByAccount()
             .then(function () {
-                // 登録後処理
+                myNavigator.pushPage('user/regist_info.html');
             })
             .catch(function (err) {
-                // エラー処理
+                var message = '';
+                if (err.status) {
+                    message = 'メールアドレスが重複します。';
+                }
+                alert(message);
             });
     }
 });

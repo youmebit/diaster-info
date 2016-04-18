@@ -8,19 +8,6 @@
     padding: 0;
 }
 
-.card {
-  background-color: white;
-  background-image: url(images/sushi-bg.jpg);
-  background-repeat: no-repeat;
-  background-size: cover;
-  color: white;
-  height: 250px;
-}
-
-.card-toolbar ons-back-button span {
-  color: white;
-}
-
 .action-col {
     text-align: center;
     color: #808080;
@@ -74,19 +61,18 @@ p {
     font-size: 1em;
     line-height: 1.5;
 }
-.under {
-    border-bottom: solid 2px #f7931e;
-}
+
 .form_contents {
     width: 100%;
     border-top: solid 1px #808080;
+    padding-top: 20px;
 }
 
 .contents {
     padding-top: 15px;
 }
 form dt {
-   padding-bottom: 5px;
+   margin-bottom: 5px;
 }
 
 form dd {
@@ -97,7 +83,7 @@ form dd {
 }
 input {
     width: 100%;
-    padding: 8px 0px 8px 2px;
+    padding: 8px 0px 8px 5px;
     border: solid 1px #808080;
     border-radius: 3px;
 }
@@ -110,6 +96,23 @@ input {
 .position_center {
     text-align: center;
 }
+
 .btn {
     width: 60%;
+}
+
+form dt:before {
+    margin-right: 1px;
+}
+form dt:after {
+    content: '必須';
+    font-family: 'Noto400';
+    background-color: #ea553a;
+    color: #fffffa;
+    font-size: 0.7em;
+    border-radius: 3px;
+    margin-left: 2px;
+    padding: 3px;
+    vertical-align: middle;
+    margin-left: 5px;
 }

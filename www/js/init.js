@@ -15,7 +15,10 @@ app.controller('bodyCtrl', function($scope, mBaasService, tabService) {
       { key: 'required', msg: '必ず入力してください' },
       { key: 'email', msg: 'メールアドレスではありません' },
         {key: 'compareTo', msg: 'パスワードが一致しません'},
-        {key: 'halfSize', msg:'パスワード形式ではありません'}
+        {key: 'passType', msg:'アルファベットと数字のみを入力してください'},
+        {key: 'nameLength', msg:'16文字以下で入力してください'},
+        {key: 'emailLength', msg:'256文字以下で入力してください'},
+        {key: 'passLength', msg:'6文字以上16文字以下で入力してください'}
     ];
     tabService.setActiveTab(0);
     $scope.settings.isHideTabbar = false;
@@ -202,16 +205,72 @@ app.directive("compareTo", function() {
     };
 });
 
-app.directive('halfSize',function(){
+// パスワードの文字数をチェックするバリデーション
+app.directive('nameLength',function(){
     return{
         restrict: "A",
         require: "ngModel",
         link: function(scope,element,attrs,ngModel){
-            ngModel.$validators.halfSize = function(modelValue){
+            ngModel.$validators.nameLength = function(modelValue){
                 if (modelValue) {
-                    var flag = /^[0-9a-zA-Z]+$/.test(modelValue);
-                    console.log(flag);
-                    return flag;
+                    return modelValue.length <= 16;
+                }
+            };
+            
+            scope.$watch("modelValue", function() {
+                ngModel.$validate();
+            });
+        }
+    }
+});
+
+// パスワードの文字数をチェックするバリデーション
+app.directive('emailLength',function(){
+    return{
+        restrict: "A",
+        require: "ngModel",
+        link: function(scope,element,attrs,ngModel){
+            ngModel.$validators.emailLength = function(modelValue){
+                if (modelValue) {
+                    return modelValue.length <= 256;
+                }
+            };
+            
+            scope.$watch("modelValue", function() {
+                ngModel.$validate();
+            });
+        }
+    }
+});
+
+// パスワードの文字種をチェックするバリデーション
+app.directive('passType',function(){
+    return{
+        restrict: "A",
+        require: "ngModel",
+        link: function(scope,element,attrs,ngModel){
+            ngModel.$validators.passType = function(modelValue){
+                if (modelValue) {
+                    return /^[0-9a-zA-Z]+$/.test(modelValue);
+                }
+            };
+            
+            scope.$watch("modelValue", function() {
+                ngModel.$validate();
+            });
+        }
+    }
+});
+
+// パスワードの文字数をチェックするバリデーション
+app.directive('passLength',function(){
+    return{
+        restrict: "A",
+        require: "ngModel",
+        link: function(scope,element,attrs,ngModel){
+            ngModel.$validators.passLength = function(modelValue){
+                if (modelValue) {
+                    return modelValue.length >= 6 && modelValue.length <= 16;
                 }
             };
             
