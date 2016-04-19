@@ -50,7 +50,7 @@
         </dl>
 
         <div class="position_center">
-            <ons-button style="margin-top: 15px;" modifier="orange" class="btn" ng-click="signUp()">
+            <ons-button style="margin-top: 15px;" modifier="orange" class="btn" ng-click="signUp()" ng-disabled="signUpForm.$invalid == null || signUpForm.$pristine">
                 登録する
             </ons-button>
         </div>

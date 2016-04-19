@@ -2,13 +2,6 @@
 
 var app = angular.module('myApp', ['onsen.directives', 'ngMessages']);
 
-//app.provider('auth', function(){
-//    this.$get = funtion() {
-//        return {
-//
-//        }
-//    }
-//});
 app.controller('bodyCtrl', function($scope, mBaasService, tabService) {
     $scope.settings = {};
     $scope.errors = [
@@ -27,20 +20,26 @@ app.controller('bodyCtrl', function($scope, mBaasService, tabService) {
     $scope.topInit = function() {
         $scope.user = {};
         $scope.settings.isLogin = false;
-        
+		$scope.user.username = 'ゲスト';
+		
         var current = mBaasService.getCurrentUser();
+        var ncmb = mBaasService.getNcmb();
         if (current) {
-            var ncmb = mBaasService.getNcmb();
-            mBaasService.login(current.mailAddress, current.password);
-            $scope.$on('auto_login', function(event, data) {
-                $scope.$apply(function () {
-                    $scope.user.username = data;
-                    ncmb.User.logout();
-                    $scope.settings.isLogin = true;
-                });
-            });
+			
+			// 匿名ユーザー判定
+			if (!current.authData.anonymous) {
+				mBaasService.login(current.mailAddress, current.password);
+				$scope.$on('auto_login', function(event, data) {
+					$scope.$apply(function () {
+						$scope.user.username = data;
+						ncmb.User.logout();
+						$scope.settings.isLogin = true;
+					});
+				});
+			}
         } else {
-            $scope.user.username = 'ゲスト';
+			//　初回起動(匿名ユーザー登録)
+			ncmb.User.loginAsAnonymous();
         }
     }
     
