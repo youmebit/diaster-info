@@ -8,7 +8,7 @@ app.controller('loginCtrl', function($scope, mBaasService) {
 		$scope.$on('login_complate', function(event, data) {
 			$scope.user.username = data;
 			$scope.user.isLogin = true;
-			myNavigator.pushPage('top.html');
+			$scope.toHome();
 		});
     }
 });
