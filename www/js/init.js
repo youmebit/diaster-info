@@ -1,9 +1,30 @@
 'use strict';
 
 var app = angular.module('myApp', ['onsen.directives', 'ngMessages']);
+app.run(function($rootScope, mBaasService) {
+	$rootScope.settings = {
+		isLogin : false,
+		isHideTabbar : false
+	};
+	
+	$rootScope.user = {
+		username : 'ゲスト'
+	};
 
+	var current = mBaasService.getCurrentUser();
+	if (current) {
+		// 匿名ユーザー判定
+		if (current.authData == null) {
+			$rootScope.user.username = current.userName;
+			$rootScope.settings.isLogin = true;
+		}
+	} else {
+		//　初回起動(匿名ユーザー登録)
+		var ncmb = mBaasService.getNcmb();
+		ncmb.User.loginAsAnonymous();
+	}
+});
 app.controller('bodyCtrl', function($scope, mBaasService, tabService) {
-    $scope.settings = {};
     $scope.errors = [
       { key: 'required', msg: '必ず入力してください' },
       { key: 'email', msg: 'メールアドレスではありません' },
@@ -14,33 +35,16 @@ app.controller('bodyCtrl', function($scope, mBaasService, tabService) {
         {key: 'passLength', msg:'6文字以上16文字以下で入力してください'}
     ];
     tabService.setActiveTab(0);
-    $scope.settings.isHideTabbar = false;
     
     // トップ画面初期化
     $scope.topInit = function() {
-        $scope.user = {};
-        $scope.settings.isLogin = false;
-		$scope.user.username = 'ゲスト';
 		
-        var current = mBaasService.getCurrentUser();
-        var ncmb = mBaasService.getNcmb();
-        if (current) {
-			// 匿名ユーザー判定
-			if (!current.authData.anonymous) {
-				mBaasService.login(current.mailAddress, current.password);
-				$scope.$on('login_complate', function(event, data) {
-					$scope.$apply(function () {
-						$scope.user.username = data;
-						$scope.settings.isLogin = true;
-					});
-				});
-			}
-        } else {
-			//　初回起動(匿名ユーザー登録)
-			ncmb.User.loginAsAnonymous();
-		}
     }
-    
+
+	$scope.toHome = function() {
+        tabService.setActiveTab(0);
+    }
+
     $scope.toLoginPage = function() {
         tabService.setActiveTab(3);
     }
