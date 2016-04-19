@@ -7,17 +7,23 @@ app.controller('userCtrl', function ($scope, mBaasService) {
         }
 
         var ncmb = mBaasService.getNcmb();
-        ncmb.Role.equalTo("roleName", "member").fetch()
-        .then(function(result){
-            addUser(result);
-        })
-        .catch(function(err) {
-            var role = new ncmb.Role("member");
-            role.save().then(function() {
-                addUser(role);
+        // ユーザ名の重複チェック
+        ncmb.User.equalTo("userName", $scope.signup.username).fetchAll().then(function(result) {
+            fail('ユーザー名が重複しています。');
+        }).catch(function(err) {
+            ncmb.Role.equalTo("roleName", "member").fetch()
+            .then(function(result){
+                addUser(result);
+            })
+            .catch(function(err) {
+                var role = new ncmb.Role("member");
+                role.save().then(function() {
+                    addUser(role);
+                });
             });
         });
-        
+
+        // 会員追加
         var addUser = function(role) {
             var ncmb = mBaasService.getNcmb();
             var user = new ncmb.User();
@@ -30,12 +36,17 @@ app.controller('userCtrl', function ($scope, mBaasService) {
                 myNavigator.pushPage('user/regist_info.html');
             })
             .catch(function (err) {
+                console.log(JSON.stringify(err));
                 var message = '';
                 if (err.status) {
                     message = 'メールアドレスが重複します。';
                 }
-                alert(message);
+                fail(message);
             });
+        }
+        
+        var fail = function(message) {
+            alert(message);
         }
     }
 });
