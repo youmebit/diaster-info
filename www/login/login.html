@@ -10,8 +10,8 @@
     <ons-icon icon="fa-sign-in" class="top"></ons-icon><br>
     ログイン
 </h1>
-        <div class="form_contents" novalidate>
-            <form class="contents" name="loginForm" >
+        <div class="form_contents">
+            <form class="contents" name="loginForm" novalidate>
                 <dl>
                     <dt class="email">メールアドレス</dt>
                     <dd>
@@ -23,7 +23,7 @@
 						</div>
                     </dd>
                     <dt class="key">パスワード</dt>
-                    <dd>
+                    <dd class="password">
                         <input type="password" name="password" ng-model="login.password" hide-tabbar required  pass-type pass-length />
 						<div class="error" ng-messages="loginForm.password.$error" ng-messages-multiple ng-if="loginForm.password.$touched">
 						  <div ng-repeat="error in errors">

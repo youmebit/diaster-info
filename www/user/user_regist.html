@@ -10,7 +10,7 @@
     <form class="contents" name="signUpForm" novalidate>
         <dl>
             <dt class="user">名前</dt>
-            <dd class="pad_bottom">
+            <dd>
                 <input type="text" name="username" style="width: 50%;" required name-length ng-model="signup.username" hide-tabbar/>
                 <div class="error" ng-messages="signUpForm.username.$error" ng-messages-multiple ng-if="signUpForm.username.$touched">
                   <div ng-repeat="error in errors">
@@ -19,7 +19,7 @@
                 </div>
             </dd>
             <dt class="email">メールアドレス</dt>
-            <dd class="pad_bottom">
+            <dd>
                 <input type="email" name="email" ng-model="signup.email" hide-tabbar required email-length />
                 <div class="error" ng-messages="signUpForm.email.$error" ng-messages-multiple ng-if="signUpForm.email.$touched">
                   <div ng-repeat="error in errors">
@@ -29,7 +29,7 @@
             </dd>
 
             <dt class="key">パスワード</dt>
-            <dd class="pad_bottom">
+            <dd>
                 <input type="password" name="password" ng-model="signup.password" hide-tabbar required  pass-type pass-length />
                 <div class="error" ng-messages="signUpForm.password.$error" ng-messages-multiple ng-if="signUpForm.password.$touched">
                   <div ng-repeat="error in errors">
@@ -39,7 +39,7 @@
             </dd>
 
             <dt class="key">パスワード(確認)</dt>
-            <dd class="pad_bottom">
+            <dd>
                 <input type="password" name="confirm" ng-model="signup.confirm" hide-tabbar required compare-to="signup.password" pass-type pass-length/>
                 <div class="error" ng-messages="signUpForm.confirm.$error" ng-messages-multiple ng-if="signUpForm.confirm.$touched">
                   <div ng-repeat="error in errors">
@@ -56,5 +56,3 @@
         </div>
     </form>
 </div>
-
-<link rel="stylesheet" href="css/form.css">

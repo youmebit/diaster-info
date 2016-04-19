@@ -147,12 +147,17 @@ app.controller('postCtrl', function ($scope, mBaasService) {
         var uploadSuccess = function () {
             var Posts = ncmb.DataStore("Posts");
             var data = new Posts();
-            data.set("username", piece.name);
+			if ($scope.user.isLogin) {
+				data.set("username", $scope.user.name);
+			} else {
+				data.set("username", piece.name);
+			}
             data.set("photo", fileName);
             data.set("address", piece.address);
             data.set("comment", piece.comment);
             var geopoint = new ncmb.GeoPoint(piece.latitude, piece.longitude);
             data.set("point", geopoint);
+			data.set("correspond", 0);
             data.save().then(function (data) {
                 saveSuccess();
             }).catch(function (err) {

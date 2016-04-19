@@ -65,7 +65,7 @@ p {
 .form_contents {
     width: 100%;
     border-top: solid 1px #808080;
-    padding-top: 20px;
+    padding-top: 10px;
 }
 
 .contents {
@@ -76,12 +76,15 @@ form dt {
 }
 
 form dd {
-    padding-bottom: 10px;
-}
-.pad_bottom {
     padding-bottom: 20px;
 }
-input {
+
+form dd.password {
+	padding-bottom: 10px;
+}
+
+input[type="text"], input[type="email"],
+input[type="password"], textarea {
     width: 100%;
     padding: 8px 0px 8px 5px;
     border: solid 1px #808080;
@@ -105,6 +108,8 @@ input {
 form dt:before {
     margin-right: 1px;
 }
+
+/*必須タグ*/
 form dt:after {
     content: '必須';
     font-family: 'Noto400';
@@ -116,4 +121,11 @@ form dt:after {
     padding: 3px;
     vertical-align: middle;
     margin-left: 5px;
+}
+
+form dt.any:after {
+	content: '';
+	background-color: transparent;
+	padding: 0;
+	margin: 0;
 }

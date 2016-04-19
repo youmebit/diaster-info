@@ -181,7 +181,11 @@ app.service('geoService', function() {
     }
 });
 
-
+app.constant('correspond', {
+			 	'0' : 'これから対応します',
+			 	'1' : '対応中です',
+				'2' : '対応しました'
+});
 // htmlタグに'hide-tabbar'をつけるとタップした時にタブバーを非表示にする。
 app.directive('hideTabbar', function($timeout) {
     return {
