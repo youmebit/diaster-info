@@ -25,14 +25,12 @@ app.controller('bodyCtrl', function($scope, mBaasService, tabService) {
         var current = mBaasService.getCurrentUser();
         var ncmb = mBaasService.getNcmb();
         if (current) {
-			
 			// 匿名ユーザー判定
 			if (!current.authData.anonymous) {
 				mBaasService.login(current.mailAddress, current.password);
-				$scope.$on('auto_login', function(event, data) {
+				$scope.$on('login_complate', function(event, data) {
 					$scope.$apply(function () {
 						$scope.user.username = data;
-						ncmb.User.logout();
 						$scope.settings.isLogin = true;
 					});
 				});
@@ -40,7 +38,7 @@ app.controller('bodyCtrl', function($scope, mBaasService, tabService) {
         } else {
 			//　初回起動(匿名ユーザー登録)
 			ncmb.User.loginAsAnonymous();
-        }
+		}
     }
     
     $scope.toLoginPage = function() {
@@ -84,7 +82,7 @@ app.service('mBaasService', function ($rootScope) {
     this.login = function(address, password) {
         var ncmb = this.getNcmb();
         ncmb.User.loginWithMailAddress(address, password).then(function(data) {
-            $rootScope.$broadcast('auto_login', data.userName);
+            $rootScope.$broadcast('login_complate', data.userName);
         })
         .catch(function(err){
             alert('ログインに失敗しました。');
