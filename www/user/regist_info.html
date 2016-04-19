@@ -6,24 +6,20 @@
 
 <h1 class="top_icon">
     <ons-icon icon="fa-heart-o" class="top"></ons-icon><br>
-    ご登録ありがとうございます
+    メールを送信しました
 </h1>
 
-<p>
-    会員登録の手続きが完了しました。<br>引き続き情報提供のご協力をお願いします。
-</p>
-<div class="position_center">
-    <ons-button  style="margin-bottom: 25px;"
-        modifier="orange"
-        class="btn"
-        ng-click="toPostPage()">
-        投稿する
-    </ons-button>
-    <ons-button
-        class="btn"
-        ng-click="toListPage()">
-        情報を見る
-    </ons-button>
+<div class="contents">
+	<p>
+		会員登録の確認メールを送信しました。メール内のURLをクリックして登録を完了してください。
+	</p>
+	<div class="position_center">
+		<ons-button
+			class="btn"
+			ng-click="toHome()">
+			トップ画面へ
+		</ons-button>
+	</div>
 </div>
     
 <link rel="stylesheet" href="css/form.css">
