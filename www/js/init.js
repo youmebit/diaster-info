@@ -1,32 +1,48 @@
 'use strict';
 
-var app = angular.module('myApp', ['onsen.directives']);
+var app = angular.module('myApp', ['onsen.directives', 'ngMessages']);
+app.run(function($rootScope, mBaasService, tabService) {
+	$rootScope.settings = {
+		isHideTabbar : false
+	};
+	
+	$rootScope.user = {
+		isLogin : false,
+		username : 'ゲスト'
+	};
+
+	$rootScope.errors = [
+      { key: 'required', msg: '必ず入力してください' },
+      { key: 'email', msg: 'メールアドレスではありません' },
+        {key: 'compareTo', msg: 'パスワードが一致しません'},
+        {key: 'passType', msg:'アルファベットと数字のみを入力してください'},
+        {key: 'nameLength', msg:'16文字以下で入力してください'},
+        {key: 'emailLength', msg:'256文字以下で入力してください'},
+        {key: 'passLength', msg:'6文字以上16文字以下で入力してください'}
+    ];
+	
+	tabService.setActiveTab(0);
+});
+
 app.controller('bodyCtrl', function($scope, mBaasService, tabService) {
-    $scope.settings = {};
-    tabService.setActiveTab(0);
-    $scope.settings.isHideTabbar = false;
-    
-    // トップ画面初期化
-    $scope.topInit = function() {
-        $scope.user = {};
-        $scope.settings.isLogin = false;
-        
-        var current = mBaasService.getCurrentUser();
-        if (current) {
-            var ncmb = mBaasService.getNcmb();
-            mBaasService.login(current.mailAddress, current.password);
-            $scope.$on('auto_login', function(event, data) {
-                $scope.$apply(function () {
-                    $scope.user.username = data;
-                    ncmb.User.logout();
-                    $scope.settings.isLogin = true;
-                });
-            });
-        } else {
-            $scope.user.username = 'ゲスト';
-        }
+	$scope.topInit = function() {
+		var current = mBaasService.getCurrentUser();
+		if (current) {
+			// 匿名ユーザー判定
+			if (current.authData == null) {
+				$scope.user.username = current.userName;
+				$scope.user.isLogin = true;
+			}
+		} else {
+			//　初回起動(匿名ユーザー登録)
+			var ncmb = mBaasService.getNcmb();
+			ncmb.User.loginAsAnonymous();
+		}
+	}
+	$scope.toHome = function() {
+        tabService.setActiveTab(0);
     }
-    
+
     $scope.toLoginPage = function() {
         tabService.setActiveTab(3);
     }
@@ -38,6 +54,22 @@ app.controller('bodyCtrl', function($scope, mBaasService, tabService) {
             tabService.setActiveTab(1);
         }
     }
+	
+	$scope.signOut = function() {
+		if (!confirm('ログアウトしてもよろしいですか？')) {
+			return;
+		}
+		var ncmb = mBaasService.getNcmb();
+		$scope.user = {
+			isLogin : false,
+			username : 'ゲスト'
+		};
+		ncmb.User.logout();
+	}
+
+	$scope.toListPage = function() {
+		console.log('aaa');
+	}
 });
 
 // ｍBaaS接続サービス
@@ -64,11 +96,11 @@ app.service('mBaasService', function ($rootScope) {
     this.login = function(address, password) {
         var ncmb = this.getNcmb();
         ncmb.User.loginWithMailAddress(address, password).then(function(data) {
-            $rootScope.$broadcast('auto_login', data.userName);
+            $rootScope.$broadcast('login_complate', data.userName);
         })
         .catch(function(err){
-            alert('失敗..');
-            console.log(err);
+            alert('メールアドレスもしくはパスワードが違います。');
+			$scope.login.password = '';
         });
     }
 });
@@ -100,7 +132,7 @@ app.service('geoService', function() {
                 alert("位置情報の取得に失敗しました。申し訳ありませんがもう一度送信してください。");
             }
         });
-    },
+    }
     this.currentPosition = function(onSuccess) {
                     // 住所を取得する
         var geoOptions = {
@@ -149,7 +181,11 @@ app.service('geoService', function() {
     }
 });
 
-
+app.constant('correspond', {
+			 	'0' : 'これから対応します',
+			 	'1' : '対応中です',
+				'2' : '対応しました'
+});
 // htmlタグに'hide-tabbar'をつけるとタップした時にタブバーを非表示にする。
 app.directive('hideTabbar', function($timeout) {
     return {
@@ -163,6 +199,106 @@ app.directive('hideTabbar', function($timeout) {
                 $timeout(function(){
                     scope.$apply(tabbar.setTabbarVisibility(true));
                 });
+            });
+        }
+    }
+});
+
+// 入力値2つを比較するバリデーション
+app.directive("compareTo", function() {
+    return {
+        require: "ngModel",
+        scope: {
+            otherModelValue: "=compareTo"
+        },
+        link: function(scope, element, attributes, ngModel) {
+             
+            ngModel.$validators.compareTo = function(modelValue) {
+                return modelValue == scope.otherModelValue;
+            };
+ 
+            scope.$watch("modelValue", function() {
+                ngModel.$validate();
+            });
+			
+			scope.$watch("otherModelValue", function() {
+                ngModel.$validate();
+            });
+        }
+    };
+});
+
+// パスワードの文字数をチェックするバリデーション
+app.directive('nameLength',function(){
+    return{
+        restrict: "A",
+        require: "ngModel",
+        link: function(scope,element,attrs,ngModel){
+            ngModel.$validators.nameLength = function(modelValue){
+                if (modelValue) {
+                    return modelValue.length <= 16;
+                }
+            };
+            
+            scope.$watch("modelValue", function() {
+                ngModel.$validate();
+            });
+        }
+    }
+});
+
+// パスワードの文字数をチェックするバリデーション
+app.directive('emailLength',function(){
+    return{
+        restrict: "A",
+        require: "ngModel",
+        link: function(scope,element,attrs,ngModel){
+            ngModel.$validators.emailLength = function(modelValue){
+                if (modelValue) {
+                    return modelValue.length <= 256;
+                }
+            };
+            
+            scope.$watch("modelValue", function() {
+                ngModel.$validate();
+            });
+        }
+    }
+});
+
+// パスワードの文字種をチェックするバリデーション
+app.directive('passType',function(){
+    return{
+        restrict: "A",
+        require: "ngModel",
+        link: function(scope,element,attrs,ngModel){
+            ngModel.$validators.passType = function(modelValue){
+                if (modelValue) {
+                    return /^[0-9a-zA-Z]+$/.test(modelValue);
+                }
+            };
+            
+            scope.$watch("modelValue", function() {
+                ngModel.$validate();
+            });
+        }
+    }
+});
+
+// パスワードの文字数をチェックするバリデーション
+app.directive('passLength',function(){
+    return{
+        restrict: "A",
+        require: "ngModel",
+        link: function(scope,element,attrs,ngModel){
+            ngModel.$validators.passLength = function(modelValue){
+                if (modelValue) {
+                    return modelValue.length >= 6 && modelValue.length <= 16;
+                }
+            };
+            
+            scope.$watch("modelValue", function() {
+                ngModel.$validate();
             });
         }
     }

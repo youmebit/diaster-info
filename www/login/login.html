@@ -1,36 +1,36 @@
 <ons-navigator var="myNavigator" page="login.html"></ons-navigator>
 <ons-template id="login.html">
-    <ons-page>
+    <ons-page ng-controller="loginCtrl">
         <ons-toolbar fixed-style>
             <div class="center">
                 ログイン画面
             </div>
         </ons-toolbar>
-
         <h1 class="top_icon">
     <ons-icon icon="fa-sign-in" class="top"></ons-icon><br>
     ログイン
 </h1>
-
         <div class="form_contents">
-            <form class="contents">
+            <form class="contents" name="loginForm" novalidate>
                 <dl>
-                    <dt>
-                <ons-icon icon="fa-envelope-o" size="1em"></ons-icon>
-                メールアドレス
-            </dt>
+                    <dt class="email">メールアドレス</dt>
                     <dd>
-                        <input type="email" name="email" />
+                        <input type="email" name="email" ng-model="login.email" hide-tabbar required email-length/>
+                        <div class="error" ng-messages="loginForm.email.$error" ng-messages-multiple ng-if="loginForm.email.$touched">
+						  <div ng-repeat="error in errors">
+							<span ng-message-exp="error.key">{{error.msg}}</span>
+						  </div>
+						</div>
                     </dd>
-
-                    <dt>
-                <ons-icon icon="fa-key" rotate="90" size="1em"></ons-icon>
-                パスワード
-            </dt>
-                    <dd>
-                        <input type="password" name="password" />
+                    <dt class="key">パスワード</dt>
+                    <dd class="password">
+                        <input type="password" name="password" ng-model="login.password" hide-tabbar required  pass-type pass-length />
+						<div class="error" ng-messages="loginForm.password.$error" ng-messages-multiple ng-if="loginForm.password.$touched">
+						  <div ng-repeat="error in errors">
+							<span ng-message-exp="error.key">{{error.msg}}</span>
+						  </div>
+						</div>
                     </dd>
-
                 </dl>
                 
                     <div class="pass_change">
@@ -41,7 +41,7 @@
             </div>
 
                 <div class="position_center">
-                    <ons-button class="btn" style="margin-bottom: 20px;" modifier="orange" ng-click="">
+                    <ons-button class="btn" style="margin-bottom: 20px;" modifier="orange" ng-click="signIn()" ng-disabled="loginForm.$invalid == null || loginForm.$pristine">
                         ログイン
                     </ons-button>
                     <ons-button class="btn" ng-click="myNavigator.pushPage('user/user_regist.html')">

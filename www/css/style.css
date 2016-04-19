@@ -39,7 +39,6 @@
 .navigation-bar .left {
     height: 100%;
     width: 20%;
-    background-color: #dbaf7d;
 }
 
 .with-back > .center {
@@ -49,6 +48,7 @@
 .toolbar-button--back {
     text-align: left;
     font-family: 'Noto400';
+    color: #4d4d4d;
 }
 
 h1 {
@@ -270,6 +270,7 @@ div .list h2:before {
 .loading span {
     display: block;
     margin-top: 10px;
+	font-family: 'Noto400', sans-serif;
 }
 /*地図マーカー*/
 .map_marker:before {
@@ -282,14 +283,25 @@ div .list h2:before {
 .user:before {
     content: '\f007';
     font-family: 'FontAwesome';
-    padding-right: 5px;
+}
+
+/*email*/
+.email:before {
+    content: '\f003';
+    font-family: 'FontAwesome';
 }
 
 /*コメント*/
 .comment:before {
     content: '\f27b';
     font-family: 'FontAwesome';
-    padding-right: 5px;
+}
+
+.key:before {
+    content: '\f084';
+    font-family: 'FontAwesome';
+    transform: rotate(90deg);
+    display: inline-block;
 }
 
 div .error {

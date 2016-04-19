@@ -42,34 +42,37 @@
             <div class="contents">
                 <form name="postForm" novalidate>
                     <dl>
-                        <dt class="map_marker">住所</dt>
+                        <dt class="map_marker any">住所</dt>
                         <dd><span ng-bind="piece.address"></span></dd>
                         <dt class="user">名前</dt>
-                        <dd>
-                            <input type="text" name="name" ng-model="piece.name" required ng-maxlength="8" hide-tabbar>
-                            <div class="error">
-                                <span ng-show="postForm.name.$error.required">必ず入力してください</span>
-                                <span ng-show="postForm.name.$error.maxlength">8文字以下で入力してください</span>
-                            </div>
+                        <dd ng-hide="user.isLogin">
+                            <input type="text" name="name" ng-model="piece.name" required name-length hide-tabbar>
+							<div class="error" ng-messages="postForm.name.$error" ng-messages-multiple ng-if="postForm.name.$touched">
+							  <div ng-repeat="error in errors">
+								<span ng-message-exp="error.key">{{error.msg}}</span>
+							  </div>
+							</div>
                         </dd>
+                        <dd ng-show="user.isLogin"><span ng-bind="user.name"></span></dd>
                         <dt class="comment">コメント</dt>
                         <dd>
-                            <textarea name="comment" cols="30" rows="10" ng-model="piece.comment" hide-tabbar required ng-maxlength="100"></textarea>
-                            <div class="error">
-                                <span ng-show="postForm.comment.$error.required">必ず入力してください</span>
-                                <span ng-show="postForm.comment.$error.maxlength">100文字以下で入力してください</span>
-                            </div>
+                            <textarea name="comment" cols="30" rows="7" ng-model="piece.comment" hide-tabbar required ng-maxlength="100"></textarea>
+                            <div class="error" ng-messages="postForm.comment.$error" ng-messages-multiple ng-if="postForm.comment.$touched">
+							  <div ng-repeat="error in errors">
+								<span ng-message-exp="error.key">{{error.msg}}</span>
+							  </div>
+								<span ng-message="maxlength">100文字以下で入力してください</span>
+							</div>
                         </dd>
                     </dl>
                     <div class="position_center">
-                        <ons-button ng-click="post(piece)" modifier="orange post" ng-disabled="postForm.$invalid">登録する</ons-button>
+                        <ons-button ng-click="post(piece)" modifier="orange post" ng-disabled="postForm.$invalid == null || postForm.$pristine">登録する</ons-button>
                     </div>
                 </form>
             </div>
         </main>
         <link rel="stylesheet" href="css/page_back_color.css">
         <link rel="stylesheet" href="css/form.css">
-        <link rel="stylesheet" href="css/post.css">
     </ons-page>
 </ons-template>
 <ons-template id="post_info.html">
@@ -89,6 +92,5 @@
             <ons-button class="btn" ng-click="">
                 ギャラリーから選ぶ</ons-button>
         </div>
-        <link rel="stylesheet" href="css/post.css">
     </ons-page>
 </ons-template>
