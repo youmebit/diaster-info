@@ -9,7 +9,7 @@ app.controller('userCtrl', function ($scope, mBaasService) {
         var ncmb = mBaasService.getNcmb();
         // ユーザ名の重複チェック
         ncmb.User.equalTo("userName", $scope.signup.username).fetchAll().then(function(result) {
-            fail('ユーザー名が重複しています。');
+            fail('名前が重複しています。');
         }).catch(function(err) {
             ncmb.Role.equalTo("roleName", "member").fetch()
             .then(function(result){
@@ -37,11 +37,9 @@ app.controller('userCtrl', function ($scope, mBaasService) {
             })
             .catch(function (err) {
                 console.log(JSON.stringify(err));
-                var message = '';
-                if (err.status) {
-                    message = 'メールアドレスが重複します。';
+                if (err.status == 409) {
+                    fail('メールアドレスが重複します。');
                 }
-                fail(message);
             });
         }
         
