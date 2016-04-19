@@ -10,19 +10,27 @@
     <ons-icon icon="fa-sign-in" class="top"></ons-icon><br>
     ログイン
 </h1>
-        <div class="form_contents" name="loginForm" novalidate>
-            <form class="contents">
+        <div class="form_contents" novalidate>
+            <form class="contents" name="loginForm" >
                 <dl>
                     <dt class="email">メールアドレス</dt>
                     <dd>
-                        <input type="email" name="email" ng-model="login.email"/>
+                        <input type="email" name="email" ng-model="login.email" hide-tabbar required email-length/>
+                        <div class="error" ng-messages="loginForm.email.$error" ng-messages-multiple ng-if="loginForm.email.$touched">
+						  <div ng-repeat="error in errors">
+							<span ng-message-exp="error.key">{{error.msg}}</span>
+						  </div>
+						</div>
                     </dd>
-
                     <dt class="key">パスワード</dt>
                     <dd>
-                        <input type="password" name="password" ng-model="login.password"/>
+                        <input type="password" name="password" ng-model="login.password" hide-tabbar required  pass-type pass-length />
+						<div class="error" ng-messages="loginForm.password.$error" ng-messages-multiple ng-if="loginForm.password.$touched">
+						  <div ng-repeat="error in errors">
+							<span ng-message-exp="error.key">{{error.msg}}</span>
+						  </div>
+						</div>
                     </dd>
-
                 </dl>
                 
                     <div class="pass_change">
@@ -33,7 +41,7 @@
             </div>
 
                 <div class="position_center">
-                    <ons-button class="btn" style="margin-bottom: 20px;" modifier="orange" ng-click="signIn()">
+                    <ons-button class="btn" style="margin-bottom: 20px;" modifier="orange" ng-click="signIn()" ng-disabled="loginForm.$invalid == null || loginForm.$pristine">
                         ログイン
                     </ons-button>
                     <ons-button class="btn" ng-click="myNavigator.pushPage('user/user_regist.html')">

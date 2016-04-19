@@ -6,7 +6,6 @@ app.controller('loginCtrl', function($scope, mBaasService) {
 		}
         mBaasService.login($scope.login.email, $scope.login.password);
 		$scope.$on('login_complate', function(event, data) {
-			alert('ログインしました。');
 			myNavigator.pushPage('top.html');
 		});
     }

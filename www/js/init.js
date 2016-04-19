@@ -203,7 +203,11 @@ app.directive("compareTo", function() {
                 return modelValue == scope.otherModelValue;
             };
  
-            scope.$watch("otherModelValue", function() {
+            scope.$watch("modelValue", function() {
+                ngModel.$validate();
+            });
+			
+			scope.$watch("otherModelValue", function() {
                 ngModel.$validate();
             });
         }

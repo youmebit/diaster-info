@@ -86,6 +86,7 @@ input {
     padding: 8px 0px 8px 5px;
     border: solid 1px #808080;
     border-radius: 3px;
+	box-sizing: border-box;
 }
 .pass_change {
     padding: 0px 0px 20px;

@@ -24,7 +24,7 @@
            <br>
         <span>読み込み中</span>
     </div>
-    <ons-tabbar var="tabbar" ng-hide="{{settings.isHideTabbar}}">
+    <ons-tabbar var="tabbar" ng-hide="settings.isHideTabbar">
         <ons-tabbar-item
             icon="home"
             label="HOME"
@@ -40,12 +40,12 @@
         <ons-tabbar-item
             icon="sign-in"
             label="ログイン"
-            page="login/login.html" ng-hide="{{settings.isLogin}}"></ons-tabbar-item>
-            <ons-tabbar-item
-                icon="sign-out"
-                label="ログアウト"
-                page="page3.html" ng-show="{{settings.isLogin}}"></ons-tabbar-item>
-    </ons-tabbar>
+            page="login/login.html" ng-hide="settings.isLogin"></ons-tabbar-item>
+		<ons-tabbar-item
+			icon="sign-out"
+			label="ログアウト"
+			page="page3.html" ng-show="settings.isLogin"></ons-tabbar-item>
+		 </ons-tabbar>
     </body>
 <ons-template id="navigator.html">
     <ons-navigator var="myNavigator" page="top.html">
