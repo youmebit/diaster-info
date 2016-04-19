@@ -54,6 +54,10 @@ app.controller('bodyCtrl', function($scope, mBaasService, tabService) {
             tabService.setActiveTab(1);
         }
     }
+	
+	$scope.toListPage = function() {
+		console.log('aaa');
+	}
 });
 
 // ｍBaaS接続サービス

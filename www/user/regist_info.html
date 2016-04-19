@@ -5,26 +5,23 @@
 </ons-toolbar>
 
 <h1 class="top_icon">
-    <ons-icon icon="fa-heart-o" size="4x"></ons-icon><br>
+    <ons-icon icon="fa-heart-o" class="top"></ons-icon><br>
     ご登録ありがとうございます
 </h1>
 
 <p>
-    会員登録の手続きが完了しました。　　　　　<br>
-    引き続き情報提供のご協力をお願いします。　
+    会員登録の手続きが完了しました。<br>引き続き情報提供のご協力をお願いします。
 </p>
-<br>
-    
 <div class="position_center">
     <ons-button  style="margin-bottom: 25px;"
         modifier="orange"
         class="btn"
-        ng-click="myNavigator.pushPage('#')">
+        ng-click="toPostPage()">
         投稿する
     </ons-button>
     <ons-button
         class="btn"
-        ng-click="myNavigator.pushPage('#')">
+        ng-click="toListPage()">
         情報を見る
     </ons-button>
 </div>
