@@ -4,8 +4,8 @@
         <span class="title">ソコキテ</span>
    </div>
 </header>
-<div ng-init="topInit()">
-<main class="wrapper">
+<div>
+<main class="wrapper" ng-init="topInit()">
     <div id="login_name">こんにちは。{{user.username}}さん
     </div>
     <div class="contents">
@@ -19,7 +19,7 @@
                 <ons-button modifier="border"><ons-icon icon="fa-file-image-o" size="3x"></ons-icon><br>情報を見る</ons-button>
             </li>
         </ul>
-        <div id="login_navi" ng-hide="{{settings.isLogin}}">
+        <div id="login_navi" ng-hide="user.isLogin">
             <p class="arrow_box">登録すると投稿が簡単になったり、投稿した情報が探しやすくなります。</p>
             <ons-button modifier="login" ng-click="toLoginPage()">ログイン/会員登録</ons-button>
         </div>
@@ -38,7 +38,7 @@
             </ons-list-item>
         </ons-list>
     </div>
-    <div id="logout_navi" class="contents" ng-show="{{settings.isLogin}}">
-        <ons-button>ログアウト</ons-button>
+    <div id="logout_navi" class="contents" ng-show="{{user.isLogin}}">
+        <ons-button ng-click="signOut()">ログアウト</ons-button>
     </div>
 </main>

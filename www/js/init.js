@@ -1,31 +1,17 @@
 'use strict';
 
 var app = angular.module('myApp', ['onsen.directives', 'ngMessages']);
-app.run(function($rootScope, mBaasService) {
+app.run(function($rootScope, mBaasService, tabService) {
 	$rootScope.settings = {
-		isLogin : false,
 		isHideTabbar : false
 	};
 	
 	$rootScope.user = {
+		isLogin : false,
 		username : 'ゲスト'
 	};
 
-	var current = mBaasService.getCurrentUser();
-	if (current) {
-		// 匿名ユーザー判定
-		if (current.authData == null) {
-			$rootScope.user.username = current.userName;
-			$rootScope.settings.isLogin = true;
-		}
-	} else {
-		//　初回起動(匿名ユーザー登録)
-		var ncmb = mBaasService.getNcmb();
-		ncmb.User.loginAsAnonymous();
-	}
-});
-app.controller('bodyCtrl', function($scope, mBaasService, tabService) {
-    $scope.errors = [
+	$rootScope.errors = [
       { key: 'required', msg: '必ず入力してください' },
       { key: 'email', msg: 'メールアドレスではありません' },
         {key: 'compareTo', msg: 'パスワードが一致しません'},
@@ -34,13 +20,25 @@ app.controller('bodyCtrl', function($scope, mBaasService, tabService) {
         {key: 'emailLength', msg:'256文字以下で入力してください'},
         {key: 'passLength', msg:'6文字以上16文字以下で入力してください'}
     ];
-    tabService.setActiveTab(0);
-    
-    // トップ画面初期化
-    $scope.topInit = function() {
-		
-    }
+	
+	tabService.setActiveTab(0);
+});
 
+app.controller('bodyCtrl', function($scope, mBaasService, tabService) {
+	$scope.topInit = function() {
+		var current = mBaasService.getCurrentUser();
+		if (current) {
+			// 匿名ユーザー判定
+			if (current.authData == null) {
+				$scope.user.username = current.userName;
+				$scope.user.isLogin = true;
+			}
+		} else {
+			//　初回起動(匿名ユーザー登録)
+			var ncmb = mBaasService.getNcmb();
+			ncmb.User.loginAsAnonymous();
+		}
+	}
 	$scope.toHome = function() {
         tabService.setActiveTab(0);
     }
@@ -57,6 +55,18 @@ app.controller('bodyCtrl', function($scope, mBaasService, tabService) {
         }
     }
 	
+	$scope.signOut = function() {
+		if (!confirm('ログアウトしてもよろしいですか？')) {
+			return;
+		}
+		var ncmb = mBaasService.getNcmb();
+		$scope.user = {
+			isLogin : false,
+			username : 'ゲスト'
+		};
+		ncmb.User.logout();
+	}
+
 	$scope.toListPage = function() {
 		console.log('aaa');
 	}
@@ -89,8 +99,8 @@ app.service('mBaasService', function ($rootScope) {
             $rootScope.$broadcast('login_complate', data.userName);
         })
         .catch(function(err){
-            alert('ログインに失敗しました。');
-            console.log(err);
+            alert('メールアドレスもしくはパスワードが違います。');
+			$scope.login.password = '';
         });
     }
 });
