@@ -14,37 +14,6 @@
     padding: 0;
 }
 
-.action-col {
-    text-align: center;
-    color: #808080;
-}
-
-.active_tab {
-    border-bottom: 6px solid #ffd37d;
-}
-.action-col:active {
-  opacity: 0.7;
-}
-
-.action-col:first-of-type {
-    border-right: 1px solid #4d4d4d;
-}
-
-.action-col a {
-    display: block;
-    width: 100%;
-}
-.action-icon {
-  padding-right: 5px;
-  font-size: 1.2em;
-}
-
-.action-label {
-    font-size: 1.3em;
-    color: #4d4d4d;
-    padding: 18px 0 10px;
-}
-
 .top_icon {
     text-align: center;
     padding-top: 10px;

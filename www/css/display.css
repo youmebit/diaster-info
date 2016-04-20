@@ -11,6 +11,7 @@
     padding: 20px 0 20px 10px;
 	font-family: 'Noto500', sans-serif;
 }
+
 .info {
 	font-family: 'Noto400', sans-serif;
 }
@@ -58,4 +59,54 @@
 	width: 80px;
 	background-color: #29abe2;
 	color: #fffffa;
+}
+
+/*詳細画面のタブ表示*/
+.action-col {
+    text-align: center;
+    color: #808080;
+    border-right: 1px solid #808080;
+	box-sizing: border-box;
+	padding:13px 0 10px;
+}
+
+.active_tab {
+    border-bottom: 6px solid #ffd37d;
+}
+.action-col:active {
+  opacity: 0.7;
+}
+
+.action-col:last-of-type {
+    border-right: none;
+}
+
+.action-col a {
+    display: block;
+    width: 100%;
+}
+.action-icon {
+  font-size: 1.4em;
+	padding-bottom: 5px;
+}
+
+.action-label {
+    font-size: 0.9em;
+	font-family: 'Noto400', sans-serif;
+}
+
+.map span {
+	display: block;
+	padding-bottom: 20px;
+}
+
+.detail_contents {
+	padding-top: 10px;
+	width: 90%;
+	margin: 0 auto;
+	font-family: 'Noto400', sans-serif;
+}
+
+.detail_contents p {
+	line-height: 1.3em;
 }

@@ -101,7 +101,7 @@ ons-list-item {
 }
 
 .info .address {
-    font-family: 'Noto700', sans-serif;
+    font-family: 'Noto500', sans-serif;
 }
 
 .info .address:before {
@@ -335,4 +335,22 @@ div .list h2:before {
 div .error {
     font-size: 0.8em;
     color: #ea553a;
+}
+
+/*画像サムネイル*/
+#thumbnail {
+    background-color: #333;
+    padding: 3px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.img-resize {
+    max-width: 280px;
+    max-height: 280px;
+    width: expression(this.width >= this.height ? "280px" : "auto");
+	height: expression(this.width <= this.height ? "280px" : "auto");
+    margin: 0 auto;
+    display: block;
 }
