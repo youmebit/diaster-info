@@ -1,4 +1,4 @@
-<ons-page>
+<ons-page ng-controller="detailCtrl" ng-init="init()">
    <ons-toolbar fixed-style class="with-back">
 		<div class="left">
 			<ons-back-button modifier="back">戻る</ons-back-button>
@@ -20,34 +20,34 @@
 		</div>
 		<ons-list>
 			<ons-row>
-				<ons-col class="action-col">
+				<ons-col class="action-col" ng-click="toMap()" ng-class="{active_tab:tab == 'map'}">
 					<div class="action-icon"><ons-icon icon="fa fa-map-o"></ons-icon></div>
 					<div class="action-label">場所</div>
 				</ons-col>
-				<ons-col class="action-col">
+				<ons-col ng-click="toComment()" class="action-col" ng-class="{active_tab:tab == 'comment'}">
 					<div class="action-icon"><ons-icon icon="fa fa-commenting-o"></ons-icon></div>
 					<div class="action-label">コメント</div>
 				</ons-col>
-				<ons-col class="action-col">
+				<ons-col class="action-col" ng-click="toStaff()" ng-class="{active_tab:tab == 'staff'}">
 					<div class="action-icon"><ons-icon icon="fa fa-black-tie"></ons-icon></div>
 					<div class="action-label">市役所の対応</div>
 				</ons-col>
 			</ons-row>
 		</ons-list>
-		<div class="map info">
+		<div class="map info" ng-if="tab == 'map'">
 			<span class="address">雲雀丘山手2丁目7-13</span>
 			<div>
 				<img src="https://placehold.jp/330x180.png" alt="">
 			</div>
 		</div>
-		<div class="detail_contents">
+		<div class="detail_contents" ng-if="tab == 'comment'">
 			<p>
 				親譲りの無鉄砲で小供の時から損ばかりしている。小学校に居る時分学校の二階から飛び降りて一週間ほど腰を抜かした事がある。なぜそんな無闇をしたと聞く人があるかも知れぬ。別段深い理由でもない。新築の二階から
 			</p>
 		</div>
-		<div class="detail_contents">
+		<div class="detail_contents" ng-if="tab == 'staff'">
 			<p>
-				親譲りの無鉄砲で小供の時から損ばかりしている。小学校に居る時分学校の二階から飛び降りて一週間ほど腰を抜かした事がある。なぜそんな無闇をしたと聞く人があるかも知れぬ。別段深い理由でもない。新築の二階から
+				つれづれなるまゝに、日暮らし、硯にむかひて、心にうつりゆくよしなし事を、そこはかとなく書きつくれば、あやしうこそものぐるほしけれ。（Wikipediaより）つれづれなるまゝに、日暮らし、硯にむかひて、
 			</p>
 		</div>
   	</main>
