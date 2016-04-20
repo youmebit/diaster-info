@@ -26,18 +26,27 @@ app.run(function($rootScope, mBaasService, tabService) {
 
 app.controller('bodyCtrl', function($scope, mBaasService, tabService) {
 	$scope.topInit = function() {
+		var ncmb = mBaasService.getNcmb();
 		var current = mBaasService.getCurrentUser();
 		if (current) {
 			// 匿名ユーザー判定
 			if (current.authData == null) {
-				$scope.user.username = current.userName;
-				$scope.user.isLogin = true;
+				if (!current.sessionToken) {
+					mBaasService.login(current.mailAddress, current.passoword);
+					$scope.$on('login_complate', function(event, data) {
+						$scope.user.username = data;
+						$scope.user.isLogin = true;
+					});
+				} else {
+					$scope.user.username = current.userName;
+					$scope.user.isLogin = true;
+				}
 			}
 		} else {
 			//　初回起動(匿名ユーザー登録)
-			var ncmb = mBaasService.getNcmb();
 			ncmb.User.loginAsAnonymous();
 		}
+		
 	}
 	$scope.toHome = function() {
         tabService.setActiveTab(0);
@@ -186,6 +195,12 @@ app.constant('correspond', {
 			 	'1' : '対応中です',
 				'2' : '対応しました'
 });
+
+app.constant('role', {
+			 	'member' : '0',
+			 	'staff' : '1'
+});
+
 // htmlタグに'hide-tabbar'をつけるとタップした時にタブバーを非表示にする。
 app.directive('hideTabbar', function($timeout) {
     return {

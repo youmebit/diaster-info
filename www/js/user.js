@@ -1,5 +1,5 @@
 'use strict';
-app.controller('userCtrl', function ($scope, mBaasService) {
+app.controller('userCtrl', function ($scope, role, mBaasService) {
     $scope.user = {};
     $scope.signUp = function () {
         if (!confirm('登録してもよろしいですか?')) {
@@ -11,7 +11,8 @@ app.controller('userCtrl', function ($scope, mBaasService) {
         var user = new ncmb.User();
         user.set("userName", $scope.signup.username)
             .set("password", $scope.signup.password)
-            .set("mailAddress", $scope.signup.email);
+            .set("mailAddress", $scope.signup.email)
+			.set("role", role.member);
         user.signUpByAccount()
         .then(function () {
             myNavigator.pushPage('user/regist_info.html');
