@@ -43,6 +43,10 @@ app.controller('bodyCtrl', function($scope, mBaasService, tabService) {
         tabService.setActiveTab(0);
     }
 
+	$scope.toDisplayPage = function() {
+		tabService.setActiveTab(2);
+	}
+
     $scope.toLoginPage = function() {
         tabService.setActiveTab(3);
     }
@@ -65,10 +69,6 @@ app.controller('bodyCtrl', function($scope, mBaasService, tabService) {
 			username : 'ゲスト'
 		};
 		ncmb.User.logout();
-	}
-
-	$scope.toListPage = function() {
-		console.log('aaa');
 	}
 });
 

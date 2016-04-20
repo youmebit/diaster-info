@@ -65,6 +65,13 @@ ons-list-item {
     color: #666;
 }
 
+.contents .info {
+    padding: 0 0 15px 0;
+    margin: 0;
+    width: 100%;
+    font-size: 1.2em;
+}
+
 .info {
     padding: 3% 0 3% 3%;
 }
@@ -193,6 +200,7 @@ div .list h2:before {
     height: 44%;
     padding: 15% 0 10%;
     box-sizing: border-box;
+	font-size: 1.1em;
 }
 
 #login_name {
