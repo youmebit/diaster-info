@@ -49,7 +49,7 @@ app.controller('imgSelectCtrl', function ($scope, mBaasService, geoService, $tim
                         }
                     });
 
-                    myNavigator.pushPage('post.html', {
+                    myNavigator.pushPage('post/post.html', {
                         image: "data:image/jpeg;base64," + imageURI,
                         address: longAddress,
                         latitude: latitude,
@@ -140,7 +140,7 @@ app.controller('postCtrl', function ($scope, mBaasService) {
 
         // データストア登録成功
         var saveSuccess = function () {
-            myNavigator.pushPage('post_info.html');
+            myNavigator.pushPage('post/post_info.html');
         }
 
         // ファイルアップロード成功

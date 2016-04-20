@@ -6,20 +6,19 @@
 			一覧選択
 		</div>
 	</ons-toolbar>
-	<main>
-    <div class="contents">
-		<p>どちらを見ますか？</p>
-           <ul id="func-navi">
-            <li>
-                <ons-button modifier="border" ng-click="toPostPage()">
-                    <ons-icon icon="fa-paste" size="3x"></ons-icon><br>マイレポート
-                </ons-button>
-            </li>
-            <li>
-                <ons-button ng-click="toDisplayPage()" modifier="border"><ons-icon icon="fa-list" size="3x"></ons-icon><br>すべての情報</ons-button>
-            </li>
-        </ul>
-    </div>
+	<main class="contents contents_position">
+		<p class="info">どちらを見ますか？</p>
+	   <ul id="func-navi">
+		<li>
+			<ons-button modifier="border" ng-click="toPostPage()">
+				<ons-icon icon="fa-paste" size="3x"></ons-icon><br>マイレポート
+			</ons-button>
+		</li>
+		<li>
+			<ons-button ng-click="toDisplayPage()" modifier="border"><ons-icon icon="fa-list" size="3x"></ons-icon><br>すべての情報</ons-button>
+		</li>
+	</ul>
 	</main>
+	<link rel="stylesheet" href="css/post.css">
 	</ons-page>
 </ons-template>

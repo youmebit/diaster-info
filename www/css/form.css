@@ -1,4 +1,10 @@
 /* This is a CSS file */
+.form_bg {
+	display: block;
+	background-color: #f2f2f2;
+	height: 100%;
+}
+
 .list {
     border-top:none;
 }
@@ -53,6 +59,7 @@
     padding: 15px 0 10px;
 }
 
+/*
 p {
     font-family: 'Noto500', sans-serif;
     width: 90%;
@@ -61,6 +68,7 @@ p {
     font-size: 1em;
     line-height: 1.5;
 }
+*/
 
 .form_contents {
     width: 100%;
@@ -69,7 +77,7 @@ p {
 }
 
 .contents {
-    padding-top: 15px;
+    padding-top: 10px;
 }
 
 form dt {
