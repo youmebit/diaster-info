@@ -44,7 +44,7 @@ app.controller('bodyCtrl', function($scope, mBaasService, tabService) {
 			}
 		} else {
 			//　初回起動(匿名ユーザー登録)
-			ncmb.User.loginAsAnonymous();
+			mBaasService.loginAsAnonymous();
 		}
 		
 	}
@@ -78,6 +78,7 @@ app.controller('bodyCtrl', function($scope, mBaasService, tabService) {
 			username : 'ゲスト'
 		};
 		ncmb.User.logout();
+		mBaasService.loginAsAnonymous();
 	}
 });
 
@@ -112,6 +113,10 @@ app.service('mBaasService', function ($rootScope) {
 			$scope.login.password = '';
         });
     }
+	
+	this.loginAsAnonymous = function() {
+		this.getNcmb().User.loginAsAnonymous();
+	}
 });
 
 // タブバーの番号を設定するとそのページに遷移するサービス

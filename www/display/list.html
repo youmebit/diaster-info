@@ -7,10 +7,12 @@
 			災害情報一覧
 		</div>
 	</ons-toolbar>
-  	<main>
+  	<main ng-controller="listCtrl" ng-init="init()">
 	  <div class="count">
 		情報件数:45件
 	  </div>
+	  <div ng-repeat="p in posts"><span ng-bind="p.comment"></span></div>
+<!--
 	<ons-list>
 		<ons-list-item modifier="chevron" class="info" ng-click="myNavigator.pushPage('display/detail.html')">
 			<ons-row class="date right">
@@ -61,6 +63,7 @@
 			</ons-row>
 		</ons-list-item>
 	</ons-list>
+-->
   	</main>
 	<link rel="stylesheet" href="css/display.css">
 </ons-page>

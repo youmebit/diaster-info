@@ -1,5 +1,13 @@
 'use strict';
-app.controller('displayCtrl', function($scope) {
+app.controller('listCtrl', function($scope, mBaasService) {
+	$scope.init = function() {
+		var ncmb = mBaasService.getNcmb();
+		var Posts = ncmb.DataStore("Posts");
+		Posts.fetchAll().then(function(results) {
+			console.log(JSON.stringify(results[0]));
+			$scope.posts = results;
+		});
+	}
 });
 
 app.controller('detailCtrl', function($scope) {
