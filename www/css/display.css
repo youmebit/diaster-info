@@ -37,6 +37,10 @@
 	padding: 3px 0;
 }
 
+.spin {
+	text-align: center;
+}
+
 /*対応状況*/
 .correspond {
 	line-height: 1em;

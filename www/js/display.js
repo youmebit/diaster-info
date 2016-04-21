@@ -1,10 +1,21 @@
 'use strict';
+app.controller('selectCtrl', function($scope) {
+	$scope.toAllInfo = function() {
+		myNavigator.pushPage('display/list.html');
+	}
+});
+
 app.controller('listCtrl', function($scope, mBaasService) {
 	$scope.init = function() {
+		$scope.isFinImg = false;
 		var ncmb = mBaasService.getNcmb();
 		var Posts = ncmb.DataStore("Posts");
 		Posts.order("updateDate", true).fetchAll().then(function(results) {
 			$scope.$apply($scope.posts = results);
+		});
+
+		$scope.$on('eventFinishedEventFired', function() {
+			$scope.isFinImg = true;
 		});
 	}
 });
@@ -29,7 +40,6 @@ app.controller('detailCtrl', function($scope) {
 	}
 });
 
-
 app.constant('correspond', {
 	'0':{class : 'still', label : 'これから対応します'},
 	'1':{class : 'now', label : '対応中です'},
@@ -46,4 +56,14 @@ app.directive("toCorrespond", function(correspond) {
 			scope.cor = correspond[flag];
 		}
 	};
+});
+
+app.directive("eventFinished", function($timeout){
+    return function(scope, element, attrs){
+      if (scope.$last){
+ 		$timeout(function(){
+          scope.$emit("eventFinishedEventFired");
+        });
+	  }
+    }
 });
