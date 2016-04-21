@@ -18,17 +18,57 @@ app.controller('listCtrl', function($scope, mBaasService) {
 			$scope.isFinImg = true;
 		});
 	}
+
+	// 詳細ページへ遷移する
+	$scope.toDetail = function(objectId) {
+		myNavigator.pushPage('display/detail.html', {id : objectId});
+	}
 });
 
-app.controller('detailCtrl', function($scope) {
+app.controller('detailCtrl', function($scope, $timeout, mBaasService) {
+//	詳細画面表示
 	$scope.init = function() {
-		$scope.tab = 'map';
+		var options = $scope.myNavigator.getCurrentPage().options;
+		var ncmb = mBaasService.getNcmb();
+		var Posts = ncmb.DataStore("Posts");
+		Posts.equalTo("objectId", options.id).fetch().then(function(result) {
+			$scope.$apply(function() {
+				$scope.obj = result;
+				$scope.$broadcast('viewMap', result);
+				$scope.toMap();
+			});
+		});
+		
+		// データが取れたタイミングで地図を表示。
+		$scope.$on('viewMap', function(event, result) {
+			$timeout(function() {
+				var geocoder = new google.maps.Geocoder();
+				var centerLatlng = new google.maps.LatLng(result.point.latitude ,result.point.longitude);
+				var myOptions = {
+					zoom: 16,
+					center: centerLatlng,
+					mapTypeId: google.maps.MapTypeId.ROADMAP,
+					disableDefaultUI: true
+				};
+				$scope.map = new google.maps.Map(document.getElementById("gmap"), myOptions);
+				$scope.element = document.getElementById('gmap');
+				var latlng = new google.maps.LatLng(result.point.latitude ,result.point.longitude);
+
+				// マーカーをmap内に表示
+				var marker = new google.maps.Marker({
+					position: latlng,
+					map: $scope.map
+				});
+			}, 100);
+		});
 	}
+	
 	
 	// 地図タブ表示
 	$scope.toMap = function() {
 		$scope.tab = 'map';
 	}
+	
 	
 	// コメントタブ表示
 	$scope.toComment = function() {
@@ -49,10 +89,10 @@ app.constant('correspond', {
 app.directive("toCorrespond", function(correspond) {
 	return {
 		restrict: 'A',
-		scope:true,
+		scope:false,
 		template:'<span class="correspond {{cor.class}}" ng-bind="cor.label"></span>',
 		link: function (scope, element, attr) {
-			var flag = attr['toCorrespond'];
+			var flag = attr.toCorrespond;
 			scope.cor = correspond[flag];
 		}
 	};

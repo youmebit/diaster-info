@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('myApp', ['onsen.directives','ngMessages']);
+var app = angular.module('myApp', ['onsen.directives', 'ngMessages']);
 app.run(function($rootScope, mBaasService, tabService) {
 	$rootScope.settings = {
 		isHideTabbar : false
@@ -29,22 +29,20 @@ app.controller('bodyCtrl', function($scope, mBaasService, tabService) {
 		var ncmb = mBaasService.getNcmb();
 		var current = mBaasService.getCurrentUser();
 		if (current) {
-			// 匿名ユーザー判定
-			if (current.authData == null) {
-				if (!current.sessionToken) {
-					mBaasService.login(current.mailAddress, current.passoword);
-					$scope.$on('login_complate', function(event, data) {
-						$scope.user.username = data;
+			current.login().then(function(user) {
+				$scope.$apply(function() {
+					if (user.mailAddress) {
+						$scope.user.username = user.userName;
 						$scope.user.isLogin = true;
-					});
-				} else {
-					$scope.user.username = current.userName;
-					$scope.user.isLogin = true;
-				}
-			}
+					}
+				});
+			}).catch(function(err) {
+				console.log(err);
+			});
 		} else {
 			//　初回起動(匿名ユーザー登録)
 			mBaasService.loginAsAnonymous();
+			console.log('匿名ユーザー登録しました');
 		}
 		
 	}

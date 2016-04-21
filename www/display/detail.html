@@ -10,15 +10,20 @@
   	<main>
   		<div class="sub_info">
 		  <div class="left_info">
-			<span class="correspond fin">対応しました</span>
-			<div class="user">くろかわしんのすけさん</div>
+			<div ng-switch="obj.correspond">
+				<span class="correspond still" ng-switch-when="0">これから対応します</span>
+				<span class="correspond now" ng-switch-when="1">対応中です</span>
+				<span class="correspond fin" ng-switch-when="2">対応しました</span>
+				</div>
+			<div>
+			<span class="user" ng-bind="obj.username"></span>さん</div>
 		  </div>
 		  <div class="right_info">
-			<span class="date right">2016/02/17 13:00</span>
+			<span class="date right" ng-bind="obj.updateDate | date:'yyyy/MM/dd HH:mm'"></span>
 		  </div>
   		</div>
-	  <div id="thumbnail">
-		<img class="img-resize" src="http://placeimg.com/280/280/arch">
+	  <div class="thumbnail">
+		<img class="img-resize" ng-src="https://mb.api.cloud.nifty.com/2013-09-01/applications/TOjZsCJbSJeKWALV/publicFiles/{{obj.photo}}">
 		</div>
 		<ons-list>
 			<ons-row>
@@ -37,15 +42,11 @@
 			</ons-row>
 		</ons-list>
 		<div class="map info" ng-if="tab == 'map'">
-			<span class="address">雲雀丘山手2丁目7-13</span>
-			<div>
-				<img src="https://placehold.jp/330x180.png" alt="">
-			</div>
+			<span class="address" ng-bind="obj.address"></span>
+			<div id="gmap" style="width:99%; height:300px;"></div>
 		</div>
 		<div class="detail_contents" ng-if="tab == 'comment'">
-			<p>
-				親譲りの無鉄砲で小供の時から損ばかりしている。小学校に居る時分学校の二階から飛び降りて一週間ほど腰を抜かした事がある。なぜそんな無闇をしたと聞く人があるかも知れぬ。別段深い理由でもない。新築の二階から
-			</p>
+			<p ng-bind="obj.comment"></p>
 		</div>
 		<div class="detail_contents" ng-if="tab == 'staff'">
 			<p>
