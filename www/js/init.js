@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('myApp', ['onsen.directives', 'ngMessages']);
+var app = angular.module('myApp', ['onsen.directives','ngMessages']);
 app.run(function($rootScope, mBaasService, tabService) {
 	$rootScope.settings = {
 		isHideTabbar : false
@@ -193,12 +193,6 @@ app.service('geoService', function() {
                 modal.hide();
             }, geoOptions);
     }
-});
-
-app.constant('correspond', {
-			 	'0' : 'これから対応します',
-			 	'1' : '対応中です',
-				'2' : '対応しました'
 });
 
 app.constant('role', {

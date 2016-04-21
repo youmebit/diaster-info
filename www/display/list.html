@@ -14,7 +14,7 @@
 	<ons-list>
 		<ons-list-item modifier="chevron disaster_list" class="info" ng-click="myNavigator.pushPage('display/detail.html')" ng-repeat="p in posts">
 			<ons-row class="date right">
-				<span ng-bind="p.updateDate"></span>
+				<span ng-bind="p.updateDate | date:'yyyy/MM/dd HH:mm'"></span>
 			</ons-row>
 			<ons-row>
 			<ons-col width="105px">
@@ -23,10 +23,7 @@
 			  </div>
 			</ons-col>
 			<ons-col>
-				<div ng-switch="p.correspond">
-					<span class="correspond still" ng-switch-when="0">これから対応します</span>
-					<span class="correspond fin" ng-switch-when="2">対応しました</span>
-				</div>
+				<span to-correspond="{{p.correspond}}"></span>
 			  <div class="address" ng-bind="p.address"></div>
 			  <div class="name" ng-bind="p.username"></div>
 			  <div ng-bind="p.comment"></div>
