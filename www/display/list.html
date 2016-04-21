@@ -9,61 +9,31 @@
 	</ons-toolbar>
   	<main ng-controller="listCtrl" ng-init="init()">
 	  <div class="count">
-		情報件数:45件
+		情報件数:<span ng-bind="posts.length"></span>件
 	  </div>
-	  <div ng-repeat="p in posts"><span ng-bind="p.comment"></span></div>
-<!--
 	<ons-list>
-		<ons-list-item modifier="chevron" class="info" ng-click="myNavigator.pushPage('display/detail.html')">
+		<ons-list-item modifier="chevron disaster_list" class="info" ng-click="myNavigator.pushPage('display/detail.html')" ng-repeat="p in posts">
 			<ons-row class="date right">
-				2016/02/17 13:00
+				<span ng-bind="p.updateDate"></span>
 			</ons-row>
 			<ons-row>
-			<ons-col width="100px">
-			  <img src="http://placeimg.com/90/90/animals">
+			<ons-col width="105px">
+			  <div class="photo">
+			  	<img class="photo" ng-src="https://mb.api.cloud.nifty.com/2013-09-01/applications/TOjZsCJbSJeKWALV/publicFiles/{{p.photo}}">
+			  </div>
 			</ons-col>
 			<ons-col>
-				<span class="correspond now">対応中です</span>
-			  <div class="address">中筋山手5丁目1-1</div>
-			  <div class="name">おおもりかずよさん</div>
-			  <div>この文章はダミーです。文字の大きさ、量、字間、行間等を確認す...</div>
-			</ons-col>
-			</ons-row>
-		</ons-list-item>
-		<ons-list-item modifier="chevron" class="info">
-			<ons-row class="date right">
-				2016/02/17 13:00
-			</ons-row>
-			<ons-row>
-			<ons-col width="100px">
-			  <img src="http://placeimg.com/90/90/arch">
-			</ons-col>
-			<ons-col>
-<span class="correspond fin">対応しました</span>
-			  <div class="address">中筋山手5丁目1-1</div>
-			  <div class="name">おおもりかずよさん</div>
-			  <div>この文章はダミーです。文字の大きさ、量、字間、行間等を確認す...</div>
-			</ons-col>
-			</ons-row>
-		</ons-list-item>
-		<ons-list-item modifier="chevron" class="info">
-			<ons-row class="date right">
-				2016/02/17 13:00
-			</ons-row>
-			<ons-row>
-			<ons-col width="100px">
-			  <img src="http://placeimg.com/90/90/any">
-			</ons-col>
-			<ons-col>
-				<span class="correspond still">これから対応します</span>
-			  <div class="address">中筋山手5丁目1-1</div>
-			  <div class="name">おおもりかずよさん</div>
-			  <div>この文章はダミーです。文字の大きさ、量、字間、行間等を確認す...</div>
+				<div ng-switch="p.correspond">
+					<span class="correspond still" ng-switch-when="0">これから対応します</span>
+					<span class="correspond fin" ng-switch-when="2">対応しました</span>
+				</div>
+			  <div class="address" ng-bind="p.address"></div>
+			  <div class="name" ng-bind="p.username"></div>
+			  <div ng-bind="p.comment"></div>
 			</ons-col>
 			</ons-row>
 		</ons-list-item>
 	</ons-list>
--->
   	</main>
 	<link rel="stylesheet" href="css/display.css">
 </ons-page>

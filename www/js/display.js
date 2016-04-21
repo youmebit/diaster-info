@@ -4,8 +4,7 @@ app.controller('listCtrl', function($scope, mBaasService) {
 		var ncmb = mBaasService.getNcmb();
 		var Posts = ncmb.DataStore("Posts");
 		Posts.fetchAll().then(function(results) {
-			console.log(JSON.stringify(results[0]));
-			$scope.posts = results;
+			$scope.$apply($scope.posts = results);
 		});
 	}
 });

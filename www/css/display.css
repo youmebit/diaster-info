@@ -1,5 +1,12 @@
+.list {
+	padding-bottom: 100px;
+}
 .list__item {
 	line-height: 30px;
+}
+
+.list__item:last-of-type {
+	border-bottom: 1px solid #808080;
 }
 
 .right {
@@ -16,10 +23,6 @@
 	font-family: 'Noto400', sans-serif;
 }
 
-.info .thumbnail img{
-	width: 90px;
-}
-
 .info div, info .correspond {
 	margin-bottom: 2px;
 	margin-top: 2px;
@@ -34,6 +37,7 @@
 	padding: 3px 0;
 }
 
+/*対応状況*/
 .correspond {
 	line-height: 1em;
 	text-align: center;
@@ -43,22 +47,40 @@
 	border-radius: 3px;
 }
 
+/*対応状況(これから対応します)*/
 .still {
 	width: 100px;
 	color: #666;
 	border: 1px solid #666;
 }
 
+/*対応状況(対応中です)*/
 .now {
 	width: 80px;
 	background-color: #fdd37d;
 	color: #666;
 }
 
+/*対応状況(対応しました)*/
 .fin {
 	width: 80px;
 	background-color: #29abe2;
 	color: #fffffa;
+}
+
+/*一覧の写真サイズ*/
+.info .photo {
+	vertical-align: middle;
+    background-color: #333;
+	width: 95px;
+}
+
+info .photo img {
+	max-width: 90px;
+    max-height: 90px;
+    width: expression(this.width >= this.height ? "90px" : "auto");
+	height: expression(this.width <= this.height ? "90px" : "auto");
+    margin: 0 auto;
 }
 
 /*詳細画面のタブ表示*/
@@ -124,6 +146,7 @@
 	padding-bottom: 20px;
 }
 
+/*詳細画面の余白設定*/
 .detail_contents {
 	padding-top: 10px;
 	width: 90%;

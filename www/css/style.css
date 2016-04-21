@@ -73,6 +73,7 @@ ons-list-item {
 	border-bottom: 1px solid #808080;
 	border-top: 1px solid #808080;
 }
+
 .list__item--chevron:before {
 	color:#999;
 }
@@ -338,7 +339,7 @@ div .error {
 }
 
 /*画像サムネイル*/
-#thumbnail {
+.thumbnail {
     background-color: #333;
     padding: 3px;
     -webkit-box-sizing: border-box;
