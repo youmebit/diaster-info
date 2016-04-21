@@ -126,6 +126,12 @@ app.controller('postCtrl', function ($scope, mBaasService) {
         $scope.piece.address = options.address;
         $scope.piece.latitude = options.latitude;
         $scope.piece.longitude = options.longitude;
+		$scope.piece.userId = null;
+		if ($scope.user.isLogin) {
+			var current = mBaasService.getCurrentUser();
+			$scope.piece.userId = current.objectId;
+			$scope.piece.name = current.userName;
+		}
         image.src = options.image;
     }
 
@@ -147,17 +153,16 @@ app.controller('postCtrl', function ($scope, mBaasService) {
         var uploadSuccess = function () {
             var Posts = ncmb.DataStore("Posts");
             var data = new Posts();
-			if ($scope.user.isLogin) {
-				data.set("username", $scope.user.name);
-			} else {
-				data.set("username", piece.name);
-			}
+			data.set("userID", piece.userId);
+			data.set("username", piece.name);
             data.set("photo", fileName);
             data.set("address", piece.address);
             data.set("comment", piece.comment);
             var geopoint = new ncmb.GeoPoint(piece.latitude, piece.longitude);
             data.set("point", geopoint);
 			data.set("correspond", 0);
+			
+			
             data.save().then(function (data) {
                 saveSuccess();
             }).catch(function (err) {
