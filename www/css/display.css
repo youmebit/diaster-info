@@ -14,9 +14,24 @@
 	text-align: right;
 }
 
+/*情報件数*/
 .count {
-    padding: 20px 0 20px 10px;
-	font-family: 'Noto500', sans-serif;
+	font-family: 'Noto400', sans-serif;
+	display: table;
+	padding-left: 10px;
+	width: 100%;
+}
+
+.count > div {
+	display: table-cell;
+}
+
+.count > div:first-of-type {
+	width: 68%;
+}
+
+.count > div:last-of-type {
+	background-color: rgba(54,162,132, 0.77);
 }
 
 .info {
@@ -28,6 +43,65 @@
 	margin-top: 2px;
 }
 
+/*絞り込みボタン*/
+.filter {
+	width: 100%;
+	cursor: pointer;
+	color: #fffffa;
+	display: block;
+	padding: 15px 0;
+	height: 100%;
+	text-align: center;
+}
+
+.filter ons-icon {
+	padding-left: 3px;
+}
+.accordion {
+	-webkit-transition: height 0.5s ease;
+	transition: height 0.5s ease;
+	height: 150px;
+	overflow: hidden;
+}
+
+.accordion.hide, .accordion.hide.button-bar{
+  	height: 0;
+}
+
+/*絞り込みToggleボタン*/
+.button-bar {
+	display: block;
+	width: 100%;
+	overflow: auto;
+}
+
+.button-bar__item {
+	display: block;
+	border-radius: 0;
+}
+
+.button-bar__item > .button-bar__button {
+	border: 1px solid rgba(54,162,132,0.77);
+	height: 50px;
+/*	ボタン切り替え速度*/
+	transition: background-color 0.1s linear, color 0.1s linear;
+	vertical-align:middle;
+	font-family: 'Noto400', sans-serif;
+	font-size: 0.9em;
+}
+.button-bar__item:first-child > .button-bar__button {
+	border-bottom: 0;
+	border-top-left-radius: 0px;
+	border-bottom-left-radius: 0px;
+}
+.button-bar__item:last-child > .button-bar__button {
+	border-top: 0;
+	border-bottom: 0;
+	border-top-right-radius: 0px;
+	border-bottom-right-radius: 0px;
+}
+
+/*名前*/
 .name {
 	color: #808080;
 	font-size: 0.8em;

@@ -9,7 +9,29 @@
 	</ons-toolbar>
   	<main ng-controller="listCtrl" ng-init="init()">
 	  <div class="count">
-		情報件数:<span ng-bind="posts.length"></span>件
+		<div>情報件数:<span ng-bind="posts.length"></span>件</div>
+		<div>
+			<span class="filter" ng-click="showFilter = !showFilter">
+			<span ng-show="showFilter">絞り込み<ons-icon icon=" fa-angle-down"></ons-icon></span>
+			<span ng-hide="showFilter">閉じる<ons-icon icon=" fa-angle-up"></ons-icon></span>
+			</span></div>
+	  	</div>
+	  <div class="accordion" ng-class="{hide: showFilter}">
+		<div class="button-bar">
+		  <div class="button-bar__item">
+			<input type="radio" name="segment-a" checked>
+			<button class="button-bar__button">これから対応します</button>
+		  </div>
+		  <div class="button-bar__item">
+			<input type="radio" name="segment-a">
+			<button class="button-bar__button">Two</button>
+		  </div>
+
+		  <div class="button-bar__item">
+			<input type="radio" name="segment-a">
+			<button class="button-bar__button">Three</button>
+		  </div>
+		</div>
 	  </div>
 	<ons-list modifier="disaster_list">
 		<ons-list-item modifier="chevron" class="info" ng-click="toDetail(p.objectId)" ng-repeat="p in posts" event-finished>

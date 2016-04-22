@@ -8,6 +8,7 @@ app.controller('selectCtrl', function($scope) {
 app.controller('listCtrl', function($scope, mBaasService) {
 	$scope.init = function() {
 		$scope.isFinImg = false;
+		$scope.showFilter = true;
 		var ncmb = mBaasService.getNcmb();
 		var Posts = ncmb.DataStore("Posts");
 		Posts.order("updateDate", true).fetchAll().then(function(results) {
