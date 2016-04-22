@@ -4,7 +4,7 @@ app.controller('loginCtrl', function($scope, mBaasService) {
 		if (!confirm('ログインしてもよろしいですか？')) {
 			return;
 		}
-        mBaasService.login($scope.login.email, $scope.login.password);
+        mBaasService.loginAsEmail($scope.login.email, $scope.login.password);
 		$scope.$on('login_complate', function(event, data) {
 			$scope.user.username = data;
 			$scope.user.isLogin = true;
