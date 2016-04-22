@@ -19,22 +19,19 @@
 	  <div class="accordion" ng-class="{hide: showFilter}">
 		<div class="button-bar">
 		  <div class="button-bar__item">
-			<input type="radio" name="segment-a" checked>
-			<button class="button-bar__button">これから対応します</button>
+			<input type="radio" name="cor" ng-model="cor.selected" ng-value="-1" checked>
+			<button class="button-bar__button">すべて表示</button>
 		  </div>
-		  <div class="button-bar__item">
-			<input type="radio" name="segment-a">
-			<button class="button-bar__button">Two</button>
-		  </div>
-
-		  <div class="button-bar__item">
-			<input type="radio" name="segment-a">
-			<button class="button-bar__button">Three</button>
+		</div>
+		<div class="button-bar">
+		  <div class="button-bar__item" ng-repeat="(key, item) in toggle | orderBy: $index">
+			<input type="radio" name="cor" ng-model="cor.selected" ng-value="key">
+			<button class="button-bar__button" ng-bind="item.label"></button>
 		  </div>
 		</div>
 	  </div>
 	<ons-list modifier="disaster_list">
-		<ons-list-item modifier="chevron" class="info" ng-click="toDetail(p.objectId)" ng-repeat="p in posts" event-finished>
+		<ons-list-item modifier="chevron" class="info" ng-click="toDetail(p.objectId)" ng-repeat="p in posts | listMatch:cor.selected" event-finished>
 			<ons-row class="date right">
 				<span ng-bind="p.updateDate | date:'yyyy/MM/dd HH:mm'"></span>
 			</ons-row>

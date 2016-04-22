@@ -1,5 +1,5 @@
 .list--disaster_list {
-	padding-bottom: 100px;
+	margin-bottom: 100px;
 }
 .list__item {
 	line-height: 30px;
@@ -60,7 +60,7 @@
 .accordion {
 	-webkit-transition: height 0.5s ease;
 	transition: height 0.5s ease;
-	height: 150px;
+	height: 200px;
 	overflow: hidden;
 }
 
@@ -81,7 +81,8 @@
 }
 
 .button-bar__item > .button-bar__button {
-	border: 1px solid rgba(54,162,132,0.77);
+	border: 0;
+	border-top: 1px solid rgba(54,162,132,0.77);
 	height: 50px;
 /*	ボタン切り替え速度*/
 	transition: background-color 0.1s linear, color 0.1s linear;
@@ -90,13 +91,10 @@
 	font-size: 0.9em;
 }
 .button-bar__item:first-child > .button-bar__button {
-	border-bottom: 0;
 	border-top-left-radius: 0px;
 	border-bottom-left-radius: 0px;
 }
 .button-bar__item:last-child > .button-bar__button {
-	border-top: 0;
-	border-bottom: 0;
 	border-top-right-radius: 0px;
 	border-bottom-right-radius: 0px;
 }

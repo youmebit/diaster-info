@@ -5,10 +5,35 @@ app.controller('selectCtrl', function($scope) {
 	}
 });
 
-app.controller('listCtrl', function($scope, mBaasService) {
+
+app.constant('correspond', {
+	'0':{class : 'still', label : 'これから対応します'},
+	'1':{class : 'now', label : '対応中です'},
+	'2':{class : 'fin', label : '対応しました'}
+});
+
+// 絞り込み機能
+app.filter('listMatch', function(){
+	return function(posts, selected){
+		if (selected == -1) {
+			return posts;
+		}
+		var filters = [];
+		angular.forEach(posts, function(p) {
+			if (p.correspond == selected) {
+				filters.push(p);
+			}
+		});
+		return filters;
+	}
+});
+
+app.controller('listCtrl', function($scope, correspond, mBaasService) {
 	$scope.init = function() {
 		$scope.isFinImg = false;
 		$scope.showFilter = true;
+		$scope.toggle = correspond;
+		$scope.cor = {selected : '-1'};
 		var ncmb = mBaasService.getNcmb();
 		var Posts = ncmb.DataStore("Posts");
 		Posts.order("updateDate", true).fetchAll().then(function(results) {
@@ -17,6 +42,10 @@ app.controller('listCtrl', function($scope, mBaasService) {
 
 		$scope.$on('eventFinishedEventFired', function() {
 			$scope.isFinImg = true;
+		});
+		
+		$scope.$watch('cor.selected', function(value) {
+			$scope.showFilter = true;
 		});
 	}
 
@@ -79,12 +108,6 @@ app.controller('detailCtrl', function($scope, $timeout, mBaasService) {
 	$scope.toStaff = function() {
 		$scope.tab = 'staff';
 	}
-});
-
-app.constant('correspond', {
-	'0':{class : 'still', label : 'これから対応します'},
-	'1':{class : 'now', label : '対応中です'},
-	'2':{class : 'fin', label : '対応しました'}
 });
 
 app.directive("toCorrespond", function(correspond) {
