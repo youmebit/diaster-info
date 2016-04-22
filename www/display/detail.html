@@ -49,9 +49,17 @@
 			<p ng-bind="obj.comment"></p>
 		</div>
 		<div class="detail_contents" ng-if="tab == 'staff'">
-			<p>
+			<p ng-if="$root.user.role == 0">
 				つれづれなるまゝに、日暮らし、硯にむかひて、心にうつりゆくよしなし事を、そこはかとなく書きつくれば、あやしうこそものぐるほしけれ。（Wikipediaより）つれづれなるまゝに、日暮らし、硯にむかひて、
 			</p>
+			<form action="" class="contents" ng-if="$root.user.role == 1">
+				<dl>
+					<dt>対応状況</dt>
+					<dd></dd>
+					<dt>コメント</dt>
+					<dd></dd>
+				</dl>
+			</form>
 		</div>
   	</main>
 	<link rel="stylesheet" href="css/display.css">

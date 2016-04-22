@@ -8,7 +8,8 @@ app.run(function($rootScope, mBaasService, tabService) {
 	
 	$rootScope.user = {
 		isLogin : false,
-		username : 'ゲスト'
+		username : 'ゲスト',
+		role : 0
 	};
 
 	$rootScope.errors = [
@@ -24,7 +25,7 @@ app.run(function($rootScope, mBaasService, tabService) {
 	tabService.setActiveTab(0);
 });
 
-app.controller('bodyCtrl', function($scope, mBaasService, tabService) {
+app.controller('bodyCtrl', function($scope, $rootScope, mBaasService, tabService) {
 	$scope.topInit = function() {
 		var ncmb = mBaasService.getNcmb();
 		var current = mBaasService.getCurrentUser();
@@ -34,8 +35,9 @@ app.controller('bodyCtrl', function($scope, mBaasService, tabService) {
 				mBaasService.loginAsName(current.userName, current.password);
 				$scope.$on('login_complate', function(event, data) {
 					$scope.$apply(function() {
-						$scope.user.username = data;
-						$scope.user.isLogin = true;
+						$rootScope.user.username = data.userName;
+						$rootScope.user.isLogin = true;
+						$rootScope.user.role = data.role;
 					});
 				});
 			} else {
@@ -105,7 +107,7 @@ app.service('mBaasService', function ($rootScope) {
     this.loginAsEmail = function(address, password) {
         var ncmb = this.getNcmb();
         ncmb.User.loginWithMailAddress(address, password).then(function(data) {
-            $rootScope.$broadcast('login_complate', data.userName);
+            $rootScope.$broadcast('login_complate', data);
         })
         .catch(function(err){
             alert('メールアドレスもしくはパスワードが違います。');
@@ -115,7 +117,7 @@ app.service('mBaasService', function ($rootScope) {
 	
 	this.loginAsName = function(name, password) {
 		ncmb.User.login(name, password).then(function(data) {
-			$rootScope.$broadcast('login_complate', data.userName);
+			$rootScope.$broadcast('login_complate', data);
 		})
         .catch(function(err){
             alert('ログインに失敗しました。');

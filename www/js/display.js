@@ -55,7 +55,7 @@ app.controller('listCtrl', function($scope, correspond, mBaasService) {
 	}
 });
 
-app.controller('detailCtrl', function($scope, $timeout, mBaasService) {
+app.controller('detailCtrl', function($scope, $rootScope, $timeout, mBaasService) {
 //	詳細画面表示
 	$scope.init = function() {
 		var options = $scope.myNavigator.getCurrentPage().options;
