@@ -48,6 +48,11 @@ app.controller('listCtrl', function($scope, correspond, mBaasService) {
 			$scope.showFilter = true;
 		});
 	}
+	
+	$scope.$on('update:success', function(e, msg) {
+		$scope.init();
+		$scope.msg = msg;
+	});
 
 	// 詳細ページへ遷移する
 	$scope.toDetail = function(objectId) {
@@ -55,15 +60,20 @@ app.controller('listCtrl', function($scope, correspond, mBaasService) {
 	}
 });
 
-app.controller('detailCtrl', function($scope, $rootScope, $timeout, mBaasService) {
+app.controller('detailCtrl', function($scope, $rootScope, $timeout, postsService, correspond, mBaasService) {
 //	詳細画面表示
 	$scope.init = function() {
 		var options = $scope.myNavigator.getCurrentPage().options;
-		var ncmb = mBaasService.getNcmb();
-		var Posts = ncmb.DataStore("Posts");
-		Posts.equalTo("objectId", options.id).fetch().then(function(result) {
+		$scope.toggle = correspond;
+		$scope.form = {};
+		$scope.correspond = "";
+		postsService.find(options.id);
+		// データが取れたタイミングで格納処理
+		$scope.$on('posts_load', function(event, result) {
 			$scope.$apply(function() {
 				$scope.obj = result;
+				$scope.form.correspond = result.correspond;
+				$scope.form.response = result.response;
 				$scope.$broadcast('viewMap', result);
 				$scope.toMap();
 			});
@@ -93,7 +103,6 @@ app.controller('detailCtrl', function($scope, $rootScope, $timeout, mBaasService
 		});
 	}
 	
-	
 	// 地図タブ表示
 	$scope.toMap = function() {
 		$scope.tab = 'map';
@@ -107,6 +116,34 @@ app.controller('detailCtrl', function($scope, $rootScope, $timeout, mBaasService
 	
 	$scope.toStaff = function() {
 		$scope.tab = 'staff';
+	}
+
+	// 対応状況更新処理
+	$scope.update = function() {
+		if (!confirm('更新してもよろしいですか?')) {
+			return;
+		}
+		var ncmb = mBaasService.getNcmb();
+		var Posts = ncmb.DataStore("Posts");
+		Posts.equalTo("objectId", $scope.obj.objectId).fetch().then(function(result) {
+			result.set("correspond", $scope.form.correspond).set("response", $scope.form.response).update().then(function() {
+				myNavigator.popPage();
+				$rootScope.$broadcast('update:success', '更新しました。');
+			}).catch(function(err) {
+				console.log(err);
+			});
+		});
+		$scope.called = "called:" + $scope.form.correspond;
+	}
+});
+
+app.service('postsService', function($rootScope, mBaasService) {
+	this.find = function(id) {
+		var ncmb = mBaasService.getNcmb();
+		var Posts = ncmb.DataStore("Posts");
+		Posts.equalTo("objectId", id).fetch().then(function(result) {
+			$rootScope.$broadcast('posts_load', result);
+		});
 	}
 });
 

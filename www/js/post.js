@@ -161,6 +161,7 @@ app.controller('postCtrl', function ($scope, mBaasService) {
             var geopoint = new ncmb.GeoPoint(piece.latitude, piece.longitude);
             data.set("point", geopoint);
 			data.set("correspond", 0);
+			data.set("response", null);
 			
 			
             data.save().then(function (data) {

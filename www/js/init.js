@@ -6,11 +6,16 @@ app.run(function($rootScope, mBaasService, tabService) {
 		isHideTabbar : false
 	};
 	
-	$rootScope.user = {
-		isLogin : false,
-		username : 'ゲスト',
-		role : 0
-	};
+	$rootScope.userInit = function() {
+		var current = {
+			isLogin : false,
+			username : 'ゲスト',
+			role : 0
+		};
+		return current;
+	}
+	
+	$rootScope.user = $rootScope.userInit();
 
 	$rootScope.errors = [
       { key: 'required', msg: '必ず入力してください' },
@@ -21,7 +26,7 @@ app.run(function($rootScope, mBaasService, tabService) {
         {key: 'emailLength', msg:'256文字以下で入力してください'},
         {key: 'passLength', msg:'6文字以上16文字以下で入力してください'}
     ];
-	
+
 	tabService.setActiveTab(0);
 });
 
@@ -74,12 +79,10 @@ app.controller('bodyCtrl', function($scope, $rootScope, mBaasService, tabService
 			return;
 		}
 		var ncmb = mBaasService.getNcmb();
-		$scope.user = {
-			isLogin : false,
-			username : 'ゲスト'
-		};
-		ncmb.User.logout();
-		mBaasService.loginAsAnonymous();
+		$rootScope.user = $rootScope.userInit();
+		ncmb.User.logout().then(function(){
+			$scope.topInit();
+		});
 	}
 });
 
@@ -111,7 +114,6 @@ app.service('mBaasService', function ($rootScope) {
         })
         .catch(function(err){
             alert('メールアドレスもしくはパスワードが違います。');
-			$scope.login.password = '';
         });
     }
 	

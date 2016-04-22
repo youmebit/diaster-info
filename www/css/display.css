@@ -91,10 +91,15 @@
 	font-size: 0.9em;
 }
 .button-bar__item:first-child > .button-bar__button {
+	border-left: 0;
+	border-right: 0;
 	border-top-left-radius: 0px;
 	border-bottom-left-radius: 0px;
 }
+
 .button-bar__item:last-child > .button-bar__button {
+	border-left: 0;
+	border-right: 0;
 	border-top-right-radius: 0px;
 	border-bottom-right-radius: 0px;
 }
@@ -234,4 +239,9 @@ info .photo img {
 
 .detail_contents p {
 	line-height: 1.3em;
+}
+
+.tag:before {
+	content: '\f02b';
+	font-family: 'FontAwesome';
 }
