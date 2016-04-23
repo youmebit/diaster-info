@@ -52,11 +52,12 @@ app.service('dialogService', function($rootScope){
 app.factory('Current', function(){
 	var current = {};
 	return {
-		setCurrent : function(username, isLogin, role) {
+		setCurrent : function(username, isLogin, role, objectId) {
 			this.current = {
 				username : username,
 				isLogin : isLogin,
-				role : role
+				role : role,
+				objectId : objectId
 			};
 		},
 		getCurrent : function() {
@@ -66,7 +67,8 @@ app.factory('Current', function(){
 			this.current = {
 				username : 'ゲスト',
 				isLogin : false,
-				role : 0
+				role : 0,
+				objectId : ''
 			};
 		}
 	}
@@ -110,7 +112,6 @@ app.factory('users', function($rootScope, mBaasService) {
 			ncmb.User.logout().then(function(){
 				$rootScope.$broadcast('logout:success');
 			});
-
 		}
 	}
 });
@@ -127,6 +128,12 @@ app.factory('posts', function(mBaasService) {
 		findAll : function(success) {
 			var Posts = getPosts();
 			Posts.order("updateDate", true).fetchAll().then(function(results) {
+				success(results);
+			});
+		},
+		findByUserId : function(id, success) {
+			var Posts = getPosts();
+			Posts.equalTo("userID", id).order("updateDate", true).fetchAll().then(function(results) {
 				success(results);
 			});
 		},

@@ -13,7 +13,7 @@ app.run(function($rootScope, Current, users, tabService) {
 		if (strage.mailAddress) {
 			users.loginAsName(strage.userName, strage.password);
 			$rootScope.$on('login_complate', function(event, data) {
-				Current.setCurrent(data.userName, true, data.role);
+				Current.setCurrent(data.userName, true, data.role, data.objectId);
 			});
 		} else {
 			users.loginAsAnonymous(strage.authData.anonymous.id);

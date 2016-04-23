@@ -5,7 +5,7 @@ app.controller('loginCtrl', function($scope, Current, users, dialogService) {
 		$scope.$on('confirm:ok', function() {
 			users.loginAsEmail($scope.login.email, $scope.login.password);
 			$scope.$on('login_complate', function(event, data) {
-				Current.setCurrent(data.userName, true, data.role);
+				Current.setCurrent(data.userName, true, data.role, data.objectId);
 				$scope.toHome();
 			});
 		});

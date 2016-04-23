@@ -1,5 +1,10 @@
 'use strict';
-app.controller('selectCtrl', function($scope) {
+app.controller('selectCtrl', function($scope, Current) {
+	$scope.toMyReport = function () {
+		var id = Current.getCurrent().objectId;
+		myNavigator.pushPage('display/list.html', {userId:id});
+	}
+	
 	$scope.toAllInfo = function() {
 		myNavigator.pushPage('display/list.html');
 	}
@@ -30,7 +35,7 @@ app.filter('listMatch', function(){
 
 app.factory('listService', ['$q', 'posts', '$timeout', function($q, posts, $timeout) {
   return {
-    data: function(){
+    data: function(userId){
       //deferのインスタンスを作る（お呪いのようなもの）
       var d = $q.defer();
 
@@ -40,7 +45,11 @@ app.factory('listService', ['$q', 'posts', '$timeout', function($q, posts, $time
 			  //プロミスオブジェクトを参照もとに返す
 			  return d.promise;
 			}
-			posts.findAll(onSuccess);
+			if (!userId) {
+				posts.findAll(onSuccess);
+			} else {
+				posts.findByUserId(userId, onSuccess);
+			}
       }, 2000);
 
 	  //プロミスオブジェクトを参照もとに返す
@@ -54,17 +63,17 @@ app.controller('listCtrl', function($scope, correspond, posts, dialogService, li
 		$scope.showFilter = true;
 		$scope.toggle = correspond;
 		$scope.cor = {selected : '-1'};
-
-		get_data();
+		var options = $scope.myNavigator.getCurrentPage().options;
+		get_data(options.userId);
 		$scope.$watch('cor.selected', function(value) {
 			$scope.showFilter = true;
 		});
 	}
 
-	var get_data = function(){
+	var get_data = function(userId){
 	// Factoryからデータ取得のメソッドを呼び出し、Promiseオブジェクトを格納する
 		$scope.isLoad = false;
-		var promise = listService.data();
+		var promise = listService.data(userId);
 		promise.then(function(results){
 		  //成功時
 			$scope.posts = results;
