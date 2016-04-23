@@ -34,6 +34,10 @@
 	background-color: rgba(54,162,132, 0.77);
 }
 
+.msg {
+	padding-top: 20px;
+}
+
 .info {
 	font-family: 'Noto400', sans-serif;
 }
@@ -98,6 +102,7 @@
 }
 
 .button-bar__item:last-child > .button-bar__button {
+	border-bottom: 1px solid rgba(54,162,132,0.77);
 	border-left: 0;
 	border-right: 0;
 	border-top-right-radius: 0px;

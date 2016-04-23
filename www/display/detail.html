@@ -53,7 +53,7 @@
 				<p ng-if="$root.user.role == 0" ng-bind="obj.response">
 					
 				</p>
-				<form name="updateForm" class="contents" ng-if="$root.user.role == 1" ng-submit="update()">
+				<form name="updateForm" class="contents" ng-if="$root.user.role == 1">
 					<dl>
 						<dt class="tag">対応状況</dt>
 						<dd>
@@ -70,8 +70,7 @@
 						</dd>
 					</dl>
 				<div class="position_center">
-<!--					<ons-button ng-click="update()" modifier="orange post" ng-disabled="updateForm.$invalid == null || updateForm.$pristine">変更する</ons-button>-->
-					<input type="submit" id="submit" value="変更する" />
+					<ons-button ng-click="update()" modifier="orange post" ng-disabled="updateForm.$invalid == null || updateForm.$pristine">変更する</ons-button>
 				</div>
 
 				</form>
