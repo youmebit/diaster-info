@@ -28,7 +28,7 @@ app.filter('listMatch', function(){
 	}
 });
 
-app.controller('listCtrl', function($scope, correspond, posts, diaLogService) {
+app.controller('listCtrl', function($scope, correspond, posts, dialogService) {
 	$scope.init = function() {
 		$scope.isFinImg = false;
 		$scope.showFilter = true;
@@ -51,7 +51,7 @@ app.controller('listCtrl', function($scope, correspond, posts, diaLogService) {
 	// 対応状況更新後の処理
 	$scope.$on('update:success', function(e, msg) {
 		$scope.init();
-		diaLogService.alert("更新しました。");
+		dialogService.complete("更新しました。");
 	});
 
 	// 詳細ページへ遷移する
@@ -60,7 +60,7 @@ app.controller('listCtrl', function($scope, correspond, posts, diaLogService) {
 	}
 });
 
-app.controller('detailCtrl', function($scope, $rootScope, $timeout, posts, correspond) {
+app.controller('detailCtrl', function($scope, $rootScope, $timeout, posts, correspond, dialogService) {
 //	詳細画面表示
 	$scope.init = function() {
 		var options = $scope.myNavigator.getCurrentPage().options;
@@ -118,18 +118,18 @@ app.controller('detailCtrl', function($scope, $rootScope, $timeout, posts, corre
 
 	// 対応状況更新処理
 	$scope.update = function() {
-		if (!confirm('更新してもよろしいですか?')) {
-			return;
-		}
-		var update = function(result) {
-			result.set("correspond", $scope.form.correspond).set("response", $scope.form.response).update().then(function() {
-				myNavigator.popPage();
-				$rootScope.$broadcast('update:success', '更新しました。');
-			}).catch(function(err) {
-				console.log(err);
-			});
-		}
-		posts.findById($scope.obj.objectId, update);
+		dialogService.confirm('更新してもよろしいですか?');
+		$scope.$on('confirm:ok', function() {
+			var update = function(result) {
+				result.set("correspond", $scope.form.correspond).set("response", $scope.form.response).update().then(function() {
+					myNavigator.popPage();
+					$rootScope.$broadcast('update:success', '更新しました。');
+				}).catch(function(err) {
+					console.log(err);
+				});
+			}
+			posts.findById($scope.obj.objectId, update);
+		});
 	}
 });
 

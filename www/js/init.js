@@ -211,12 +211,33 @@ app.constant('role', {
 			 	'staff' : '1'
 });
 
-app.service('diaLogService', function($rootScope){
-	this.alert = function(msg) {
+app.service('dialogService', function($rootScope){
+	this.complete = function(msg) {
 		ons.createAlertDialog('template/dialog.html', {parentScope: $rootScope}).then(function(dialog) {
 			$rootScope.msg = msg;
+			$rootScope.type = "msg_info";
 			alertDialog.show();
 		});
+	},
+	this.error = function () {
+		ons.createAlertDialog('template/dialog.html', {parentScope: $rootScope}).then(function(dialog) {
+			$rootScope.msg = msg;
+			$rootScope.type = "msg_error";
+			alertDialog.show();
+		});
+	}
+	this.confirm = function(msg) {
+		ons.notification.confirm({
+			title:'確認',
+			message: msg,
+			primaryButtonIndex: 1,
+			cancelable:true,
+			callback: function(answer) {
+				if (answer == 1) {
+					$rootScope.$broadcast('confirm:ok');
+				}
+			}
+	  });
 	}
 });
 

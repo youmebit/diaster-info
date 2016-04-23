@@ -356,8 +356,13 @@ div .error {
     display: block;
 }
 
-
-.msg_info {
+.msg {
 	font-family: 'Noto400', sans-serif;
+}
+.msg_info {
 	color: rgb(54,162,132);
+}
+
+.msg_error {
+	color: #ea553a;
 }
