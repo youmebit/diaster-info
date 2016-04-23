@@ -140,29 +140,6 @@ app.controller('detailCtrl', function($scope, $rootScope, $timeout, posts, corre
 	}
 });
 
-// Postsデータストア
-app.factory('posts', function($rootScope, mBaasService) {
-	return {
-		findById : function(id, success) {
-			var Posts = getPosts();
-			Posts.equalTo("objectId", id).fetch().then(function(result) {
-				success(result);
-			});
-		},
-		findAll : function(success) {
-			var Posts = getPosts();
-			Posts.order("updateDate", true).fetchAll().then(function(results) {
-				success(results);
-			});
-		},
-	};
-
-	function getPosts() {
-		var ncmb = mBaasService.getNcmb();
-		return ncmb.DataStore("Posts");
-	}
-});
-
 app.directive("toCorrespond", function(correspond) {
 	return {
 		restrict: 'A',

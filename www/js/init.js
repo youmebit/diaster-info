@@ -1,22 +1,29 @@
 'use strict';
 
 var app = angular.module('myApp', ['onsen.directives', 'ngMessages']);
-app.run(function($rootScope, mBaasService, tabService) {
+app.run(function($rootScope, Current, mBaasService, tabService) {
 	$rootScope.settings = {
 		isHideTabbar : false
 	};
 	
-	$rootScope.userInit = function() {
-		var current = {
-			isLogin : false,
-			username : 'ゲスト',
-			role : 0
-		};
-		return current;
+	Current.initialize();
+	var ncmb = mBaasService.getNcmb();
+	var strage = mBaasService.getCurrentUser();
+	if (strage) {
+//			匿名ユーザー判定
+		if (strage.mailAddress) {
+			mBaasService.loginAsName(strage.userName, strage.password);
+			$rootScope.$on('login_complate', function(event, data) {
+				Current.setCurrent(data.userName, true, data.role);
+			});
+		} else {
+			mBaasService.loginAsAnonymous(strage.authData.anonymous.id);
+		}
+	} else {
+		//　初回起動(匿名ユーザー登録)
+		mBaasService.loginAsAnonymous();
 	}
 	
-	$rootScope.user = $rootScope.userInit();
-
 	$rootScope.errors = [
       { key: 'required', msg: '必ず入力してください' },
       { key: 'email', msg: 'メールアドレスではありません' },
@@ -30,30 +37,11 @@ app.run(function($rootScope, mBaasService, tabService) {
 	tabService.setActiveTab(0);
 });
 
-app.controller('bodyCtrl', function($scope, $rootScope, mBaasService, tabService) {
+app.controller('bodyCtrl', function($scope, $rootScope, Current, mBaasService, tabService, dialogService) {
 	$scope.topInit = function() {
-		var ncmb = mBaasService.getNcmb();
-		var current = mBaasService.getCurrentUser();
-		if (current) {
-//			匿名ユーザー判定
-			if (current.mailAddress) {
-				mBaasService.loginAsName(current.userName, current.password);
-				$scope.$on('login_complate', function(event, data) {
-					$scope.$apply(function() {
-						$rootScope.user.username = data.userName;
-						$rootScope.user.isLogin = true;
-						$rootScope.user.role = data.role;
-					});
-				});
-			} else {
-				mBaasService.loginAsAnonymous(current.authData.anonymous.id);
-			}
-		} else {
-			//　初回起動(匿名ユーザー登録)
-			mBaasService.loginAsAnonymous();
-		}
-		
+		$scope.$apply($rootScope.user = Current.getCurrent());
 	}
+	
 	$scope.toHome = function() {
         tabService.setActiveTab(0);
     }
@@ -75,68 +63,15 @@ app.controller('bodyCtrl', function($scope, $rootScope, mBaasService, tabService
     }
 	
 	$scope.signOut = function() {
-		if (!confirm('ログアウトしてもよろしいですか？')) {
-			return;
-		}
-		var ncmb = mBaasService.getNcmb();
-		$rootScope.user = $rootScope.userInit();
-		ncmb.User.logout().then(function(){
-			$scope.topInit();
+		dialogService.confirm('ログアウトしてもよろしいですか？');
+		$scope.$on('confirm:ok', function() {
+			var ncmb = mBaasService.getNcmb();
+			Current.initialize();
+			ncmb.User.logout().then(function(){
+				$scope.topInit();
+			});
 		});
 	}
-});
-
-// ｍBaaS接続サービス
-app.service('mBaasService', function ($rootScope) {
-    var ncmb = null;
-    this.getNcmb = function () {
-        if (!ncmb) {
-            var APP_KEY = '536ea833c07c98ed2cf1b836739a9729ad7544fc3a9e282e875f99e93bd8eb47';
-            var CLIENT_KEY = 'c47f0f99bc98940357aeb142158515adbca19f165f49b579f1cce020a3135583';
-            ncmb = new NCMB(APP_KEY, CLIENT_KEY);
-        }
-        return ncmb;
-    }
-    
-    this.hasCurrent = function() {
-        var user = this.getCurrentUser();
-        return user != null;
-    }
-    
-    this.getCurrentUser = function() {
-        return this.getNcmb().User.getCurrentUser();
-    }
-    
-    this.loginAsEmail = function(address, password) {
-        var ncmb = this.getNcmb();
-        ncmb.User.loginWithMailAddress(address, password).then(function(data) {
-            $rootScope.$broadcast('login_complate', data);
-        })
-        .catch(function(err){
-            alert('メールアドレスもしくはパスワードが違います。');
-        });
-    }
-	
-	this.loginAsName = function(name, password) {
-		ncmb.User.login(name, password).then(function(data) {
-			$rootScope.$broadcast('login_complate', data);
-		})
-        .catch(function(err){
-            alert('ログインに失敗しました。');
-        });
-	}
-	this.loginAsAnonymous = function(uuid) {
-		this.getNcmb().User.loginAsAnonymous(uuid);
-	}
-});
-
-// タブバーの番号を設定するとそのページに遷移するサービス
-app.service('tabService', function(){
-    this.setActiveTab = function(index) {
-        setImmediate(function() {
-            tabbar.setActiveTab(index);
-        });
-    }
 });
 
 // 位置情報から住所を取得するサービス
@@ -209,152 +144,4 @@ app.service('geoService', function() {
 app.constant('role', {
 			 	'member' : '0',
 			 	'staff' : '1'
-});
-
-app.service('dialogService', function($rootScope){
-	this.complete = function(msg) {
-		ons.createAlertDialog('template/dialog.html', {parentScope: $rootScope}).then(function(dialog) {
-			$rootScope.msg = msg;
-			$rootScope.type = "msg_info";
-			alertDialog.show();
-		});
-	},
-	this.error = function () {
-		ons.createAlertDialog('template/dialog.html', {parentScope: $rootScope}).then(function(dialog) {
-			$rootScope.msg = msg;
-			$rootScope.type = "msg_error";
-			alertDialog.show();
-		});
-	}
-	this.confirm = function(msg) {
-		ons.notification.confirm({
-			title:'確認',
-			message: msg,
-			primaryButtonIndex: 1,
-			cancelable:true,
-			callback: function(answer) {
-				if (answer == 1) {
-					$rootScope.$broadcast('confirm:ok');
-				}
-			}
-	  });
-	}
-});
-
-// htmlタグに'hide-tabbar'をつけるとタップした時にタブバーを非表示にする。
-app.directive('hideTabbar', function($timeout) {
-    return {
-        link : function(scope, element, attrs) {
-            element.bind('focus', function(e) {
-                $timeout(function(){
-                    scope.$apply(tabbar.setTabbarVisibility(false));
-                });
-            });
-            element.bind('blur', function(e) {
-                $timeout(function(){
-                    scope.$apply(tabbar.setTabbarVisibility(true));
-                });
-            });
-        }
-    }
-});
-
-// 入力値2つを比較するバリデーション
-app.directive("compareTo", function() {
-    return {
-        require: "ngModel",
-        scope: {
-            otherModelValue: "=compareTo"
-        },
-        link: function(scope, element, attributes, ngModel) {
-             
-            ngModel.$validators.compareTo = function(modelValue) {
-                return modelValue == scope.otherModelValue;
-            };
- 
-            scope.$watch("modelValue", function() {
-                ngModel.$validate();
-            });
-			
-			scope.$watch("otherModelValue", function() {
-                ngModel.$validate();
-            });
-        }
-    };
-});
-
-// パスワードの文字数をチェックするバリデーション
-app.directive('nameLength',function(){
-    return{
-        restrict: "A",
-        require: "ngModel",
-        link: function(scope,element,attrs,ngModel){
-            ngModel.$validators.nameLength = function(modelValue){
-                if (modelValue) {
-                    return modelValue.length <= 16;
-                }
-            };
-            
-            scope.$watch("modelValue", function() {
-                ngModel.$validate();
-            });
-        }
-    }
-});
-
-// パスワードの文字数をチェックするバリデーション
-app.directive('emailLength',function(){
-    return{
-        restrict: "A",
-        require: "ngModel",
-        link: function(scope,element,attrs,ngModel){
-            ngModel.$validators.emailLength = function(modelValue){
-                if (modelValue) {
-                    return modelValue.length <= 256;
-                }
-            };
-            
-            scope.$watch("modelValue", function() {
-                ngModel.$validate();
-            });
-        }
-    }
-});
-
-// パスワードの文字種をチェックするバリデーション
-app.directive('passType',function(){
-    return{
-        restrict: "A",
-        require: "ngModel",
-        link: function(scope,element,attrs,ngModel){
-            ngModel.$validators.passType = function(modelValue){
-                if (modelValue) {
-                    return /^[0-9a-zA-Z]+$/.test(modelValue);
-                }
-            };
-            
-            scope.$watch("modelValue", function() {
-                ngModel.$validate();
-            });
-        }
-    }
-});
-
-// パスワードの文字数をチェックするバリデーション
-app.directive('passLength',function(){
-    return{
-        restrict: "A",
-        require: "ngModel",
-        link: function(scope,element,attrs,ngModel){
-            ngModel.$validators.passLength = function(modelValue){
-                if (modelValue) {
-                    return modelValue.length >= 6 && modelValue.length <= 16;
-                }
-            };
-            
-            scope.$watch("modelValue", function() {
-                ngModel.$validate();
-            });
-        }
-    }
 });
