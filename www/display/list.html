@@ -9,7 +9,9 @@
 	</ons-toolbar>
   	<main ng-controller="listCtrl" ng-init="init()">
 	  <div class="count">
-		<div><div>{{msg}}</div>情報件数:{{(posts | listMatch:cor.selected).length}}件</div>
+		<div>
+			<p>情報件数:{{(posts | listMatch:cor.selected).length}}件</p>
+		</div>
 		<div>
 			<span class="filter" ng-click="showFilter = !showFilter">
 			<span ng-show="showFilter">絞り込み<ons-icon icon=" fa-angle-down"></ons-icon></span>

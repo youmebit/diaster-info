@@ -28,17 +28,16 @@ app.filter('listMatch', function(){
 	}
 });
 
-app.controller('listCtrl', function($scope, correspond, mBaasService) {
+app.controller('listCtrl', function($scope, correspond, posts, diaLogService) {
 	$scope.init = function() {
 		$scope.isFinImg = false;
 		$scope.showFilter = true;
 		$scope.toggle = correspond;
 		$scope.cor = {selected : '-1'};
-		var ncmb = mBaasService.getNcmb();
-		var Posts = ncmb.DataStore("Posts");
-		Posts.order("updateDate", true).fetchAll().then(function(results) {
+		var onSuccess = function(results) {
 			$scope.$apply($scope.posts = results);
-		});
+		}
+		posts.findAll(onSuccess);
 
 		$scope.$on('eventFinishedEventFired', function() {
 			$scope.isFinImg = true;
@@ -49,9 +48,10 @@ app.controller('listCtrl', function($scope, correspond, mBaasService) {
 		});
 	}
 	
+	// 対応状況更新後の処理
 	$scope.$on('update:success', function(e, msg) {
 		$scope.init();
-		$scope.msg = msg;
+		diaLogService.alert("更新しました。");
 	});
 
 	// 詳細ページへ遷移する
@@ -60,16 +60,13 @@ app.controller('listCtrl', function($scope, correspond, mBaasService) {
 	}
 });
 
-app.controller('detailCtrl', function($scope, $rootScope, $timeout, postsService, correspond, mBaasService) {
+app.controller('detailCtrl', function($scope, $rootScope, $timeout, posts, correspond) {
 //	詳細画面表示
 	$scope.init = function() {
 		var options = $scope.myNavigator.getCurrentPage().options;
 		$scope.toggle = correspond;
 		$scope.form = {};
-		$scope.correspond = "";
-		postsService.find(options.id);
-		// データが取れたタイミングで格納処理
-		$scope.$on('posts_load', function(event, result) {
+		var onSuccess = function(result) {
 			$scope.$apply(function() {
 				$scope.obj = result;
 				$scope.form.correspond = result.correspond;
@@ -77,7 +74,8 @@ app.controller('detailCtrl', function($scope, $rootScope, $timeout, postsService
 				$scope.$broadcast('viewMap', result);
 				$scope.toMap();
 			});
-		});
+		}
+		posts.findById(options.id, onSuccess);
 		
 		// データが取れたタイミングで地図を表示。
 		$scope.$on('viewMap', function(event, result) {
@@ -123,27 +121,38 @@ app.controller('detailCtrl', function($scope, $rootScope, $timeout, postsService
 		if (!confirm('更新してもよろしいですか?')) {
 			return;
 		}
-		var ncmb = mBaasService.getNcmb();
-		var Posts = ncmb.DataStore("Posts");
-		Posts.equalTo("objectId", $scope.obj.objectId).fetch().then(function(result) {
+		var update = function(result) {
 			result.set("correspond", $scope.form.correspond).set("response", $scope.form.response).update().then(function() {
 				myNavigator.popPage();
 				$rootScope.$broadcast('update:success', '更新しました。');
 			}).catch(function(err) {
 				console.log(err);
 			});
-		});
-		$scope.called = "called:" + $scope.form.correspond;
+		}
+		posts.findById($scope.obj.objectId, update);
 	}
 });
 
-app.service('postsService', function($rootScope, mBaasService) {
-	this.find = function(id) {
+// Postsデータストア
+app.factory('posts', function($rootScope, mBaasService) {
+	return {
+		findById : function(id, success) {
+			var Posts = getPosts();
+			Posts.equalTo("objectId", id).fetch().then(function(result) {
+				success(result);
+			});
+		},
+		findAll : function(success) {
+			var Posts = getPosts();
+			Posts.order("updateDate", true).fetchAll().then(function(results) {
+				success(results);
+			});
+		},
+	};
+
+	function getPosts() {
 		var ncmb = mBaasService.getNcmb();
-		var Posts = ncmb.DataStore("Posts");
-		Posts.equalTo("objectId", id).fetch().then(function(result) {
-			$rootScope.$broadcast('posts_load', result);
-		});
+		return ncmb.DataStore("Posts");
 	}
 });
 

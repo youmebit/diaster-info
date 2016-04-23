@@ -211,6 +211,15 @@ app.constant('role', {
 			 	'staff' : '1'
 });
 
+app.service('diaLogService', function($rootScope){
+	this.alert = function(msg) {
+		ons.createAlertDialog('template/dialog.html', {parentScope: $rootScope}).then(function(dialog) {
+			$rootScope.msg = msg;
+			alertDialog.show();
+		});
+	}
+});
+
 // htmlタグに'hide-tabbar'をつけるとタップした時にタブバーを非表示にする。
 app.directive('hideTabbar', function($timeout) {
     return {

@@ -20,10 +20,16 @@
 	display: table;
 	padding-left: 10px;
 	width: 100%;
+	font-size: 0.9em;
+}
+
+.count>p {
+	padding: 3px 0;
 }
 
 .count > div {
 	display: table-cell;
+	vertical-align: middle;
 }
 
 .count > div:first-of-type {

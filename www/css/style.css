@@ -355,3 +355,9 @@ div .error {
     margin: 0 auto;
     display: block;
 }
+
+
+.msg_info {
+	font-family: 'Noto400', sans-serif;
+	color: rgb(54,162,132);
+}
