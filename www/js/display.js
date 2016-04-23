@@ -121,7 +121,7 @@ app.controller('detailCtrl', function($scope, $rootScope, $timeout, posts, corre
 		dialogService.confirm('更新してもよろしいですか?');
 		$scope.$on('confirm:ok', function() {
 			var update = function(result) {
-				result.set("correspond", $scope.form.correspond).set("response", $scope.form.response).update().then(function() {
+				result.set("correspond", $scope.form.correspond).set("response", $scope.toNull($scope.form.response)).update().then(function() {
 					myNavigator.popPage();
 					$rootScope.$broadcast('update:success', '更新しました。');
 				}).catch(function(err) {
@@ -130,6 +130,13 @@ app.controller('detailCtrl', function($scope, $rootScope, $timeout, posts, corre
 			}
 			posts.findById($scope.obj.objectId, update);
 		});
+	}
+	
+	$scope.toNull = function(value) {
+		if (!angular.isDefined(value)) {
+			return null;
+		}
+		return value;
 	}
 });
 
