@@ -103,7 +103,7 @@ app.factory('users', function($rootScope, mBaasService) {
 			});
 		},
 		loginAsAnonymous : function(uuid) {
-			this.getNcmb().User.loginAsAnonymous(uuid);
+			mBaasService.getNcmb().User.loginAsAnonymous(uuid);
 		},
 		logout : function() {
 			var ncmb = mBaasService.getNcmb();
