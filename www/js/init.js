@@ -1,27 +1,26 @@
 'use strict';
 
 var app = angular.module('myApp', ['onsen.directives', 'ngMessages']);
-app.run(function($rootScope, Current, mBaasService, tabService) {
+app.run(function($rootScope, Current, users, tabService) {
 	$rootScope.settings = {
 		isHideTabbar : false
 	};
 	
 	Current.initialize();
-	var ncmb = mBaasService.getNcmb();
-	var strage = mBaasService.getCurrentUser();
+	var strage = users.getCurrentUser();
 	if (strage) {
 //			匿名ユーザー判定
 		if (strage.mailAddress) {
-			mBaasService.loginAsName(strage.userName, strage.password);
+			users.loginAsName(strage.userName, strage.password);
 			$rootScope.$on('login_complate', function(event, data) {
 				Current.setCurrent(data.userName, true, data.role);
 			});
 		} else {
-			mBaasService.loginAsAnonymous(strage.authData.anonymous.id);
+			users.loginAsAnonymous(strage.authData.anonymous.id);
 		}
 	} else {
 		//　初回起動(匿名ユーザー登録)
-		mBaasService.loginAsAnonymous();
+		users.loginAsAnonymous();
 	}
 	
 	$rootScope.errors = [
@@ -37,7 +36,7 @@ app.run(function($rootScope, Current, mBaasService, tabService) {
 	tabService.setActiveTab(0);
 });
 
-app.controller('bodyCtrl', function($scope, $rootScope, Current, mBaasService, tabService, dialogService) {
+app.controller('bodyCtrl', function($scope, $rootScope, Current, tabService, dialogService, users) {
 	$scope.topInit = function() {
 		$scope.$apply($rootScope.user = Current.getCurrent());
 	}
@@ -65,9 +64,9 @@ app.controller('bodyCtrl', function($scope, $rootScope, Current, mBaasService, t
 	$scope.signOut = function() {
 		dialogService.confirm('ログアウトしてもよろしいですか？');
 		$scope.$on('confirm:ok', function() {
-			var ncmb = mBaasService.getNcmb();
-			Current.initialize();
-			ncmb.User.logout().then(function(){
+			users.logout();
+			$scope.$on('logout:success', function(event) {
+				Current.initialize();
 				$scope.topInit();
 			});
 		});

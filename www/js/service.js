@@ -9,37 +9,6 @@ app.service('mBaasService', function ($rootScope) {
         }
         return ncmb;
     }
-    
-    this.hasCurrent = function() {
-        var user = this.getCurrentUser();
-        return user != null;
-    }
-    
-    this.getCurrentUser = function() {
-        return this.getNcmb().User.getCurrentUser();
-    }
-    
-    this.loginAsEmail = function(address, password) {
-        var ncmb = this.getNcmb();
-        ncmb.User.loginWithMailAddress(address, password).then(function(data) {
-            $rootScope.$broadcast('login_complate', data);
-        })
-        .catch(function(err){
-            alert('メールアドレスもしくはパスワードが違います。');
-        });
-    }
-	
-	this.loginAsName = function(name, password) {
-		ncmb.User.login(name, password).then(function(data) {
-			$rootScope.$broadcast('login_complate', data);
-		})
-        .catch(function(err){
-            alert('ログインに失敗しました。');
-        });
-	}
-	this.loginAsAnonymous = function(uuid) {
-		this.getNcmb().User.loginAsAnonymous(uuid);
-	}
 });
 
 // タブバーの番号を設定するとそのページに遷移するサービス
@@ -103,12 +72,51 @@ app.factory('Current', function(){
 	}
 });
 
-app.factory('users', function() {
-	
+// Usersデータストア
+app.factory('users', function($rootScope, mBaasService) {
+	return {
+		hasCurrent : function() {
+			var user = this.getCurrentUser();
+			return user != null;
+		},
+		getCurrentUser : function() {
+			return mBaasService.getNcmb().User.getCurrentUser();
+		},
+		// メールアドレスとパスワードでログイン
+		loginAsEmail: function (address, password) {
+			var ncmb = mBaasService.getNcmb();
+			ncmb.User.loginWithMailAddress(address, password).then(function (data) {
+					$rootScope.$broadcast('login_complate', data);
+				})
+				.catch(function (err) {
+					alert('メールアドレスもしくはパスワードが違います。');
+				});
+		},
+		// 名前とパスワードでログイン
+		loginAsName : function(name, password) {
+			mBaasService.getNcmb().User.login(name, password)
+				.then(function(data) {
+					$rootScope.$broadcast('login_complate', data);
+				})
+			.catch(function(err){
+				alert('ログインに失敗しました。');
+			});
+		},
+		loginAsAnonymous : function(uuid) {
+			this.getNcmb().User.loginAsAnonymous(uuid);
+		},
+		logout : function() {
+			var ncmb = mBaasService.getNcmb();
+			ncmb.User.logout().then(function(){
+				$rootScope.$broadcast('logout:success');
+			});
+
+		}
+	}
 });
 
 // Postsデータストア
-app.factory('posts', function($rootScope, mBaasService) {
+app.factory('posts', function(mBaasService) {
 	return {
 		findById : function(id, success) {
 			var Posts = getPosts();
