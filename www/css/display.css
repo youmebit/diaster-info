@@ -44,6 +44,10 @@
 	padding-top: 20px;
 }
 
+.loading {
+	text-align: center;
+}
+
 .info {
 	font-family: 'Noto400', sans-serif;
 }
