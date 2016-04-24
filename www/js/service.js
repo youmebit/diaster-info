@@ -1,3 +1,8 @@
+app.constant('role', {
+			 	'member' : '0',
+			 	'staff' : '1'
+});
+
 // mBaaS接続サービス
 app.service('mBaasService', function ($rootScope) {
     var ncmb = null;
@@ -120,7 +125,7 @@ app.factory('users', function($rootScope, mBaasService) {
 });
 
 // Postsデータストア
-app.factory('posts', function(mBaasService) {
+app.factory('posts', function(mBaasService, $q, $timeout) {
 	return {
 		findById : function(id, success) {
 			var Posts = getPosts();
@@ -128,22 +133,52 @@ app.factory('posts', function(mBaasService) {
 				success(result);
 			});
 		},
-		findAll : function(success) {
-			var Posts = getPosts();
-			Posts.order("updateDate", true).fetchAll().then(function(results) {
-				success(results);
-			});
-		},
-		findByUserId : function(id, success) {
-			var Posts = getPosts();
-			Posts.equalTo("userID", id).order("updateDate", true).fetchAll().then(function(results) {
-				success(results);
-			});
-		},
-	};
 
-	function getPosts() {
-		var ncmb = mBaasService.getNcmb();
-		return ncmb.DataStore("Posts");
-	}
+    find : function(dataStore, success) {
+        dataStore.order("updateDate", true).fetchAll().then(function(results) {
+          success(results);
+        });
+    },
+    // 非同期でデータを取得する
+    findAsync : function(dataStore) {
+        var d = $q.defer();
+        $timeout(function(){
+            dataStore.order("updateDate", true).fetchAll().then(function(results) {
+              d.resolve(results);
+              //プロミスオブジェクトを参照もとに返す
+              return d.promise;
+            });
+        }, 2000);
+
+        //プロミスオブジェクトを参照もとに返す
+        return d.promise;
+    },
+
+    getPosts : function() {
+        var ncmb = mBaasService.getNcmb();
+    		return ncmb.DataStore("Posts");
+    }
+	};
 });
+
+// 非同期でPostsデータストアからデータを取得する
+// app.factory('listService', ['$q', 'posts', '$timeout', function($q, posts, $timeout) {
+//   return {
+//     data: function(dataStore){
+//       var d = $q.defer();
+//
+// 		$timeout(function(){
+// 				var onSuccess = function(results) {
+// 					d.resolve(results);
+// 				  //プロミスオブジェクトを参照もとに返す
+// 				  return d.promise;
+// 				}
+//
+// 				posts.find(dataStore, onSuccess);
+//       }, 2000);
+//
+// 	  //プロミスオブジェクトを参照もとに返す
+// 	  return d.promise;
+//     }
+//   }
+// }]);

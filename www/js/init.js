@@ -37,7 +37,7 @@ app.run(function($rootScope, Current, users, tabService) {
 	tabService.setActiveTab(0);
 });
 
-app.controller('bodyCtrl', function($scope, $rootScope, Current, tabService, dialogService, users) {
+app.controller('bodyCtrl', function($scope, $rootScope, Current, tabService, dialogService, users, posts) {
 	$scope.topInit = function() {
 		$scope.$apply(function() {
 				$rootScope.displayPage = 'list_ghest';
@@ -147,9 +147,4 @@ app.service('geoService', function() {
                 modal.hide();
             }, geoOptions);
     }
-});
-
-app.constant('role', {
-			 	'member' : '0',
-			 	'staff' : '1'
 });
