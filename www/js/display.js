@@ -4,12 +4,11 @@ app.controller('selectCtrl', function($scope, Current) {
 		var id = Current.getCurrent().objectId;
 		myNavigator.pushPage('display/list.html', {userId:id});
 	}
-	
+
 	$scope.toAllInfo = function() {
 		myNavigator.pushPage('display/list.html');
 	}
 });
-
 
 app.constant('correspond', {
 	'0':{class : 'still', label : 'これから対応します'},
@@ -36,7 +35,6 @@ app.filter('listMatch', function(){
 app.factory('listService', ['$q', 'posts', '$timeout', function($q, posts, $timeout) {
   return {
     data: function(userId){
-      //deferのインスタンスを作る（お呪いのようなもの）
       var d = $q.defer();
 
 		$timeout(function(){
@@ -80,7 +78,7 @@ app.controller('listCtrl', function($scope, correspond, posts, dialogService, li
 			$scope.isLoad = true;
 		});
 	}
-	
+
 	// 対応状況更新後の処理
 	$scope.$on('update:success', function(e, msg) {
 		$scope.init();
@@ -109,7 +107,7 @@ app.controller('detailCtrl', function($scope, $rootScope, $timeout, posts, corre
 			});
 		}
 		posts.findById(options.id, onSuccess);
-		
+
 		// データが取れたタイミングで地図を表示。
 		$scope.$on('viewMap', function(event, result) {
 			$timeout(function() {
@@ -133,18 +131,18 @@ app.controller('detailCtrl', function($scope, $rootScope, $timeout, posts, corre
 			}, 100);
 		});
 	}
-	
+
 	// 地図タブ表示
 	$scope.toMap = function() {
 		$scope.tab = 'map';
 	}
-	
-	
+
+
 	// コメントタブ表示
 	$scope.toComment = function() {
 		$scope.tab = 'comment';
 	}
-	
+
 	$scope.toStaff = function() {
 		$scope.tab = 'staff';
 	}
@@ -164,7 +162,7 @@ app.controller('detailCtrl', function($scope, $rootScope, $timeout, posts, corre
 			posts.findById($scope.obj.objectId, update);
 		});
 	}
-	
+
 	$scope.toNull = function(value) {
 		if (!angular.isDefined(value)) {
 			return null;
