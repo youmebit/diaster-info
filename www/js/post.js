@@ -37,7 +37,9 @@ app.controller('imgSelectCtrl', function ($scope, mBaasService, geoService, $tim
             };
 
             navigator.geolocation.getCurrentPosition(function (position) {
-                var onGeoSuccess = function(latitude, longitude, components) {
+                geoService.loadAddress(position.coords.latitude, position.coords.longitude);
+                // 住所が取れた場合
+                $scope.$on("geocode:success", function(event, components) {
                     var longAddress = "";
                     var isAppend = true;
                     angular.forEach(components, function (address) {
@@ -52,12 +54,10 @@ app.controller('imgSelectCtrl', function ($scope, mBaasService, geoService, $tim
                     myNavigator.pushPage('post/post.html', {
                         image: "data:image/jpeg;base64," + imageURI,
                         address: longAddress,
-                        latitude: latitude,
-                        longitude: longitude
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude
                     });
-                }
-                
-                geoService.loadAddress(position.coords.latitude, position.coords.longitude, onGeoSuccess);
+                });
                 },
                 function (error) {
                     var errorMessage = {
@@ -173,7 +173,7 @@ app.controller('postCtrl', function ($scope, mBaasService, dialogService) {
 				console.error(err);
 				dialogService.error('申し訳ありませんが、電波の届くところでもう一度投稿してください。');
 			}
-			
+
 			ncmb.File.upload(fileName, blob).then(
 				function (data) {
 					uploadSuccess();
