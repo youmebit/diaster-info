@@ -128,7 +128,7 @@ app.factory('users', function($rootScope, mBaasService) {
 app.factory('posts', function(mBaasService, $q, $timeout) {
 	return {
 		findById : function(id, success) {
-			var Posts = getPosts();
+			var Posts = this.getPosts();
 			Posts.equalTo("objectId", id).fetch().then(function(result) {
 				success(result);
 			});

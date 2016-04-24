@@ -33,7 +33,7 @@
 		</div>
 	  </div>
 	  <p class="count msg" ng-if="(posts | listMatch:cor.selected).length == 0">該当する情報はありません</p>
-	 <p class="loading" ng-hide="isLoad"><ons-icon icon="ion-load-c" spin="true"></ons-icon></p>
+	 <p class="list_loading" ng-hide="isLoad"><ons-icon icon="ion-load-c" spin="true"></ons-icon></p>
 	<ons-list modifier="disaster_list" ng-if="(posts | listMatch:cor.selected).length != 0" ng-show="isLoad">
 		<ons-list-item modifier="chevron" class="info" ng-click="toDetail(p.objectId)" ng-repeat="p in filterd = (posts | listMatch:cor.selected)" event-finished>
 			<ons-row class="date right">

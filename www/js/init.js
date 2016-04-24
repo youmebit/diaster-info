@@ -45,6 +45,16 @@ app.controller('bodyCtrl', function($scope, $rootScope, Current, tabService, dia
 				if (Current.isLogin()) {
 					$rootScope.displayPage = 'list_select';
 				}
+
+				// 対応完了のお知らせを取得
+				$scope.isLoad = false;
+				var dataStore = posts.getPosts().equalTo("correspond", "2").limit(5);
+				var promise = posts.findAsync(dataStore);
+				promise.then(function(results){
+					//成功時
+					$scope.items = results;
+					$scope.isLoad = true;
+				});
 		});
 	}
 
@@ -68,6 +78,10 @@ app.controller('bodyCtrl', function($scope, $rootScope, Current, tabService, dia
         }
     }
 
+		$scope.toDetail = function (objectId) {
+			myNavigator.pushPage('display/detail.html', {id : objectId});
+
+		}
 	$scope.signOut = function() {
 		dialogService.confirm('ログアウトしてもよろしいですか？');
 		$scope.$on('confirm:ok', function() {

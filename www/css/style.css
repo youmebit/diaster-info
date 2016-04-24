@@ -69,6 +69,10 @@ ons-list-item {
     color: #666;
 }
 
+.wrapper {
+  margin-bottom: 80px;
+}
+
 .list, .list__item {
 	border-bottom: 1px solid #808080;
 	border-top: 1px solid #808080;
@@ -152,7 +156,7 @@ header div {
     padding: 7px 0;
     border-bottom: 2px solid #444;
     background-color: #fdd37d;
-    text-align: center;    
+    text-align: center;
 }
 
 header div .subtitle {
@@ -170,16 +174,17 @@ header .title {
     font-family: 'Noto700', sans-serif;
 }
 
-div .list h2 {
+div .fin_contents h2 {
     padding-left: 5%;
     padding-top: 2%;
     padding-bottom: 2%;
     background-color: #fdd37d;
     display: block;
     font-size: 1.3em;
-    border: 2px solid #666666;
+    border: 2px solid #444;
     border-left-width: 0;
     border-right-width: 0;
+    color: #444;
 }
 
 div .list h2:before {
@@ -365,4 +370,11 @@ div .error {
 
 .msg_error {
 	color: #ea553a;
+}
+
+.list_loading {
+  padding: 30px 0;
+  width: 100%;
+  vertical-align: middle;
+	text-align: center;
 }
