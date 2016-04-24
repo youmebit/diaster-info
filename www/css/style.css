@@ -69,10 +69,6 @@ ons-list-item {
     color: #666;
 }
 
-.wrapper {
-  margin-bottom: 80px;
-}
-
 .list, .list__item {
 	border-bottom: 1px solid #808080;
 	border-top: 1px solid #808080;
@@ -176,8 +172,8 @@ header .title {
 
 div .fin_contents h2 {
     padding-left: 5%;
-    padding-top: 2%;
-    padding-bottom: 2%;
+    padding-top: 2.5%;
+    padding-bottom: 2.5%;
     background-color: #fdd37d;
     display: block;
     font-size: 1.3em;
@@ -187,11 +183,15 @@ div .fin_contents h2 {
     color: #444;
 }
 
-div .list h2:before {
+div .fin_contents h2:before {
     font-family: 'FontAwesome';
     content: '\f27e';
     font-size: 1.1em;
     padding-right: 10px;
+}
+
+.list--fin_list {
+  border-top: none;
 }
 
 #func-navi {
@@ -227,6 +227,9 @@ div .list h2:before {
     padding: 13px 0 13px 20px;
 }
 
+#logout_navi {
+  padding-bottom: 50px;
+}
 .button--login, #logout_navi .button{
     width: 100%;
 }
