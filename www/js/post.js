@@ -30,56 +30,32 @@ app.controller('imgSelectCtrl', function ($scope, mBaasService, geoService, $tim
             // 読み込み中の画面表示
             modal.show();
             // 住所を取得する
-            var geoOptions = {
-                maximumAge: 5000,
-                timeout: 6000,
-                enableHighAccuracy: true
-            };
-
-            navigator.geolocation.getCurrentPosition(function (position) {
-                var onGeoSuccess = function(latitude, longitude, components) {
-                    var longAddress = "";
-                    var isAppend = true;
-                    angular.forEach(components, function (address) {
-                        if (address.long_name.indexOf('市') != -1) {
-                            isAppend = false;
-                        }
-                        if (isAppend) {
-                            longAddress = address.long_name + longAddress;
-                        }
-                    });
-
-                    myNavigator.pushPage('post/post.html', {
-                        image: "data:image/jpeg;base64," + imageURI,
-                        address: longAddress,
-                        latitude: latitude,
-                        longitude: longitude
-                    });
-                }
-                
-                geoService.loadAddress(position.coords.latitude, position.coords.longitude, onGeoSuccess);
-                },
-                function (error) {
-                    var errorMessage = {
-                        0: "原因不明のエラーが発生しました。",
-                        1: "位置情報の取得が許可されませんでした。",
-                        2: "電波状況などで位置情報が取得できませんでした。",
-                        3: "位置情報の取得に時間がかかり過ぎてタイムアウトしました。",
-                    };
-
-                    // エラーコードに合わせたエラー内容をアラート表示
-                    alert(errorMessage[error.code]);
-                modal.hide();
-                }, geoOptions);
-            }
-
+            geoService.currentPosition();
+            // 住所が取れた場合
+            $scope.$on("geocode:success", function(event, point) {
+                var longAddress = "";
+                var isAppend = true;
+                angular.forEach(point.address, function (a) {
+                    if (a.long_name.indexOf('市') != -1) {
+                        isAppend = false;
+                    }
+                    if (isAppend) {
+                        longAddress = a.long_name + longAddress;
+                    }
+                });
+                myNavigator.pushPage('post/post.html', {
+                    image: "data:image/jpeg;base64," + imageURI,
+                    address: longAddress,
+                    latitude: point.lat,
+                    longitude: point.long
+                });
+            });
+          }
         var onFail = function () {}
-
         navigator.camera.getPicture(function (imageURI) {
             onSuccess(imageURI);
         }, onFail, options);
     }
-
 });
 
 app.controller('postCtrl', function ($scope, mBaasService, dialogService) {
@@ -173,7 +149,7 @@ app.controller('postCtrl', function ($scope, mBaasService, dialogService) {
 				console.error(err);
 				dialogService.error('申し訳ありませんが、電波の届くところでもう一度投稿してください。');
 			}
-			
+
 			ncmb.File.upload(fileName, blob).then(
 				function (data) {
 					uploadSuccess();

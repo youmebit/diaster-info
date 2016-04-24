@@ -152,7 +152,7 @@ header div {
     padding: 7px 0;
     border-bottom: 2px solid #444;
     background-color: #fdd37d;
-    text-align: center;    
+    text-align: center;
 }
 
 header div .subtitle {
@@ -170,23 +170,28 @@ header .title {
     font-family: 'Noto700', sans-serif;
 }
 
-div .list h2 {
+div .fin_contents h2 {
     padding-left: 5%;
-    padding-top: 2%;
-    padding-bottom: 2%;
+    padding-top: 2.5%;
+    padding-bottom: 2.5%;
     background-color: #fdd37d;
     display: block;
     font-size: 1.3em;
-    border: 2px solid #666666;
+    border: 2px solid #444;
     border-left-width: 0;
     border-right-width: 0;
+    color: #444;
 }
 
-div .list h2:before {
+div .fin_contents h2:before {
     font-family: 'FontAwesome';
     content: '\f27e';
     font-size: 1.1em;
     padding-right: 10px;
+}
+
+.list--fin_list {
+  border-top: none;
 }
 
 #func-navi {
@@ -222,6 +227,9 @@ div .list h2:before {
     padding: 13px 0 13px 20px;
 }
 
+#logout_navi {
+  padding-bottom: 50px;
+}
 .button--login, #logout_navi .button{
     width: 100%;
 }
@@ -365,4 +373,11 @@ div .error {
 
 .msg_error {
 	color: #ea553a;
+}
+
+.list_loading {
+  padding: 30px 0;
+  width: 100%;
+  vertical-align: middle;
+	text-align: center;
 }

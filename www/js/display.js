@@ -1,12 +1,14 @@
 'use strict';
-app.controller('selectCtrl', function($scope, Current) {
+app.controller('selectCtrl', function($scope, Current, posts) {
 	$scope.toMyReport = function () {
 		var id = Current.getCurrent().objectId;
-		myNavigator.pushPage('display/list.html', {userId:id});
+		var dataStore = posts.getPosts().equalTo('userID', id);
+		myNavigator.pushPage('display/list.html', {dataStore:dataStore});
 	}
 
 	$scope.toAllInfo = function() {
-		myNavigator.pushPage('display/list.html');
+		var dataStore = posts.getPosts();
+		myNavigator.pushPage('display/list.html', {dataStore:dataStore});
 	}
 });
 
@@ -32,46 +34,25 @@ app.filter('listMatch', function(){
 	}
 });
 
-app.factory('listService', ['$q', 'posts', '$timeout', function($q, posts, $timeout) {
-  return {
-    data: function(userId){
-      var d = $q.defer();
-
-		$timeout(function(){
-			var onSuccess = function(results) {
-				d.resolve(results);
-			  //プロミスオブジェクトを参照もとに返す
-			  return d.promise;
-			}
-			if (!userId) {
-				posts.findAll(onSuccess);
-			} else {
-				posts.findByUserId(userId, onSuccess);
-			}
-      }, 2000);
-
-	  //プロミスオブジェクトを参照もとに返す
-	  return d.promise;
-    }
-  }
-}]);
-
-app.controller('listCtrl', function($scope, correspond, posts, dialogService, listService) {
+app.controller('listCtrl', function($scope, correspond, posts, dialogService) {
 	$scope.init = function() {
 		$scope.showFilter = true;
 		$scope.toggle = correspond;
 		$scope.cor = {selected : '-1'};
 		var options = $scope.myNavigator.getCurrentPage().options;
-		get_data(options.userId);
+		if (!options.dataStore) {
+			options.dataStore = posts.getPosts();
+		}
+		get_data(options.dataStore);
 		$scope.$watch('cor.selected', function(value) {
 			$scope.showFilter = true;
 		});
 	}
 
-	var get_data = function(userId){
+	var get_data = function(dataStore){
 	// Factoryからデータ取得のメソッドを呼び出し、Promiseオブジェクトを格納する
 		$scope.isLoad = false;
-		var promise = listService.data(userId);
+		var promise = posts.findAsync(dataStore);
 		promise.then(function(results){
 		  //成功時
 			$scope.posts = results;

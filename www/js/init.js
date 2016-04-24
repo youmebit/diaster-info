@@ -14,7 +14,7 @@ app.run(function($rootScope, Current, users, tabService) {
 		if (strage.mailAddress) {
 			users.loginAsName(strage.userName, strage.password);
 			$rootScope.$on('login_complate', function(event, data) {
-				Current.setCurrent(data.userName, true, data.role, data.objectId);
+				Current.setCurrent(data, true);
 			});
 		} else {
 			users.loginAsAnonymous(strage.authData.anonymous.id);
@@ -37,7 +37,7 @@ app.run(function($rootScope, Current, users, tabService) {
 	tabService.setActiveTab(0);
 });
 
-app.controller('bodyCtrl', function($scope, $rootScope, Current, tabService, dialogService, users) {
+app.controller('bodyCtrl', function($scope, $rootScope, Current, tabService, dialogService, users, posts, geoService) {
 	$scope.topInit = function() {
 		$scope.$apply(function() {
 				$rootScope.displayPage = 'list_ghest';
@@ -45,6 +45,16 @@ app.controller('bodyCtrl', function($scope, $rootScope, Current, tabService, dia
 				if (Current.isLogin()) {
 					$rootScope.displayPage = 'list_select';
 				}
+
+				// 対応完了のお知らせを取得
+				$scope.isLoad = false;
+				var dataStore = posts.getPosts().equalTo("correspond", "2").limit(5);
+				var promise = posts.findAsync(dataStore);
+				promise.then(function(results){
+					//成功時
+					$scope.items = results;
+					$scope.isLoad = true;
+				});
 		});
 	}
 
@@ -62,12 +72,29 @@ app.controller('bodyCtrl', function($scope, $rootScope, Current, tabService, dia
 
     $scope.toPostPage = function() {
         if (!navigator.geolocation) {
-            alert('位置情報が取得できないため、この機能は使用できません。');
+            dialogService.error('位置情報が取得できないため、この機能は使用できません。');
         } else {
-            tabService.setActiveTab(1);
+					var canPost = false;
+						geoService.currentPosition();
+						$scope.$on("geocode:success", function(event, point) {
+							angular.forEach(point.address, function (a) {
+									if (a.long_name.indexOf('宝塚市') != -1) {
+											canPost = true;
+									}
+							});
+							if (!canPost) {
+								dialogService.error('宝塚市内ではないため投稿できません');
+							} else {
+								tabService.setActiveTab(1);
+							}
+						});
         }
     }
 
+		$scope.toDetail = function (objectId) {
+			myNavigator.pushPage('display/detail.html', {id : objectId});
+
+		}
 	$scope.signOut = function() {
 		dialogService.confirm('ログアウトしてもよろしいですか？');
 		$scope.$on('confirm:ok', function() {
@@ -80,76 +107,4 @@ app.controller('bodyCtrl', function($scope, $rootScope, Current, tabService, dia
 			});
 		});
 	}
-});
-
-// 位置情報から住所を取得するサービス
-app.service('geoService', function() {
-    this.loadAddress = function(latitude, longitude, onSuccess) {
-        var geocoder = new google.maps.Geocoder();
-        // 入力された緯度経度取得
-        var latlng = new google.maps.LatLng(latitude, longitude);
-        geocoder.geocode({
-            'latLng': latlng
-        }, function (results, status) {
-
-            // ステータスがOK（成功）
-            if (status == google.maps.GeocoderStatus.OK) {
-                onSuccess(latitude, longitude, results[0].address_components);
-            } else {
-                console.log('位置情報取得ステータス:' + status);
-                alert("位置情報の取得に失敗しました。申し訳ありませんがもう一度送信してください。");
-            }
-        });
-    }
-    this.currentPosition = function(onSuccess) {
-                    // 住所を取得する
-        var geoOptions = {
-            maximumAge: 3000,
-            timeout: 4000,
-            enableHighAccuracy: true
-        };
-
-        // 現在位置を取得する。
-        navigator.geolocation.getCurrentPosition(function (position) {
-            var onGeoSuccess = function(latitude, longitude, components) {
-                var longAddress = "";
-                var isAppend = true;
-                angular.forEach(components, function (address) {
-                    if (address.long_name.indexOf('市') != -1) {
-                        isAppend = false;
-                    }
-                    if (isAppend) {
-                        longAddress = address.long_name + longAddress;
-                    }
-                });
-
-                myNavigator.pushPage('post.html', {
-                    image: "data:image/jpeg;base64," + imageURI,
-                    address: longAddress,
-                    latitude: latitude,
-                    longitude: longitude
-                });
-            }
-
-            // 住所を取得する。
-            geoService.loadAddress(position.coords.latitude, position.coords.longitude, onGeoSuccess);
-            },
-            function (error) {
-                var errorMessage = {
-                    0: "原因不明のエラーが発生しました。",
-                    1: "位置情報の取得が許可されませんでした。",
-                    2: "電波状況などで位置情報が取得できませんでした。",
-                    3: "位置情報の取得に時間がかかり過ぎてタイムアウトしました。",
-                };
-
-                // エラーコードに合わせたエラー内容をアラート表示
-                alert(errorMessage[error.code]);
-                modal.hide();
-            }, geoOptions);
-    }
-});
-
-app.constant('role', {
-			 	'member' : '0',
-			 	'staff' : '1'
 });

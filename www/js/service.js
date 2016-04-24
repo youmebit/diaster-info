@@ -1,3 +1,8 @@
+app.constant('role', {
+			 	'member' : '0',
+			 	'staff' : '1'
+});
+
 // mBaaS接続サービス
 app.service('mBaasService', function ($rootScope) {
     var ncmb = null;
@@ -27,7 +32,7 @@ app.service('dialogService', function($rootScope){
 			alertDialog.show();
 		});
 	},
-	this.error = function () {
+	this.error = function (msg) {
 		ons.createAlertDialog('template/dialog.html', {parentScope: $rootScope}).then(function(dialog) {
 			$rootScope.msg = msg;
 			$rootScope.type = "msg_error";
@@ -52,24 +57,24 @@ app.service('dialogService', function($rootScope){
 app.factory('Current', function(){
 	var current = {};
 	return {
-		setCurrent : function(username, isLogin, role, objectId) {
-			this.current = {
-				username : username,
-				isLogin : isLogin,
-				role : role,
-				objectId : objectId
-			};
+		setCurrent : function(user, isLogin) {
+				this.current = {
+					username : user.userName,
+					isLogin : isLogin,
+					role : user.role,
+					objectId : user.objectId
+				};
 		},
 		getCurrent : function() {
 			return this.current;
 		},
 		initialize : function() {
-			this.current = {
-				username : 'ゲスト',
-				isLogin : false,
-				role : 0,
-				objectId : ''
-			};
+				this.current = {
+					username : 'ゲスト',
+					isLogin : false,
+					role : 0,
+					objectId : ''
+				};
 		},
 		isLogin : function() {
       return this.current.isLogin;
@@ -110,6 +115,14 @@ app.factory('users', function($rootScope, mBaasService) {
 		loginAsAnonymous : function(uuid) {
 			mBaasService.getNcmb().User.loginAsAnonymous(uuid);
 		},
+		reset : function(mailAddress) {
+				var ncmb = mBaasService.getNcmb();
+				var current = new ncmb.User();
+				current.set("mailAddress", mailAddress);
+				current.requestPasswordReset(function(data) {
+					$rootScope.$broadcast("reset:success");
+				});
+		},
 		logout : function() {
 			var ncmb = mBaasService.getNcmb();
 			ncmb.User.logout().then(function(){
@@ -120,30 +133,86 @@ app.factory('users', function($rootScope, mBaasService) {
 });
 
 // Postsデータストア
-app.factory('posts', function(mBaasService) {
+app.factory('posts', function(mBaasService, $q, $timeout) {
 	return {
 		findById : function(id, success) {
-			var Posts = getPosts();
+			var Posts = this.getPosts();
 			Posts.equalTo("objectId", id).fetch().then(function(result) {
 				success(result);
 			});
 		},
-		findAll : function(success) {
-			var Posts = getPosts();
-			Posts.order("updateDate", true).fetchAll().then(function(results) {
-				success(results);
-			});
-		},
-		findByUserId : function(id, success) {
-			var Posts = getPosts();
-			Posts.equalTo("userID", id).order("updateDate", true).fetchAll().then(function(results) {
-				success(results);
-			});
-		},
-	};
 
-	function getPosts() {
-		var ncmb = mBaasService.getNcmb();
-		return ncmb.DataStore("Posts");
-	}
+    find : function(dataStore, success) {
+        dataStore.order("updateDate", true).fetchAll().then(function(results) {
+          success(results);
+        });
+    },
+    // 非同期でデータを取得する
+    findAsync : function(dataStore) {
+        var d = $q.defer();
+        $timeout(function(){
+            dataStore.order("updateDate", true).fetchAll().then(function(results) {
+              d.resolve(results);
+              //プロミスオブジェクトを参照もとに返す
+              return d.promise;
+            });
+        }, 2000);
+
+        //プロミスオブジェクトを参照もとに返す
+        return d.promise;
+    },
+
+    getPosts : function() {
+        var ncmb = mBaasService.getNcmb();
+    		return ncmb.DataStore("Posts");
+    }
+	};
+});
+
+// 位置情報から住所を取得するサービス
+app.service('geoService', function($rootScope, dialogService) {
+	// 入力された緯度経度から取得
+    this.loadAddress = function(latitude, longitude) {
+    },
+		// 現在位置から位置情報と住所を取得する。
+	  this.currentPosition = function() {
+			var geoOptions = {
+					maximumAge: 5000,
+					timeout: 6000,
+					enableHighAccuracy: true
+			};
+			navigator.geolocation.getCurrentPosition(function (position) {
+					var geocoder = new google.maps.Geocoder();
+					var latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+					geocoder.geocode({
+							'latLng': latlng
+					}, function (results, status) {
+							// ステータスがOK（成功）
+							if (status == google.maps.GeocoderStatus.OK) {
+									var point = {
+										lat:position.coords.latitude,
+										long:position.coords.longitude,
+										address:results[0].address_components
+									};
+									$rootScope.$broadcast("geocode:success", point);
+							} else {
+									console.log('位置情報取得ステータス:' + status);
+									dialogService.error("位置情報の取得に失敗しました。申し訳ありませんがもう一度送信してください。");
+							}
+					});
+
+					},
+					function (error) {
+							var errorMessage = {
+									0: "原因不明のエラーが発生しました。",
+									1: "位置情報の取得が許可されませんでした。",
+									2: "電波状況などで位置情報が取得できませんでした。",
+									3: "位置情報の取得に時間がかかり過ぎてタイムアウトしました。",
+							};
+
+							// エラーコードに合わせたエラー内容をアラート表示
+							alert(errorMessage[error.code]);
+					modal.hide();
+					}, geoOptions);
+    }
 });

@@ -24,21 +24,34 @@
             <ons-button modifier="login" ng-click="toLoginPage()">ログイン/会員登録</ons-button>
         </div>
     </div>
-    <div class="list">
+    <div class="fin_contents">
         <h2>対応完了のお知らせ</h2>
-        <ons-list>
-            <ons-list-item modifier="chevron line">
-                <ons-row>
-                    <ons-col class="info">
-                        <div class="date">2016/2/17 13:00</div>
-                        <div class="address">中筋山手5丁目1-1</div>
-                        <div class="comment">親譲りの無鉄砲で小供の時から損ばかり...</div>
-                    </ons-col>
-                </ons-row>
-            </ons-list-item>
-        </ons-list>
+        <div class="list_loading" ng-hide="isLoad"><ons-icon icon="ion-load-c" spin="true"></ons-icon></div>
+        <div ng-show="isLoad">
+          <ons-list modifier="disaster_list fin_list">
+        		<ons-list-item modifier="chevron" class="info" ng-click="toDetail(p.objectId)" ng-repeat="p in items">
+        			<ons-row class="date right">
+        				<span ng-bind="p.updateDate | date:'yyyy/MM/dd HH:mm'"></span>
+        			</ons-row>
+        			<ons-row>
+        			<ons-col width="105px">
+        			  <div class="photo">
+        			  	<img class="photo" ng-src="https://mb.api.cloud.nifty.com/2013-09-01/applications/TOjZsCJbSJeKWALV/publicFiles/{{p.photo}}">
+        			  </div>
+        			</ons-col>
+        			<ons-col>
+        				<span to-correspond="{{p.correspond}}"></span>
+        			  <div class="address" ng-bind="p.address"></div>
+        			  <div class="name"><span ng-bind="p.username"></span>さん</div>
+        			  <div ng-bind="p.comment"></div>
+        			</ons-col>
+        			</ons-row>
+        		</ons-list-item>
+        	</ons-list>
+        </div>
     </div>
-    <div id="logout_navi" class="contents" ng-show="user.isLogin">
-        <ons-button ng-click="signOut()">ログアウト</ons-button>
+    <div id="logout_navi" class="contents">
+        <ons-button ng-click="signOut()" ng-show="user.isLogin">ログアウト</ons-button>
     </div>
 </main>
+<link rel="stylesheet" href="css/display.css">

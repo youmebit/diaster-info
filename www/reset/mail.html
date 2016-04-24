@@ -1,40 +1,44 @@
-<ons-toolbar fixed-style>
-    <div class="center">
+<ons-toolbar fixed-style class="with-back">
+  <div class="left">
+    <ons-back-button modifier="back">戻る</ons-back-button>
+  </div>
+  <div class="center">
         パスワード変更
     </div>
 </ons-toolbar>
 
     <h1 class="top_icon">
-        <span class="fa-stack" style="font-size: 40px;">
+        <span class="fa-stack top reset_icon">
             <i class="fa fa-circle-thin fa-stack-2x"></i>
             <i class="fa fa-key fa-stack-1x fa-rotate-90"></i>
         </span><br>
         パスワード変更
     </h1>
-    
-    <p>
-        登録したメールアドレス宛に確認メールを送信します。
-        メール内のURLからパスワードを再設定してください。
-    </p>
-    
-    <form class="contents">
-        <dl>
-            <dt>
-                <ons-icon icon="fa-envelope-o" size="1em"></ons-icon>
-                メールアドレス
-            </dt>
-            <dd>
-                <input type="email" name="email"/>
-            </dd>
-        </dl>
-        
-        <div class="position_center">
-            <ons-button style="margin-top: 20px;"
-                class="btn"
-                onclick="">
-                メールを送信する
-            </ons-button>
-        </div>
-    </form>
-    
+
+    <div class="form_contents" ng-controller="mailCtrl">
+        <p class="contents reset_desc">
+            登録したメールアドレスに確認メールを送信します。
+            メール内のURLからパスワードを再設定してください。
+        </p>
+        <form class="contents" name="resetForm" novalidate>
+            <dl>
+                <dt class="email">メールアドレス</dt>
+                <dd>
+                    <input type="email" name="email" ng-model="reset.email" hide-tabbar required email-length/>
+                    <div class="error" ng-messages="resetForm.email.$error" ng-messages-multiple ng-if="resetForm.email.$touched">
+                    <div ng-repeat="error in errors">
+                    <span ng-message-exp="error.key">{{error.msg}}</span>
+                    </div>
+                </dd>
+            </dl>
+
+            <div class="position_center">
+                <ons-button style="margin-top: 10px;"
+                    class="btn"
+                    ng-click="sendMail(reset)">
+                    メールを送信する
+                </ons-button>
+            </div>
+        </form>
+    </div>
     <link rel="stylesheet" href="css/form.css">
