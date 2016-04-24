@@ -37,7 +37,7 @@ app.run(function($rootScope, Current, users, tabService) {
 	tabService.setActiveTab(0);
 });
 
-app.controller('bodyCtrl', function($scope, $rootScope, Current, tabService, dialogService, users, posts) {
+app.controller('bodyCtrl', function($scope, $rootScope, Current, tabService, dialogService, users, posts, geoService) {
 	$scope.topInit = function() {
 		$scope.$apply(function() {
 				$rootScope.displayPage = 'list_ghest';
@@ -72,9 +72,22 @@ app.controller('bodyCtrl', function($scope, $rootScope, Current, tabService, dia
 
     $scope.toPostPage = function() {
         if (!navigator.geolocation) {
-            alert('位置情報が取得できないため、この機能は使用できません。');
+            dialogService.error('位置情報が取得できないため、この機能は使用できません。');
         } else {
-            tabService.setActiveTab(1);
+					var canPost = false;
+						geoService.currentPosition();
+						$scope.$on("geocode:success", function(event, point) {
+							angular.forEach(point.address, function (a) {
+									if (a.long_name.indexOf('宝塚市') != -1) {
+											canPost = true;
+									}
+							});
+							if (!canPost) {
+								dialogService.error('宝塚市内ではないため投稿できません');
+							} else {
+								tabService.setActiveTab(1);
+							}
+						});
         }
     }
 

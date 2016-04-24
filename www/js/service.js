@@ -32,7 +32,7 @@ app.service('dialogService', function($rootScope){
 			alertDialog.show();
 		});
 	},
-	this.error = function () {
+	this.error = function (msg) {
 		ons.createAlertDialog('template/dialog.html', {parentScope: $rootScope}).then(function(dialog) {
 			$rootScope.msg = msg;
 			$rootScope.type = "msg_error";
@@ -173,64 +173,46 @@ app.factory('posts', function(mBaasService, $q, $timeout) {
 app.service('geoService', function($rootScope, dialogService) {
 	// 入力された緯度経度から取得
     this.loadAddress = function(latitude, longitude) {
-        var geocoder = new google.maps.Geocoder();
-        var latlng = new google.maps.LatLng(latitude, longitude);
-        geocoder.geocode({
-            'latLng': latlng
-        }, function (results, status) {
-            // ステータスがOK（成功）
-            if (status == google.maps.GeocoderStatus.OK) {
-								$rootScope.$broadcast("geocode:success", results[0].address_components);
-            } else {
-                console.log('位置情報取得ステータス:' + status);
-								dialogService.error("位置情報の取得に失敗しました。申し訳ありませんがもう一度送信してください。");
-            }
-        });
-    }
-    this.currentPosition = function(onSuccess) {
-                    // 住所を取得する
-        var geoOptions = {
-            maximumAge: 3000,
-            timeout: 4000,
-            enableHighAccuracy: true
-        };
+    },
+		// 現在位置から位置情報と住所を取得する。
+	  this.currentPosition = function() {
+			var geoOptions = {
+					maximumAge: 5000,
+					timeout: 6000,
+					enableHighAccuracy: true
+			};
+			navigator.geolocation.getCurrentPosition(function (position) {
+					var geocoder = new google.maps.Geocoder();
+					var latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+					geocoder.geocode({
+							'latLng': latlng
+					}, function (results, status) {
+							// ステータスがOK（成功）
+							if (status == google.maps.GeocoderStatus.OK) {
+									var point = {
+										lat:position.coords.latitude,
+										long:position.coords.longitude,
+										address:results[0].address_components
+									};
+									$rootScope.$broadcast("geocode:success", point);
+							} else {
+									console.log('位置情報取得ステータス:' + status);
+									dialogService.error("位置情報の取得に失敗しました。申し訳ありませんがもう一度送信してください。");
+							}
+					});
 
-        // 現在位置を取得する。
-        navigator.geolocation.getCurrentPosition(function (position) {
-            var onGeoSuccess = function(latitude, longitude, components) {
-                var longAddress = "";
-                var isAppend = true;
-                angular.forEach(components, function (address) {
-                    if (address.long_name.indexOf('市') != -1) {
-                        isAppend = false;
-                    }
-                    if (isAppend) {
-                        longAddress = address.long_name + longAddress;
-                    }
-                });
+					},
+					function (error) {
+							var errorMessage = {
+									0: "原因不明のエラーが発生しました。",
+									1: "位置情報の取得が許可されませんでした。",
+									2: "電波状況などで位置情報が取得できませんでした。",
+									3: "位置情報の取得に時間がかかり過ぎてタイムアウトしました。",
+							};
 
-                myNavigator.pushPage('post.html', {
-                    image: "data:image/jpeg;base64," + imageURI,
-                    address: longAddress,
-                    latitude: latitude,
-                    longitude: longitude
-                });
-            }
-
-            // 住所を取得する。
-            geoService.loadAddress(position.coords.latitude, position.coords.longitude, onGeoSuccess);
-            },
-            function (error) {
-                var errorMessage = {
-                    0: "原因不明のエラーが発生しました。",
-                    1: "位置情報の取得が許可されませんでした。",
-                    2: "電波状況などで位置情報が取得できませんでした。",
-                    3: "位置情報の取得に時間がかかり過ぎてタイムアウトしました。",
-                };
-
-                // エラーコードに合わせたエラー内容をアラート表示
-                alert(errorMessage[error.code]);
-                modal.hide();
-            }, geoOptions);
+							// エラーコードに合わせたエラー内容をアラート表示
+							alert(errorMessage[error.code]);
+					modal.hide();
+					}, geoOptions);
     }
 });
