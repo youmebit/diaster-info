@@ -1,0 +1,262 @@
+.list--disaster_list {
+	margin-bottom: 100px;
+}
+.list__item {
+	line-height: 30px;
+}
+
+.list__item:last-of-type {
+	border-bottom: 1px solid #808080;
+}
+
+.right {
+	display:block;
+	text-align: right;
+}
+
+/*情報件数*/
+.count {
+	font-family: 'Noto400', sans-serif;
+	display: table;
+	padding-left: 10px;
+	width: 100%;
+	font-size: 0.9em;
+}
+
+.count>p {
+	padding: 3px 0;
+}
+
+.count > div {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+.count > div:first-of-type {
+	width: 68%;
+}
+
+.count > div:last-of-type {
+	background-color: rgba(54,162,132, 0.77);
+}
+
+.msg {
+	padding-top: 20px;
+}
+
+.loading {
+	text-align: center;
+}
+
+.info {
+	font-family: 'Noto400', sans-serif;
+}
+
+.info div, info .correspond {
+	margin-bottom: 2px;
+	margin-top: 2px;
+}
+
+/*絞り込みボタン*/
+.filter {
+	width: 100%;
+	cursor: pointer;
+	color: #fffffa;
+	display: block;
+	padding: 15px 0;
+	height: 100%;
+	text-align: center;
+}
+
+.filter ons-icon {
+	padding-left: 3px;
+}
+.accordion {
+	-webkit-transition: height 0.5s ease;
+	transition: height 0.5s ease;
+	height: 200px;
+	overflow: hidden;
+}
+
+.accordion.hide, .accordion.hide.button-bar{
+  	height: 0;
+}
+
+/*絞り込みToggleボタン*/
+.button-bar {
+	display: block;
+	width: 100%;
+	overflow: auto;
+}
+
+.button-bar__item {
+	display: block;
+	border-radius: 0;
+}
+
+.button-bar__item > .button-bar__button {
+	border: 0;
+	border-top: 1px solid rgba(54,162,132,0.77);
+	height: 50px;
+/*	ボタン切り替え速度*/
+	transition: background-color 0.1s linear, color 0.1s linear;
+	vertical-align:middle;
+	font-family: 'Noto400', sans-serif;
+	font-size: 0.9em;
+}
+.button-bar__item:first-child > .button-bar__button {
+	border-left: 0;
+	border-right: 0;
+	border-top-left-radius: 0px;
+	border-bottom-left-radius: 0px;
+}
+
+.button-bar__item:last-child > .button-bar__button {
+	border-bottom: 1px solid rgba(54,162,132,0.77);
+	border-left: 0;
+	border-right: 0;
+	border-top-right-radius: 0px;
+	border-bottom-right-radius: 0px;
+}
+
+/*名前*/
+.name {
+	color: #808080;
+	font-size: 0.8em;
+}
+
+.row--modify_date {
+	padding: 3px 0;
+}
+
+.spin {
+	text-align: center;
+}
+
+/*対応状況*/
+.correspond {
+	line-height: 1em;
+	text-align: center;
+	padding: 4px 5px;
+	font-family: 'Noto500', sans-serif;
+	box-sizing: border-box;
+	border-radius: 3px;
+}
+
+/*対応状況(これから対応します)*/
+.still {
+	width: 100px;
+	color: #666;
+	border: 1px solid #666;
+}
+
+/*対応状況(対応中です)*/
+.now {
+	width: 80px;
+	background-color: #fdd37d;
+	color: #666;
+}
+
+/*対応状況(対応しました)*/
+.fin {
+	width: 80px;
+	background-color: #29abe2;
+	color: #fffffa;
+}
+
+/*一覧の写真サイズ*/
+.info .photo {
+	vertical-align: middle;
+    background-color: #333;
+	width: 95px;
+}
+
+info .photo img {
+	max-width: 90px;
+    max-height: 90px;
+    width: expression(this.width >= this.height ? "90px" : "auto");
+	height: expression(this.width <= this.height ? "90px" : "auto");
+    margin: 0 auto;
+}
+
+/*詳細画面のタブ表示*/
+.action-col {
+    text-align: center;
+    color: #808080;
+    border-right: 1px solid #808080;
+	box-sizing: border-box;
+	padding:13px 0 10px;
+}
+
+.active_tab {
+    border-bottom: 6px solid #ffd37d;
+}
+.action-col:active {
+  opacity: 0.7;
+}
+
+.sub_info {
+	display: table;
+	padding: 20px 0 5px;
+	width: 96%;
+	margin: 0 auto;
+	font-family: 'Noto400', sans-serif;
+}
+
+.sub_info>div{
+	width: 40%;
+	display: table-cell;
+	vertical-align: top;
+}
+
+.left_info {
+	line-height: 2em;
+	font-size: 0.8em;
+}
+
+.right_info {
+	font-size: 0.9em;
+}
+
+.action-col:last-of-type {
+    border-right: none;
+}
+
+.action-icon {
+  font-size: 1.4em;
+	padding-bottom: 5px;
+}
+
+.action-label {
+    font-size: 0.9em;
+	font-family: 'Noto400', sans-serif;
+}
+
+.map {
+	min-height: 60%;
+	padding-bottom: 30px;
+}
+
+.map span {
+	display: block;
+	padding-bottom: 20px;
+}
+
+/*詳細画面の余白設定*/
+.detail_contents {
+	padding-top: 10px;
+	width: 90%;
+	margin: 0 auto;
+	font-family: 'Noto400', sans-serif;
+	min-height: 30%;
+	padding-bottom: 50px;
+}
+
+.detail_contents p {
+	line-height: 1.3em;
+}
+
+.tag:before {
+	content: '\f02b';
+	font-family: 'FontAwesome';
+}

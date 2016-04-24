@@ -49,7 +49,7 @@ app.controller('imgSelectCtrl', function ($scope, mBaasService, geoService, $tim
                         }
                     });
 
-                    myNavigator.pushPage('post.html', {
+                    myNavigator.pushPage('post/post.html', {
                         image: "data:image/jpeg;base64," + imageURI,
                         address: longAddress,
                         latitude: latitude,
@@ -82,7 +82,7 @@ app.controller('imgSelectCtrl', function ($scope, mBaasService, geoService, $tim
 
 });
 
-app.controller('postCtrl', function ($scope, mBaasService) {
+app.controller('postCtrl', function ($scope, mBaasService, dialogService) {
     // 画像縮小処理
     $scope.init = function () {
         $scope.piece = {};
@@ -126,57 +126,63 @@ app.controller('postCtrl', function ($scope, mBaasService) {
         $scope.piece.address = options.address;
         $scope.piece.latitude = options.latitude;
         $scope.piece.longitude = options.longitude;
+		$scope.piece.userId = null;
+		if ($scope.user.isLogin) {
+			var current = mBaasService.getCurrentUser();
+			$scope.piece.userId = current.objectId;
+			$scope.piece.name = current.userName;
+		}
         image.src = options.image;
     }
 
     // ファイルアップロード→データストア登録の順で登録する。
     $scope.post = function (piece) {
-        if (!window.confirm('投稿してもよろしいですか？')) {
-            return false;
-        }
-        var blob = b64ToBlob(piece.imageURI);
-        var ncmb = mBaasService.getNcmb();
-        var fileName = getFileName();
+		dialogService.confirm('投稿してもよろしいですか？');
+		$scope.$on('confirm:ok', function() {
+			var blob = b64ToBlob(piece.imageURI);
+			var ncmb = mBaasService.getNcmb();
+			var fileName = getFileName();
 
-        // データストア登録成功
-        var saveSuccess = function () {
-            myNavigator.pushPage('post_info.html');
-        }
-
-        // ファイルアップロード成功
-        var uploadSuccess = function () {
-            var Posts = ncmb.DataStore("Posts");
-            var data = new Posts();
-			if ($scope.user.isLogin) {
-				data.set("username", $scope.user.name);
-			} else {
-				data.set("username", piece.name);
+			// データストア登録成功
+			var saveSuccess = function () {
+				myNavigator.pushPage('post/post_info.html');
 			}
-            data.set("photo", fileName);
-            data.set("address", piece.address);
-            data.set("comment", piece.comment);
-            var geopoint = new ncmb.GeoPoint(piece.latitude, piece.longitude);
-            data.set("point", geopoint);
-			data.set("correspond", 0);
-            data.save().then(function (data) {
-                saveSuccess();
-            }).catch(function (err) {
-                onFail(err);
-            });
-        }
 
-        var onFail = function (err) {
-            console.error(err);
-            alert('申し訳ありませんが、電波の届くところでもう一度投稿してください。');
-        }
+			// ファイルアップロード成功
+			var uploadSuccess = function () {
+				var Posts = ncmb.DataStore("Posts");
+				var data = new Posts();
+				data.set("userID", piece.userId);
+				data.set("username", piece.name);
+				data.set("photo", fileName);
+				data.set("address", piece.address);
+				data.set("comment", piece.comment);
+				var geopoint = new ncmb.GeoPoint(piece.latitude, piece.longitude);
+				data.set("point", geopoint);
+				data.set("correspond", 0);
+				data.set("response", null);
 
-        ncmb.File.upload(fileName, blob).then(
-            function (data) {
-                uploadSuccess();
-            }
-        ).catch(function (err) {
-            onFail(err);
-        });
+				data.save().then(function (data) {
+					saveSuccess();
+				}).catch(function (err) {
+					onFail(err);
+				});
+			}
+
+			var onFail = function (err) {
+				console.error(err);
+				dialogService.error('申し訳ありませんが、電波の届くところでもう一度投稿してください。');
+			}
+			
+			ncmb.File.upload(fileName, blob).then(
+				function (data) {
+					uploadSuccess();
+				}
+			).catch(function (err) {
+				onFail(err);
+			});
+		});
+
     }
 });
 

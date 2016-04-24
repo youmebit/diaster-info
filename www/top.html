@@ -6,8 +6,8 @@
 </header>
 <div>
 <main class="wrapper" ng-init="topInit()">
-    <div id="login_name">こんにちは。{{user.username}}さん
-    </div>
+	<div id="login_name">こんにちは。{{$root.user.username}}さん
+	</div>
     <div class="contents">
         <ul id="func-navi">
             <li>
@@ -16,10 +16,10 @@
                 </ons-button>
             </li>
             <li>
-                <ons-button modifier="border"><ons-icon icon="fa-file-image-o" size="3x"></ons-icon><br>情報を見る</ons-button>
+                <ons-button ng-click="toDisplayPage()" modifier="border"><ons-icon icon="fa-file-image-o" size="3x"></ons-icon><br>情報を見る</ons-button>
             </li>
         </ul>
-        <div id="login_navi" ng-hide="user.isLogin">
+        <div id="login_navi" ng-hide="$root.user.isLogin">
             <p class="arrow_box">登録すると投稿が簡単になったり、投稿した情報が探しやすくなります。</p>
             <ons-button modifier="login" ng-click="toLoginPage()">ログイン/会員登録</ons-button>
         </div>
@@ -27,7 +27,7 @@
     <div class="list">
         <h2>対応完了のお知らせ</h2>
         <ons-list>
-            <ons-list-item modifier="chevron">
+            <ons-list-item modifier="chevron line">
                 <ons-row>
                     <ons-col class="info">
                         <div class="date">2016/2/17 13:00</div>

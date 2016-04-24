@@ -1,39 +1,7 @@
-.contents {
-    padding-top: 20px;
-}
-.contents .info {
-    padding: 0 0 15px 0;
-    margin: 0;
-    width: 100%;
-    font-size: 1.2em;
-}
-.image_wrapper {
-    position: absolute;
-    top:10%;
-    left:5%;
-}
-.image_wrapper .button{
+.contents_position .button{
     width: 100%;
     margin-bottom: 30px;
     padding-bottom: 0px;
-}
-
-/*画像サムネイル*/
-#thumbnail {
-    background-color: #333;
-    padding: 3px;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-}
-
-.img-resize {
-    max-width: 280px;
-    max-height: 280px;
-    width: expression(this.width >= this.height ? "280px" : "auto");
-	height: expression(this.width <= this.height ? "280px" : "auto");
-    margin: 0 auto;
-    display: block;
 }
 
 .button--post {

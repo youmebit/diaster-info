@@ -1,0 +1,59 @@
+<ons-page>
+   <ons-toolbar fixed-style class="with-back">
+		<div class="left">
+			<ons-back-button modifier="back">戻る</ons-back-button>
+		</div>
+		<div class="center">
+			災害情報一覧
+		</div>
+	</ons-toolbar>
+  	<main ng-controller="listCtrl" ng-init="init()">
+	  <div class="count" ng-show="isLoad">
+		<div>
+			<p>情報件数:{{(posts | listMatch:cor.selected).length}}件</p>
+		</div>
+		<div>
+			<span class="filter" ng-click="showFilter = !showFilter">
+			<span ng-show="showFilter">絞り込み<ons-icon icon=" fa-angle-down"></ons-icon></span>
+			<span ng-hide="showFilter">閉じる<ons-icon icon=" fa-angle-up"></ons-icon></span>
+			</span></div>
+	  	</div>
+	  <div class="accordion" ng-class="{hide: showFilter}" ng-show="isLoad">
+		<div class="button-bar">
+		  <div class="button-bar__item">
+			<input type="radio" name="cor" ng-model="cor.selected" ng-value="-1" checked>
+			<button class="button-bar__button">すべて表示</button>
+		  </div>
+		</div>
+		<div class="button-bar">
+		  <div class="button-bar__item" ng-repeat="(key, item) in toggle | orderBy: $index">
+			<input type="radio" name="cor" ng-model="cor.selected" ng-value="key">
+			<button class="button-bar__button" ng-bind="item.label"></button>
+		  </div>
+		</div>
+	  </div>
+	  <p class="count msg" ng-if="(posts | listMatch:cor.selected).length == 0">該当する情報はありません</p>
+	 <p class="loading" ng-hide="isLoad"><ons-icon icon="ion-load-c" spin="true"></ons-icon></p>
+	<ons-list modifier="disaster_list" ng-if="(posts | listMatch:cor.selected).length != 0" ng-show="isLoad">
+		<ons-list-item modifier="chevron" class="info" ng-click="toDetail(p.objectId)" ng-repeat="p in filterd = (posts | listMatch:cor.selected)" event-finished>
+			<ons-row class="date right">
+				<span ng-bind="p.updateDate | date:'yyyy/MM/dd HH:mm'"></span>
+			</ons-row>
+			<ons-row>
+			<ons-col width="105px">
+			  <div class="photo">
+			  	<img class="photo" ng-src="https://mb.api.cloud.nifty.com/2013-09-01/applications/TOjZsCJbSJeKWALV/publicFiles/{{p.photo}}">
+			  </div>
+			</ons-col>
+			<ons-col>
+				<span to-correspond="{{p.correspond}}"></span>
+			  <div class="address" ng-bind="p.address"></div>
+			  <div class="name"><span ng-bind="p.username"></span>さん</div>
+			  <div ng-bind="p.comment"></div>
+			</ons-col>
+			</ons-row>
+		</ons-list-item>
+	</ons-list>
+      	</main>
+	<link rel="stylesheet" href="css/display.css">
+</ons-page>

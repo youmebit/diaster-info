@@ -1,4 +1,12 @@
 /* This is a CSS file */
+.form_bg {
+	display: block;
+	background-color: #f2f2f2;
+	height: 100%;
+	overflow: hidden;
+	padding-bottom: 50px;
+}
+
 .list {
     border-top:none;
 }
@@ -6,37 +14,6 @@
 .list__item {
     line-height: 0;
     padding: 0;
-}
-
-.action-col {
-    text-align: center;
-    color: #808080;
-}
-
-.active_tab {
-    border-bottom: 6px solid #ffd37d;
-}
-.action-col:active {
-  opacity: 0.7;
-}
-
-.action-col:first-of-type {
-    border-right: 1px solid #4d4d4d;
-}
-
-.action-col a {
-    display: block;
-    width: 100%;
-}
-.action-icon {
-  padding-right: 5px;
-  font-size: 1.2em;
-}
-
-.action-label {
-    font-size: 1.3em;
-    color: #4d4d4d;
-    padding: 18px 0 10px;
 }
 
 .top_icon {
@@ -53,15 +30,6 @@
     padding: 15px 0 10px;
 }
 
-p {
-    font-family: 'Noto500', sans-serif;
-    width: 90%;
-    margin: 0 auto;
-    padding: 10px 0px 20px;
-    font-size: 1em;
-    line-height: 1.5;
-}
-
 .form_contents {
     width: 100%;
     border-top: solid 1px #808080;
@@ -69,8 +37,9 @@ p {
 }
 
 .contents {
-    padding-top: 15px;
+    padding-top: 10px;
 }
+
 form dt {
    margin-bottom: 5px;
 }
@@ -99,6 +68,36 @@ input[type="password"], textarea {
 }
 .position_center {
     text-align: center;
+}
+
+/*詳細画面-職員用対応状況*/
+.button-bar__item {
+	background-color: #fffffa;
+}
+.button-bar__item > .staff_toggle {
+	border: 1px solid #808080;
+	border-bottom: none;
+	text-align: left;
+	padding-left: 10px;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.button-bar__item:first-child > .button-bar__button,.button-bar__item:last-child > .button-bar__button {
+	border-left: 1px solid #808080;
+	border-right: 1px solid #808080;
+}
+
+.button-bar__item:first-child > .button-bar__button {
+	border-top-left-radius: 3px;
+	border-top-right-radius: 3px;
+}
+
+.button-bar__item:last-child > .button-bar__button {
+	border-bottom: 1px solid #808080;
+	border-bottom-left-radius: 3px;
+	border-bottom-right-radius: 3px;
 }
 
 .btn {

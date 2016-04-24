@@ -1,0 +1,85 @@
+<ons-page ng-controller="detailCtrl" ng-init="init()">
+   <ons-toolbar fixed-style class="with-back">
+		<div class="left">
+			<ons-back-button modifier="back">戻る</ons-back-button>
+		</div>
+		<div class="center">
+			災害情報詳細
+		</div>
+	</ons-toolbar>
+  	<main>
+  		<div class="sub_info">
+		  <div class="left_info">
+			<div ng-switch="obj.correspond">
+				<span class="correspond still" ng-switch-when="0">これから対応します</span>
+				<span class="correspond now" ng-switch-when="1">対応中です</span>
+				<span class="correspond fin" ng-switch-when="2">対応しました</span>
+				</div>
+			<div>
+			<span class="user" ng-bind="obj.username"></span>さん</div>
+		  </div>
+		  <div class="right_info">
+			<span class="date right" ng-bind="obj.updateDate | date:'yyyy/MM/dd HH:mm'"></span>
+		  </div>
+  		</div>
+	  <div class="thumbnail">
+		<img class="img-resize" ng-src="https://mb.api.cloud.nifty.com/2013-09-01/applications/TOjZsCJbSJeKWALV/publicFiles/{{obj.photo}}">
+		</div>
+		<ons-list>
+			<ons-row>
+				<ons-col class="action-col" ng-click="toMap()" ng-class="{active_tab:tab == 'map'}">
+					<div class="action-icon"><ons-icon icon="fa fa-map-o"></ons-icon></div>
+					<div class="action-label">場所</div>
+				</ons-col>
+				<ons-col ng-click="toComment()" class="action-col" ng-class="{active_tab:tab == 'comment'}">
+					<div class="action-icon"><ons-icon icon="fa fa-commenting-o"></ons-icon></div>
+					<div class="action-label">コメント</div>
+				</ons-col>
+				<ons-col class="action-col" ng-click="toStaff()" ng-class="{active_tab:tab == 'staff'}">
+					<div class="action-icon"><ons-icon icon="fa fa-black-tie"></ons-icon></div>
+					<div class="action-label">市役所の対応</div>
+				</ons-col>
+			</ons-row>
+		</ons-list>
+		<div class="map info" ng-if="tab == 'map'">
+			<span class="address" ng-bind="obj.address"></span>
+			<div id="gmap" style="width:99%; height:300px;"></div>
+		</div>
+		<div class="detail_contents" ng-if="tab == 'comment'">
+			<p ng-bind="obj.comment"></p>
+		</div>
+		<div ng-if="tab == 'staff'" ng-class="{form_bg: $root.user.role == 1}">
+			<div class="detail_contents">
+				<p ng-if="$root.user.role == 0" ng-bind="obj.response">
+					
+				</p>
+				<form name="updateForm" class="contents" ng-if="$root.user.role == 1">
+					<dl>
+						<dt class="tag">対応状況</dt>
+						<dd>
+							<div class="button-bar">
+							  <div class="button-bar__item" ng-repeat="(key, item) in toggle">
+								<input type="radio" name="correspond" ng-model="$parent.form.correspond" ng-value="key">
+								<button class="button-bar__button staff_toggle" ng-bind="item.label"></button>
+							  </div>
+							</div>
+						</dd>
+						<dt class="comment any">コメント</dt>
+						<dd>
+							<textarea name="response" cols="30" rows="7" ng-model="form.response" hide-tabbar ng-maxlength="100"></textarea>
+							<div class="error" ng-messages="updateForm.response.$error" ng-messages-multiple ng-if="updateForm.response.$error">
+							<span ng-message="maxlength">100文字以下で入力してください</span>
+							</div>
+						</dd>
+					</dl>
+				<div class="position_center">
+					<ons-button ng-click="update()" modifier="orange post" ng-disabled="updateForm.$invalid == null">変更する</ons-button>
+				</div>
+
+				</form>
+			</div>
+		</div>
+  	</main>
+	<link rel="stylesheet" href="css/display.css">
+	<link rel="stylesheet" href="css/form.css">
+</ons-page>

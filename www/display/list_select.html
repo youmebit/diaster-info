@@ -1,0 +1,24 @@
+<ons-navigator var="myNavigator" page="list_select.html"></ons-navigator>
+<ons-template id="list_select.html">
+	<ons-page ng-controller="selectCtrl">
+	<ons-toolbar fixed-style>
+		<div class="center">
+			一覧選択
+		</div>
+	</ons-toolbar>
+	<main class="contents contents_position">
+		<p class="info">どちらを見ますか？</p>
+		<ul id="func-navi">
+			<li>
+				<ons-button modifier="border" ng-click="toMyReport()">
+					<ons-icon icon="fa-paste" size="3x"></ons-icon><br>マイレポート
+				</ons-button>
+			</li>
+			<li>
+				<ons-button modifier="border" ng-click="toAllInfo()"><ons-icon icon="fa-list" size="3x"></ons-icon><br>すべての情報</ons-button>
+			</li>
+		</ul>
+	</main>
+	<link rel="stylesheet" href="css/post.css">
+	</ons-page>
+</ons-template>

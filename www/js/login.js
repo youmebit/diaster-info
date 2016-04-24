@@ -1,14 +1,13 @@
 'use strict';
-app.controller('loginCtrl', function($scope, mBaasService) {
+app.controller('loginCtrl', function($scope, Current, users, dialogService) {
     $scope.signIn = function() {
-		if (!confirm('ログインしてもよろしいですか？')) {
-			return;
-		}
-        mBaasService.login($scope.login.email, $scope.login.password);
-		$scope.$on('login_complate', function(event, data) {
-			$scope.user.username = data;
-			$scope.user.isLogin = true;
-			$scope.toHome();
+		dialogService.confirm('ログインしてもよろしいですか？');
+		$scope.$on('confirm:ok', function() {
+			users.loginAsEmail($scope.login.email, $scope.login.password);
+			$scope.$on('login_complate', function(event, data) {
+				Current.setCurrent(data.userName, true, data.role, data.objectId);
+				$scope.toHome();
+			});
 		});
     }
 });
