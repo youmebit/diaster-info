@@ -5,7 +5,8 @@ app.run(function($rootScope, Current, users, tabService) {
 	$rootScope.settings = {
 		isHideTabbar : false
 	};
-	
+
+	// 一覧ページの遷移先
 	Current.initialize();
 	var strage = users.getCurrentUser();
 	if (strage) {
@@ -22,7 +23,7 @@ app.run(function($rootScope, Current, users, tabService) {
 		//　初回起動(匿名ユーザー登録)
 		users.loginAsAnonymous();
 	}
-	
+
 	$rootScope.errors = [
       { key: 'required', msg: '必ず入力してください' },
       { key: 'email', msg: 'メールアドレスではありません' },
@@ -38,9 +39,15 @@ app.run(function($rootScope, Current, users, tabService) {
 
 app.controller('bodyCtrl', function($scope, $rootScope, Current, tabService, dialogService, users) {
 	$scope.topInit = function() {
-		$scope.$apply($rootScope.user = Current.getCurrent());
+		$scope.$apply(function() {
+				$rootScope.displayPage = 'list_ghest';
+				$rootScope.user = Current.getCurrent();
+				if (Current.isLogin()) {
+					$rootScope.displayPage = 'list_select';
+				}
+		});
 	}
-	
+
 	$scope.toHome = function() {
         tabService.setActiveTab(0);
     }
@@ -52,7 +59,7 @@ app.controller('bodyCtrl', function($scope, $rootScope, Current, tabService, dia
     $scope.toLoginPage = function() {
         tabService.setActiveTab(3);
     }
-    
+
     $scope.toPostPage = function() {
         if (!navigator.geolocation) {
             alert('位置情報が取得できないため、この機能は使用できません。');
@@ -60,13 +67,15 @@ app.controller('bodyCtrl', function($scope, $rootScope, Current, tabService, dia
             tabService.setActiveTab(1);
         }
     }
-	
+
 	$scope.signOut = function() {
 		dialogService.confirm('ログアウトしてもよろしいですか？');
 		$scope.$on('confirm:ok', function() {
 			users.logout();
 			$scope.$on('logout:success', function(event) {
 				Current.initialize();
+				//　初回起動(匿名ユーザー登録)
+				users.loginAsAnonymous();
 				$scope.topInit();
 			});
 		});

@@ -7,15 +7,15 @@ app.directive("compareTo", function() {
             otherModelValue: "=compareTo"
         },
         link: function(scope, element, attributes, ngModel) {
-             
+
             ngModel.$validators.compareTo = function(modelValue) {
                 return modelValue == scope.otherModelValue;
             };
- 
+
             scope.$watch("modelValue", function() {
                 ngModel.$validate();
             });
-			
+
 			scope.$watch("otherModelValue", function() {
                 ngModel.$validate();
             });
@@ -34,7 +34,7 @@ app.directive('nameLength',function(){
                     return modelValue.length <= 16;
                 }
             };
-            
+
             scope.$watch("modelValue", function() {
                 ngModel.$validate();
             });
@@ -53,7 +53,7 @@ app.directive('emailLength',function(){
                     return modelValue.length <= 256;
                 }
             };
-            
+
             scope.$watch("modelValue", function() {
                 ngModel.$validate();
             });
@@ -72,7 +72,7 @@ app.directive('passType',function(){
                     return /^[0-9a-zA-Z]+$/.test(modelValue);
                 }
             };
-            
+
             scope.$watch("modelValue", function() {
                 ngModel.$validate();
             });
@@ -91,7 +91,7 @@ app.directive('passLength',function(){
                     return modelValue.length >= 6 && modelValue.length <= 16;
                 }
             };
-            
+
             scope.$watch("modelValue", function() {
                 ngModel.$validate();
             });
@@ -115,4 +115,14 @@ app.directive('hideTabbar', function($timeout) {
             });
         }
     }
+});
+
+// ons-page読み込みディレクティブ
+app.directive('myInclude', function($http, $compile) {
+  return function(scope, element, attr) {
+    $http.get(attr.myInclude).success(function(response) {
+      element.html(response);
+      $compile(element.contents())(scope);
+    })
+  };
 });

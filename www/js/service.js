@@ -70,7 +70,10 @@ app.factory('Current', function(){
 				role : 0,
 				objectId : ''
 			};
-		}
+		},
+		isLogin : function() {
+      return this.current.isLogin;
+    }
 	}
 });
 
