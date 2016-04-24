@@ -57,24 +57,24 @@ app.service('dialogService', function($rootScope){
 app.factory('Current', function(){
 	var current = {};
 	return {
-		setCurrent : function(username, isLogin, role, objectId) {
-			this.current = {
-				username : username,
-				isLogin : isLogin,
-				role : role,
-				objectId : objectId
-			};
+		setCurrent : function(user, isLogin) {
+				this.current = {
+					username : user.userName,
+					isLogin : isLogin,
+					role : user.role,
+					objectId : user.objectId
+				};
 		},
 		getCurrent : function() {
 			return this.current;
 		},
 		initialize : function() {
-			this.current = {
-				username : 'ゲスト',
-				isLogin : false,
-				role : 0,
-				objectId : ''
-			};
+				this.current = {
+					username : 'ゲスト',
+					isLogin : false,
+					role : 0,
+					objectId : ''
+				};
 		},
 		isLogin : function() {
       return this.current.isLogin;
@@ -114,6 +114,14 @@ app.factory('users', function($rootScope, mBaasService) {
 		},
 		loginAsAnonymous : function(uuid) {
 			mBaasService.getNcmb().User.loginAsAnonymous(uuid);
+		},
+		reset : function(mailAddress) {
+				var ncmb = mBaasService.getNcmb();
+				var current = new ncmb.User();
+				current.set("mailAddress", mailAddress);
+				current.requestPasswordReset(function(data) {
+					$rootScope.$broadcast("reset:success");
+				});
 		},
 		logout : function() {
 			var ncmb = mBaasService.getNcmb();
