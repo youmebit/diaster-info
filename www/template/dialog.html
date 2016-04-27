@@ -1,5 +1,6 @@
 <ons-alert-dialog var="alertDialog">
-  <div class="{{type}} msg alert-dialog-content" ng-bind="msg"></div>
+  <div class="dialog_title alert-dialog-title">{{dialogTitle}}</div>
+  <div class="msg alert-dialog-content" ng-bind="msg"></div>
   <div class="alert-dialog-footer">
     <button class="alert-dialog-button" ng-click="alertDialog.hide()">OK</button>
   </div>

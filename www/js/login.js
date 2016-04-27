@@ -7,6 +7,7 @@ app.controller('loginCtrl', function($scope, Current, users, dialogService) {
 			$scope.$on('login_complate', function(event, data) {
 				Current.setCurrent(data, true);
 				$scope.toHome();
+        $scope.$emit('toHome:success', 'ログインしました');
 			});
 		});
     }

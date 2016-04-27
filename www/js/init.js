@@ -95,16 +95,23 @@ app.controller('bodyCtrl', function($scope, $rootScope, Current, tabService, dia
 			myNavigator.pushPage('display/detail.html', {id : objectId});
 
 		}
-	$scope.signOut = function() {
-		dialogService.confirm('ログアウトしてもよろしいですか？');
-		$scope.$on('confirm:ok', function() {
-			users.logout();
-			$scope.$on('logout:success', function(event) {
-				Current.initialize();
-				//　初回起動(匿名ユーザー登録)
-				users.loginAsAnonymous();
-				$scope.topInit();
+
+		$scope.signOut = function() {
+			dialogService.confirm('ログアウトしてもよろしいですか？');
+			$scope.$on('confirm:ok', function() {
+				users.logout();
+				$scope.$on('logout:success', function(event) {
+					Current.initialize();
+					//　初回起動(匿名ユーザー登録)
+					users.loginAsAnonymous();
+					$scope.topInit();
+					$scope.$emit('toHome:success', 'ログアウトしました');
+				});
 			});
+		}
+
+		// トップ画面を初期化した後にダイアログ表示。
+		$scope.$on('toHome:success', function(event, msg) {
+			dialogService.complete(msg);
 		});
-	}
 });
