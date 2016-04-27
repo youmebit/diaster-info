@@ -1,46 +1,18 @@
 'use strict';
 // 入力値2つを比較するバリデーション
-app.directive("compareTo", function() {
-    return {
-        require: "ngModel",
-        scope: {
-            otherModelValue: "=compareTo"
-        },
-        link: function(scope, element, attributes, ngModel) {
-
-            ngModel.$validators.compareTo = function(modelValue) {
-                return modelValue == scope.otherModelValue;
-            };
-
-            scope.$watch("modelValue", function() {
-                ngModel.$validate();
-            });
-
-			scope.$watch("otherModelValue", function() {
-                ngModel.$validate();
-            });
-        }
-    };
-});
-
-// パスワードの文字数をチェックするバリデーション
-app.directive('nameLength',function(){
-    return{
-        restrict: "A",
-        require: "ngModel",
-        link: function(scope,element,attrs,ngModel){
-            ngModel.$validators.nameLength = function(modelValue){
-                if (modelValue) {
-                    return modelValue.length <= 16;
-                }
-            };
-
-            scope.$watch("modelValue", function() {
-                ngModel.$validate();
-            });
-        }
+app.directive("match", ["$parse", function($parse) {
+  return {
+    require: 'ngModel',
+    link: function(scope, elem, attrs, ctrl) {
+    scope.$watch(function() {
+      var target = $parse(attrs.match)(scope);  // 比較対象となるモデルの値
+      return !ctrl.$viewValue || target === ctrl.$viewValue;
+    }, function(currentValue) {
+      ctrl.$setValidity('match', currentValue);
+    });
     }
-});
+  }
+}]);
 
 // パスワードの文字数をチェックするバリデーション
 app.directive('emailLength',function(){

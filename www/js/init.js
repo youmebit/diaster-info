@@ -27,7 +27,7 @@ app.run(function($rootScope, Current, users, tabService) {
 	$rootScope.errors = [
       { key: 'required', msg: '必ず入力してください' },
       { key: 'email', msg: 'メールアドレスではありません' },
-        {key: 'compareTo', msg: 'パスワードが一致しません'},
+        {key: 'match', msg: 'パスワードが一致しません'},
         {key: 'passType', msg:'アルファベットと数字のみを入力してください'},
         {key: 'nameLength', msg:'16文字以下で入力してください'},
         {key: 'emailLength', msg:'256文字以下で入力してください'},
