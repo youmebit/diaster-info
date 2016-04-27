@@ -28,14 +28,14 @@ app.service('dialogService', function($rootScope){
 	this.complete = function(msg) {
 		ons.createAlertDialog('template/dialog.html', {parentScope: $rootScope}).then(function(dialog) {
 			$rootScope.msg = msg;
-			$rootScope.type = "msg_info";
+			$rootScope.dialogTitle = "OK";
 			alertDialog.show();
 		});
 	},
 	this.error = function (msg) {
 		ons.createAlertDialog('template/dialog.html', {parentScope: $rootScope}).then(function(dialog) {
 			$rootScope.msg = msg;
-			$rootScope.type = "msg_error";
+			$rootScope.dialogTitle = "申し訳ありません";
 			alertDialog.show();
 		});
 	}

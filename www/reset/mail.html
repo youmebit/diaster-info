@@ -35,7 +35,7 @@
             <div class="position_center">
                 <ons-button style="margin-top: 10px;"
                     class="btn"
-                    ng-click="sendMail(reset)">
+                    ng-click="sendMail(reset)" ng-disabled="!resetForm.$valid">
                     メールを送信する
                 </ons-button>
             </div>

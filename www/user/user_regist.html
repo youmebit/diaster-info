@@ -40,7 +40,7 @@
 
             <dt class="key">パスワード(確認)</dt>
             <dd>
-                <input type="password" name="confirm" ng-model="signup.confirm" hide-tabbar required compare-to="signup.password" pass-type pass-length/>
+                <input type="password" name="confirm" ng-model="signup.confirm" hide-tabbar required match="signup.password" pass-type pass-length/>
                 <div class="error" ng-messages="signUpForm.confirm.$error" ng-messages-multiple ng-if="signUpForm.confirm.$touched">
                   <div ng-repeat="error in errors">
                     <span ng-message-exp="error.key">{{error.msg}}</span>
@@ -50,7 +50,7 @@
         </dl>
 
         <div class="position_center">
-            <ons-button style="margin-top: 15px;" modifier="orange" class="btn" ng-click="signUp()" ng-disabled="signUpForm.$invalid == null || signUpForm.$pristine">
+            <ons-button style="margin-top: 15px;" modifier="orange" class="btn" ng-click="signUp()" ng-disabled="!signUpForm.$valid">
                 登録する
             </ons-button>
         </div>

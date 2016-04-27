@@ -41,7 +41,7 @@
             </div>
 
                 <div class="position_center">
-                    <ons-button class="btn" style="margin-bottom: 20px;" modifier="orange" ng-click="signIn()" ng-disabled="loginForm.$invalid == null || loginForm.$pristine">
+                    <ons-button class="btn" style="margin-bottom: 20px;" modifier="orange" ng-click="signIn()" ng-disabled="!loginForm.$valid">
                         ログイン
                     </ons-button>
                     <ons-button class="btn" ng-click="myNavigator.pushPage('user/user_regist.html')">

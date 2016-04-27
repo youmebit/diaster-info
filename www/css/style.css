@@ -10,7 +10,7 @@
     src: url("../font/NotoSansCJKjp-Medium.woff") format("woff");
 }
 
-@font-face {
+ @font-face {
     font-family: 'Noto700';
     font-weight: 700;
     src: url("../font/NotoSansCJKjp-Bold.woff") format("woff");
@@ -61,7 +61,7 @@ h1 {
 
 h2 {
     font-family: 'Noto400', sans-serif;
-    color: #333;
+    color: #444;
 }
 
 ons-list-item {
@@ -119,7 +119,6 @@ ons-list-item {
 .button {
     background-color: #36a284;
     border-radius: 3px;
-    font-family: 'Noto500', sans-serif;
     border: 1px solid #4d4d4d;
     box-shadow: 0px 3px 8px -1px #444;
     font-family: 'Noto500', sans-serif;
@@ -364,17 +363,14 @@ div .error {
     display: block;
 }
 
-.msg {
+.msg, .dialog_title {
 	font-family: 'Noto400', sans-serif;
-}
-.msg_info {
-	color: rgb(54,162,132);
+  text-align: center;
 }
 
-.msg_error {
-	color: #ea553a;
+.dialog_title {
+  font-family: 'Noto500', sans-serif;
 }
-
 .list_loading {
   padding: 30px 0;
   width: 100%;
