@@ -49,7 +49,7 @@
 				<span to-correspond="{{p.correspond}}"></span>
 			  <div class="address" ng-bind="p.address"></div>
 			  <div class="name"><span ng-bind="p.username"></span>さん</div>
-			  <div ng-bind="p.comment"></div>
+			  <div ng-bind="(p.comment | abbreviate)"></div>
 			</ons-col>
 			</ons-row>
 		</ons-list-item>
