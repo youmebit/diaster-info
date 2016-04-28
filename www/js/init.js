@@ -1,11 +1,7 @@
 'use strict';
 
 var app = angular.module('myApp', ['onsen.directives', 'ngMessages']);
-app.run(function($rootScope, Current, users, tabService) {
-	$rootScope.settings = {
-		isHideTabbar : false
-	};
-
+app.run(function($rootScope, $http, Current, users, tabService, geoService) {
 	// 一覧ページの遷移先
 	Current.initialize();
 	var strage = users.getCurrentUser();
@@ -35,9 +31,27 @@ app.run(function($rootScope, Current, users, tabService) {
     ];
 
 	tabService.setActiveTab(0);
+
+  $http.get('setting.json').success(function(data) {
+      $rootScope.settings = data;
+      $rootScope.settings.isHideTabbar = false;
+			$rootScope.settings.canPost = false;
+			if ($rootScope.settings.isDebug) {
+				$rootScope.settings.canPost = true;
+			} else {
+				geoService.currentPosition();
+				$rootScope.$on("geocode:success", function(event, point) {
+					angular.forEach(point.address, function (a) {
+							if (a.long_name.indexOf('宝塚市') != -1) {
+									$rootScope.settings.canPost = true;
+							}
+					});
+				});
+			}
+	});
 });
 
-app.controller('bodyCtrl', function($scope, $rootScope, Current, tabService, dialogService, users, posts, geoService) {
+app.controller('bodyCtrl', function($scope, $rootScope, Current, tabService, dialogService, users, posts) {
 	$scope.topInit = function() {
 		$scope.$apply(function() {
 				$rootScope.displayPage = 'list_ghest';
@@ -73,22 +87,11 @@ app.controller('bodyCtrl', function($scope, $rootScope, Current, tabService, dia
     $scope.toPostPage = function() {
         if (!navigator.geolocation) {
             dialogService.error('位置情報が取得できないため、この機能は使用できません。');
-        } else {
-					var canPost = false;
-						geoService.currentPosition();
-						$scope.$on("geocode:success", function(event, point) {
-							angular.forEach(point.address, function (a) {
-									if (a.long_name.indexOf('宝塚市') != -1) {
-											canPost = true;
-									}
-							});
-							if (!canPost) {
+        } else if (!$rootScope.settings.isDebug) {
 								dialogService.error('宝塚市内ではないため投稿できません');
-							} else {
-								tabService.setActiveTab(1);
-							}
-						});
-        }
+				} else {
+					tabService.setActiveTab(1);
+				}
     }
 
 		$scope.toDetail = function (objectId) {

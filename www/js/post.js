@@ -58,7 +58,7 @@ app.controller('imgSelectCtrl', function ($scope, mBaasService, geoService, $tim
     }
 });
 
-app.controller('postCtrl', function ($scope, mBaasService, dialogService) {
+app.controller('postCtrl', function ($scope, users, mBaasService, dialogService) {
     // 画像縮小処理
     $scope.init = function () {
         $scope.piece = {};
@@ -104,7 +104,7 @@ app.controller('postCtrl', function ($scope, mBaasService, dialogService) {
         $scope.piece.longitude = options.longitude;
 		$scope.piece.userId = null;
 		if ($scope.user.isLogin) {
-			var current = mBaasService.getCurrentUser();
+			var current = users.getCurrentUser();
 			$scope.piece.userId = current.objectId;
 			$scope.piece.name = current.userName;
 		}
