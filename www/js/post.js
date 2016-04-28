@@ -102,12 +102,12 @@ app.controller('postCtrl', function ($scope, users, mBaasService, dialogService)
         $scope.piece.address = options.address;
         $scope.piece.latitude = options.latitude;
         $scope.piece.longitude = options.longitude;
-		$scope.piece.userId = null;
-		if ($scope.user.isLogin) {
-			var current = users.getCurrentUser();
-			$scope.piece.userId = current.objectId;
-			$scope.piece.name = current.userName;
-		}
+    		$scope.piece.userId = null;
+    		if ($scope.user.isLogin) {
+    			var current = users.getCurrentUser();
+    			$scope.piece.userId = current.objectId;
+    			$scope.piece.name = current.userName;
+    		}
         image.src = options.image;
     }
 
@@ -126,38 +126,38 @@ app.controller('postCtrl', function ($scope, users, mBaasService, dialogService)
 
 			// ファイルアップロード成功
 			var uploadSuccess = function () {
-				var Posts = ncmb.DataStore("Posts");
-				var data = new Posts();
-				data.set("userID", piece.userId);
-				data.set("username", piece.name);
-				data.set("photo", fileName);
-				data.set("address", piece.address);
-				data.set("comment", piece.comment);
-				var geopoint = new ncmb.GeoPoint(piece.latitude, piece.longitude);
-				data.set("point", geopoint);
-				data.set("correspond", 0);
-				data.set("response", null);
+  				var Posts = ncmb.DataStore("Posts");
+  				var data = new Posts();
+  				data.set("userID", piece.userId);
+  				data.set("username", piece.name);
+  				data.set("photo", fileName);
+  				data.set("address", piece.address);
+  				data.set("comment", piece.comment);
+  				var geopoint = new ncmb.GeoPoint(piece.latitude, piece.longitude);
+  				data.set("point", geopoint);
+  				data.set("correspond", 0);
+  				data.set("response", null);
 
-				data.save().then(function (data) {
-					saveSuccess();
-				}).catch(function (err) {
-					onFail(err);
-				});
-			}
+  				data.save().then(function (data) {
+  					saveSuccess();
+  				}).catch(function (err) {
+  					onFail(err);
+  				});
+  			}
 
-			var onFail = function (err) {
-				console.error(err);
-				dialogService.error('申し訳ありませんが、電波の届くところでもう一度投稿してください。');
-			}
+  			var onFail = function (err) {
+  				console.error(err);
+  				dialogService.error('申し訳ありませんが、電波の届くところでもう一度投稿してください。');
+  			}
 
-			ncmb.File.upload(fileName, blob).then(
-				function (data) {
-					uploadSuccess();
-				}
-			).catch(function (err) {
-				onFail(err);
-			});
-		});
+  			ncmb.File.upload(fileName, blob).then(
+  				function (data) {
+  					uploadSuccess();
+  				}
+  			).catch(function (err) {
+  				onFail(err);
+  			});
+  		});
 
     }
 });
