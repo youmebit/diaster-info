@@ -1,5 +1,5 @@
 'use strict';
-app.controller('userCtrl', function ($scope, role, dialogService, mBaasService) {
+app.controller('userCtrl', function ($scope, role, dialogService, mBaasService, ErrInterceptor) {
     $scope.user = {};
     $scope.signUp = function () {
 		dialogService.confirm('登録してもよろしいですか?');
@@ -16,15 +16,13 @@ app.controller('userCtrl', function ($scope, role, dialogService, mBaasService) 
 				myNavigator.pushPage('user/regist_info.html');
 			})
 			.catch(function (err) {
-				console.log(JSON.stringify(err));
-				if (err.status == 409) {
-					fail('会員名もしくはメールアドレスが既に登録されています。');
-				}
+                ErrInterceptor.responseErr(err);
+                $scope.$on('process:fail', function(event, err) {
+        			if (err.status == 409) {
+                        dialogService.error('会員名もしくはメールアドレスが既に登録されています。');
+    				}
+                });
 			});
-
-			var fail = function(message) {
-				alert(message);
-			}
 		});
     }
 });

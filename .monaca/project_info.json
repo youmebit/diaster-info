@@ -25,6 +25,9 @@
     "plugin_settings": {
         "cordova-plugin-camera": {
             "variables": []
+        },
+        "ncmb-push-monaca-plugin": {
+            "variables": []
         }
     }
 }
