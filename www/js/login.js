@@ -7,8 +7,12 @@ app.controller('loginCtrl', function($scope, Current, users, dialogService) {
 			$scope.$on('login_complate', function(event, data) {
 				Current.setCurrent(data, true);
 				$scope.toHome();
-        $scope.$emit('toHome:success', 'ログインしました');
+                $scope.$emit('toHome:success', 'ログインしました');
 			});
+            
+            $scope.$on('login_fail', function(event, err) {
+                dialogService.error('メールアドレスもしくはパスワードが違います。');
+            });
 		});
     }
 });

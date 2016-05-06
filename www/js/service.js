@@ -99,7 +99,7 @@ app.factory('users', function($rootScope, mBaasService) {
 					$rootScope.$broadcast('login_complate', data);
 				})
 				.catch(function (err) {
-					alert('メールアドレスもしくはパスワードが違います。');
+    				$rootScope.$broadcast('login_fail', err);
 				});
 		},
 		// 名前とパスワードでログイン
@@ -155,6 +155,7 @@ app.factory('posts', function(mBaasService, $q, $timeout) {
               d.resolve(results);
               //プロミスオブジェクトを参照もとに返す
               return d.promise;
+            }).catch(function(err) {
             });
         }, 2000);
 
