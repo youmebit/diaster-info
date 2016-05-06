@@ -54,6 +54,19 @@ app.service('dialogService', function($rootScope){
 	}
 });
 
+// NCMBでエラーが発生したときのInterceptor
+app.factory('ErrInterceptor', function($rootScope, $filter, dialogService) {
+    return {
+        responseErr : function (err) {
+            if (!err.status) {
+        		$rootScope.$broadcast('line:off', err);
+            } else {
+    			$rootScope.$broadcast('process:fail', err);
+            }
+        }
+    }
+});
+
 app.factory('Current', function(){
 	var current = {};
 	return {
@@ -77,13 +90,13 @@ app.factory('Current', function(){
 				};
 		},
 		isLogin : function() {
-      return this.current.isLogin;
-    }
+          return this.current.isLogin;
+        }
 	}
 });
 
 // Usersデータストア
-app.factory('users', function($rootScope, mBaasService) {
+app.factory('users', function($rootScope, mBaasService, ErrInterceptor) {
 	return {
 		hasCurrent : function() {
 			var user = this.getCurrentUser();
@@ -99,7 +112,7 @@ app.factory('users', function($rootScope, mBaasService) {
 					$rootScope.$broadcast('login_complate', data);
 				})
 				.catch(function (err) {
-					alert('メールアドレスもしくはパスワードが違います。');
+                    ErrInterceptor.responseErr(err);
 				});
 		},
 		// 名前とパスワードでログイン
@@ -109,7 +122,7 @@ app.factory('users', function($rootScope, mBaasService) {
 					$rootScope.$broadcast('login_complate', data);
 				})
 			.catch(function(err){
-				alert('ログインに失敗しました。');
+                ErrInterceptor.responseErr(err);
 			});
 		},
 		loginAsAnonymous : function(uuid) {
@@ -133,7 +146,7 @@ app.factory('users', function($rootScope, mBaasService) {
 });
 
 // Postsデータストア
-app.factory('posts', function(mBaasService, $q, $timeout) {
+app.factory('posts', function(mBaasService, $q, $timeout, ErrInterceptor) {
 	return {
 		findById : function(id, success) {
 			var Posts = this.getPosts();
@@ -155,6 +168,8 @@ app.factory('posts', function(mBaasService, $q, $timeout) {
               d.resolve(results);
               //プロミスオブジェクトを参照もとに返す
               return d.promise;
+            }).catch(function(err) {
+                ErrInterceptor.responseErr(err);
             });
         }, 2000);
 
@@ -165,7 +180,7 @@ app.factory('posts', function(mBaasService, $q, $timeout) {
     getPosts : function() {
         var ncmb = mBaasService.getNcmb();
     		return ncmb.DataStore("Posts");
-    }
+          }
 	};
 });
 
