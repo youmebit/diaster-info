@@ -1,5 +1,5 @@
 'use strict';
-app.controller('loginCtrl', function($rootScope, $scope, $filter, Current, users, dialogService) {
+app.controller('loginCtrl', function($scope, Current, users, dialogService) {
     $scope.signIn = function() {
 		dialogService.confirm('ログインしてもよろしいですか？');
 		$scope.$on('confirm:ok', function() {
@@ -10,12 +10,8 @@ app.controller('loginCtrl', function($rootScope, $scope, $filter, Current, users
                 $scope.$emit('toHome:success', 'ログインしました');
 			});
             
-            $scope.$on('login_fail', function(event, err) {
+            $scope.$on('process:fail', function(event, err) {
                 var msg = 'ログインに失敗しました。';
-                if (!err.status) {
-                    var obj = $filter('filter')($rootScope.errors, {key:'lineOff'}, true);
-                    var msg = obj[0].msg;
-                }
                 if (err.status == '401') {
                     msg = 'メールアドレスもしくはパスワードが違います。';
                 }

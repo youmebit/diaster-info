@@ -54,6 +54,18 @@ app.service('dialogService', function($rootScope){
 	}
 });
 
+app.factory('ErrInterceptor', function($rootScope, $filter, dialogService) {
+    return {
+        responseErr : function (err) {
+            if (!err.status) {
+        		$rootScope.$broadcast('line:off', err);
+            } else {
+    			$rootScope.$broadcast('process:fail', err);
+            }
+        }
+    }
+});
+
 app.factory('Current', function(){
 	var current = {};
 	return {
@@ -77,13 +89,13 @@ app.factory('Current', function(){
 				};
 		},
 		isLogin : function() {
-      return this.current.isLogin;
-    }
+          return this.current.isLogin;
+        }
 	}
 });
 
 // Usersデータストア
-app.factory('users', function($rootScope, mBaasService) {
+app.factory('users', function($rootScope, mBaasService, ErrInterceptor) {
 	return {
 		hasCurrent : function() {
 			var user = this.getCurrentUser();
@@ -99,7 +111,7 @@ app.factory('users', function($rootScope, mBaasService) {
 					$rootScope.$broadcast('login_complate', data);
 				})
 				.catch(function (err) {
-    				$rootScope.$broadcast('login_fail', err);
+                    ErrInterceptor.responseErr(err);
 				});
 		},
 		// 名前とパスワードでログイン
