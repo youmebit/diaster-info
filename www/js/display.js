@@ -72,7 +72,7 @@ app.controller('listCtrl', function($scope, correspond, posts, dialogService) {
 	}
 });
 
-app.controller('detailCtrl', function($scope, $rootScope, $timeout, posts, correspond, dialogService) {
+app.controller('detailCtrl', function($scope, $rootScope, $timeout, posts, correspond, dialogService, ErrInterceptor) {
 //	詳細画面表示
 	$scope.init = function() {
 		var options = $scope.myNavigator.getCurrentPage().options;
@@ -137,7 +137,10 @@ app.controller('detailCtrl', function($scope, $rootScope, $timeout, posts, corre
 					myNavigator.popPage();
 					$rootScope.$broadcast('update:success', '更新しました。');
 				}).catch(function(err) {
-					console.log(err);
+                    ErrInterceptor.responseErr(err);
+                    $scope.$on('process:fail', function(event, err) {
+                        console.error(err);
+                    });
 				});
 			}
 			posts.findById($scope.obj.objectId, update);

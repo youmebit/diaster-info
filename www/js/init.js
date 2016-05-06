@@ -12,6 +12,9 @@ app.run(function($rootScope, $http, Current, users, tabService, geoService) {
 			$rootScope.$on('login_complate', function(event, data) {
 				Current.setCurrent(data, true);
 			});
+            $rootScope.$on('process:fail', function(event, err) {
+            });
+
 		} else {
 			users.loginAsAnonymous(strage.authData.anonymous.id);
 		}
