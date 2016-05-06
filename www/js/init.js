@@ -1,6 +1,7 @@
 'use strict';
 
 var app = angular.module('myApp', ['onsen.directives', 'ngMessages']);
+
 app.run(function($rootScope, $http, Current, users, tabService, geoService) {
 	// 一覧ページの遷移先
 	Current.initialize();
@@ -27,7 +28,8 @@ app.run(function($rootScope, $http, Current, users, tabService, geoService) {
         {key: 'passType', msg:'アルファベットと数字のみを入力してください'},
         {key: 'nameLength', msg:'16文字以下で入力してください'},
         {key: 'emailLength', msg:'256文字以下で入力してください'},
-        {key: 'passLength', msg:'6文字以上16文字以下で入力してください'}
+        {key: 'passLength', msg:'6文字以上16文字以下で入力してください'},
+        {key: 'lineOff', msg:'電波の届くところでもう一度お願いします'}
     ];
 
 	tabService.setActiveTab(0);
