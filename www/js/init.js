@@ -1,58 +1,6 @@
 'use strict';
 
-var app = angular.module('myApp', ['onsen.directives', 'ngMessages']);
-app.run(function($rootScope, $http, Current, users, tabService, geoService) {
-	// 一覧ページの遷移先
-	Current.initialize();
-	var strage = users.getCurrentUser();
-	if (strage) {
-//			匿名ユーザー判定
-		if (strage.mailAddress) {
-			users.loginAsName(strage.userName, strage.password);
-			$rootScope.$on('login_complate', function(event, data) {
-				Current.setCurrent(data, true);
-			});
-            $rootScope.$on('process:fail', function(event, err) {
-            });
-
-		} else {
-			users.loginAsAnonymous(strage.authData.anonymous.id);
-		}
-	} else {
-		//　初回起動(匿名ユーザー登録)
-		users.loginAsAnonymous();
-	}
-
-	$rootScope.errors = [
-      { key: 'required', msg: '必ず入力してください' },
-      { key: 'email', msg: 'メールアドレスではありません' },
-        {key: 'match', msg: 'パスワードが一致しません'},
-        {key: 'passType', msg:'アルファベットと数字のみを入力してください'},
-        {key: 'nameLength', msg:'16文字以下で入力してください'},
-        {key: 'emailLength', msg:'256文字以下で入力してください'},
-        {key: 'passLength', msg:'6文字以上16文字以下で入力してください'},
-        {key: 'lineOff', msg:'電波の届くところでもう一度お願いします'}
-    ];
-
-	tabService.setActiveTab(0);
-
-  $http.get('setting.json').success(function(data) {
-      $rootScope.settings = data;
-      $rootScope.settings.isHideTabbar = false;
-			if (!$rootScope.settings.isDebug) {
-    			geoService.currentPosition();
-    			$rootScope.$on("geocode:success", function(event, point) {
-    				angular.forEach(point.address, function (a) {
-						if (a.long_name.indexOf('宝塚市') != -1) {
-							$rootScope.settings.canPost = true;
-						}
-    				});
-    			});
-			}
-	});
-});
-
-app.controller('bodyCtrl', function($scope, $rootScope, Current, tabService, dialogService, users, posts, $filter) {
+app.controller('bodyCtrl', function($scope, $rootScope, Current, tabService, dialogService, users, posts) {
 	$scope.topInit = function() {
 		$scope.$apply(function() {
 				$rootScope.displayPage = 'list_ghest';
@@ -89,37 +37,33 @@ app.controller('bodyCtrl', function($scope, $rootScope, Current, tabService, dia
         if (!navigator.geolocation) {
             dialogService.error('位置情報が取得できないため、この機能は使用できません。');
         } else if (!$rootScope.settings.isDebug) {
-			dialogService.error('宝塚市内ではないため投稿できません');
-		} else {
-			tabService.setActiveTab(1);
-		}
+								dialogService.error('宝塚市内ではないため投稿できません');
+				} else {
+					tabService.setActiveTab(1);
+				}
     }
 
-	$scope.toDetail = function (objectId) {
-		myNavigator.pushPage('display/detail.html', {id : objectId});
-	}
+		$scope.toDetail = function (objectId) {
+			myNavigator.pushPage('display/detail.html', {id : objectId});
 
-	$scope.signOut = function() {
-		dialogService.confirm('ログアウトしてもよろしいですか？');
-		$scope.$on('confirm:ok', function() {
-			users.logout();
-			$scope.$on('logout:success', function(event) {
-				Current.initialize();
-				//　初回起動(匿名ユーザー登録)
-				users.loginAsAnonymous();
-				$scope.topInit();
-				$scope.$emit('toHome:success', 'ログアウトしました');
+		}
+
+		$scope.signOut = function() {
+			dialogService.confirm('ログアウトしてもよろしいですか？');
+			$scope.$on('confirm:ok', function() {
+				users.logout();
+				$scope.$on('logout:success', function(event) {
+					Current.initialize();
+					//　初回起動(匿名ユーザー登録)
+					users.loginAsAnonymous();
+					$scope.topInit();
+					$scope.$emit('toHome:success', 'ログアウトしました');
+				});
 			});
-		});
-	}
+		}
 
-	// トップ画面を初期化した後にダイアログ表示。
-	$scope.$on('toHome:success', function(event, msg) {
-		dialogService.complete(msg);
-	});
-        
-    $scope.$on('line:off', function(event, err) {
-        var obj = $filter('filter')($rootScope.errors, {key:'lineOff'}, true);
-        dialogService.error(obj[0].msg);
-    });
+		// トップ画面を初期化した後にダイアログ表示。
+		$scope.$on('toHome:success', function(event, msg) {
+			dialogService.complete(msg);
+		});
 });
