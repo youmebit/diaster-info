@@ -234,4 +234,3 @@ app.service('geoService', function($rootScope, dialogService) {
 					}, geoOptions);
     }
 });
-

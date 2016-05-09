@@ -1,21 +1,44 @@
 'use strict';
+
+// 認証サービス
+app.service('authService', function(users, $rootScope) {
+    this.autoLogin = function() {
+        var strage = users.getCurrentUser();
+        if (strage) {
+            if (strage.sessionToken) {
+                $rootScope.$broadcast('login_complate', strage);
+            } else {
+                // 匿名ユーザー判定
+                if (strage.role) {
+                    users.loginAsName(strage.userName, strage.password);
+                } else {
+                    users.loginAsAnonymous(strage.authData.anonymous.id);
+                }
+                console.debug("再ログインしました。");
+            }
+        } else {
+        	//　初回起動(匿名ユーザー登録)
+    		users.loginAsAnonymous();
+        }
+    }
+});
+
 app.config(function($httpProvider) {
     $httpProvider.interceptors.push(function ($q, $injector) {
         return {
             request : function(config) {
-                var users = $injector.get('users');
-                var rScope = $injector.get('$rootScope');
-                autoLogin(rScope, users);
+                var authService = $injector.get('authService');
+                authService.autoLogin();
                 return config;
             }
         }
     });
 });
 
-app.run(function($rootScope, $http, Current, users, tabService, geoService) {
+app.run(function($rootScope, $http, Current, authService, tabService, geoService) {
     // 一覧ページの遷移先
 	Current.initialize();
-    autoLogin($rootScope, users);
+    authService.autoLogin();
 	$rootScope.$on('login_complate', function(event, data) {
         if (data.role) {
         	Current.setCurrent(data, true);
