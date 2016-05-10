@@ -1,6 +1,5 @@
 'use strict';
 
-var app = angular.module('myApp', ['onsen.directives', 'ngMessages']);
 app.constant('role', {
     		 	'member' : '0',
 			 	'staff' : '1'

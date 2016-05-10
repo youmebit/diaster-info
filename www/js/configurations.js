@@ -1,5 +1,5 @@
 'use strict';
-
+var app = angular.module('myApp', ['onsen.directives', 'ngMessages']);
 // 認証サービス
 app.service('authService', function(users, $rootScope) {
     this.autoLogin = function() {
