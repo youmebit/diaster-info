@@ -3,15 +3,6 @@
 app.controller('bodyCtrl', function($scope, $rootScope, Current, tabService, dialogService, users, posts) {
 	$scope.topInit = function() {
 		$scope.$apply(function() {
-					// 一覧ページの遷移先
-				Current.initialize();
-			  authService.autoLogin();
-				$rootScope.$on('login_complate', function(event, data) {
-			        if (data.role) {
-			        	Current.setCurrent(data, true);
-			        }
-				});
-			
 				$rootScope.displayPage = 'list_ghest';
 				$rootScope.user = Current.getCurrent();
 				if (Current.isLogin()) {
