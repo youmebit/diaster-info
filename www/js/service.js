@@ -4,6 +4,29 @@ app.constant('role', {
     		 	'member' : '0',
 			 	'staff' : '1'
 });
+// 認証サービス
+app.service('authService', function(users, $rootScope) {
+    this.autoLogin = function() {
+        var strage = users.getCurrentUser();
+        if (strage) {
+            console.debug(strage.sessionToken);
+            if (strage.sessionToken) {
+                $rootScope.$broadcast('login_complate', strage);
+            } else {
+                // 匿名ユーザー判定
+                if (strage.role) {
+                    users.loginAsName(strage.userName, strage.password);
+                } else {
+                    users.loginAsAnonymous(strage.authData.anonymous.id);
+                }
+                console.debug("再ログインしました。");
+            }
+        } else {
+          	//　初回起動(匿名ユーザー登録)
+      		users.loginAsAnonymous();
+        }
+    }
+});
 
 // mBaaS接続サービス
 app.service('mBaasService', function ($rootScope) {

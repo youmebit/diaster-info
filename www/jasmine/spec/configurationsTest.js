@@ -1,34 +1,45 @@
 'use strict';
 describe('自動ログイン', function() {
-  var service, _$scope_, controller;
+  var users, _$scope_, controller;
+  var userFactory = {};
+  userFactory.current = {};
+  userFactory.getCurrentUser = function() {
+      return this.current;
+  };
+
+  userFactory.setCurrent = function(_current_) {
+    this.current = _current_;
+  };
+
   beforeEach(function() {
-    module('myApp');
+    angular.mock.module('myApp', function($provide) {
+        var APP_KEY = '536ea833c07c98ed2cf1b836739a9729ad7544fc3a9e282e875f99e93bd8eb47';
+        var CLIENT_KEY = 'c47f0f99bc98940357aeb142158515adbca19f165f49b579f1cce020a3135583';
+        var ncmb = new NCMB(APP_KEY, CLIENT_KEY);
+        ncmb.User.loginAsAnonymous().then(function(data) {
+            var current = {
+              "objectId":data.objectId,
+              "userName":data.userName,
+              "authData":data.authData,
+              "password":data.password,
+              "role":0
+            };
+            userFactory.setCurrent(current);
+            $provide.factory('users', function(){return userFactory;});
+        });
+    });
   });
-  // beforeEach(inject($provide) {
-  //   $provide.factory('mockUsers', function($rootScope, mBaasService, ErrInterceptor) {
-  //     return {
-  //       getCurrentUser : function() {
-  //         return {
-  //           "objectId":"epaKcaYZqsREdSMY",
-  //           "userName":"YamadaTarou",
-  //           "authData":null,
-  //           "mailAddress":null,
-  //           "mailAddressConfirm":null,
-  //           "createDate":"2013-08-28T11:27:16.446Z",
-  //           "updateDate":"2013-08-28T12:03:28.926Z",
-  //           "sessionToken":"epaKcaYZqsREdSMY",
-  //           "acl":{
-  //             "*":{
-  //               "read":true,
-  //               "write":true
-  //             }
-  //           }
-  //         };
-  //       }
-  //     }
-  //   });
-  // });
-  it("authService導入", inject(function(authService) {
-    // expect(authService.say()).toEqual('nyafoo');
+
+  it("authService導入", inject(function(authService, mBaasService) {
+      authService.autoLogin();
+
+        // var current = ncmb.User.getCurrentUser();
+        // console.log(current.sessionToken);
   }));
+
 });
+function injectUsers(mockUsers) {
+  module(function ($provide) {
+      $provide.value('users', mockUsers);
+  });
+}

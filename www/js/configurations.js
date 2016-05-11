@@ -1,28 +1,5 @@
 'use strict';
 var app = angular.module('myApp', ['onsen.directives', 'ngMessages']);
-// 認証サービス
-app.service('authService', function(users, $rootScope) {
-    this.autoLogin = function() {
-        var strage = users.getCurrentUser();
-        if (strage) {
-            if (strage.sessionToken) {
-                $rootScope.$broadcast('login_complate', strage);
-            } else {
-                // 匿名ユーザー判定
-                if (strage.role) {
-                    users.loginAsName(strage.userName, strage.password);
-                } else {
-                    users.loginAsAnonymous(strage.authData.anonymous.id);
-                }
-                console.debug("再ログインしました。");
-            }
-        } else {
-        	//　初回起動(匿名ユーザー登録)
-    		users.loginAsAnonymous();
-        }
-    }
-});
-
 app.config(function($httpProvider) {
     $httpProvider.interceptors.push(function ($q, $injector) {
         return {
@@ -36,14 +13,14 @@ app.config(function($httpProvider) {
 });
 
 app.run(function($rootScope, $http, Current, authService, tabService, geoService) {
-    // 一覧ページの遷移先
-	Current.initialize();
-    authService.autoLogin();
-	$rootScope.$on('login_complate', function(event, data) {
-        if (data.role) {
-        	Current.setCurrent(data, true);
-        }
-	});
+  //   // 一覧ページの遷移先
+	// Current.initialize();
+  // authService.autoLogin();
+	// $rootScope.$on('login_complate', function(event, data) {
+  //       if (data.role) {
+  //       	Current.setCurrent(data, true);
+  //       }
+	// });
 
 	$rootScope.errors = [
       { key: 'required', msg: '必ず入力してください' },
@@ -75,24 +52,3 @@ app.run(function($rootScope, $http, Current, authService, tabService, geoService
 			}
 	});
 });
-
-// 接続中のユーザーにセッショントークンが無い場合、再ログインする。
-function autoLogin($rootScope, users) {
-    var strage = users.getCurrentUser();
-    if (strage) {
-        if (strage.sessionToken) {
-            $rootScope.$broadcast('login_complate', strage);
-        } else {
-            // 匿名ユーザー判定
-            if (strage.role) {
-                users.loginAsName(strage.userName, strage.password);
-            } else {
-        		users.loginAsAnonymous(strage.authData.anonymous.id);
-            }
-            console.debug("再ログインしました。");
-        }
-    } else {
-    	//　初回起動(匿名ユーザー登録)
-		users.loginAsAnonymous();
-    }
-}
