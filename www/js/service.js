@@ -7,35 +7,56 @@ app.constant('role', {
 // 認証サービス
 app.service('authService', function(users, $rootScope, Current) {
     var limitSeconds = 1000 * 60 * 60;
+    var UserType = function(_strage_) {
+        this.strage = _strage_;
+    };
+    // 一般ユーザー
+    UserType.prototype = {
+        getLastDate : function() {
+            return new Date();
+        },
+        login : function() {
+            users.loginAsAnonymous(this.strage.authData.anonymous.id);
+            Current.setUpdateDate(new Date());
+        }
+    };
+    // 会員
+    var Member = function(_strage_) {
+        this.strage = _strage_;
+    };
+    Member.prototype = new UserType();
+    Member.prototype.getLastDate = function() {
+        return Date.parse(this.strage.updateDate);
+    }
+    Member.prototype.login = function() {
+        users.loginAsEmail(strage.mailAddress, strage.password);
+        $rootScope.$on('login_complate', function(event, data) {
+            console.debug("再ログインしました。");
+        });
+    };
+    
     this.autoLogin = function() {
         var strage = users.getCurrentUser();
         var current = new Date();
         if (strage) {
-            // 匿名ユーザー判定
+            var userType;
             if (strage.role) {
-                var updateDate = Date.parse(strage.updateDate);
-                if (updateDate - current > limitSeconds) {
-                    users.loginAsName(strage.userName, strage.password);
-                    $rootScope.$on('login_complate', function(event, data) {
-                        console.debug("再ログインしました。");
-                        Current.setUpdateDate(updateDate);
-                	});
-                }
+                userType = new Member(strage);
             } else {
-                if (Current.getCurrent().updateDate - current > limitSeconds) {
-                    users.loginAsAnonymous(strage.authData.anonymous.id).then(function(data) {
-                        Current.setUpdateDate(new Date());
-                    });
-                }
+                userType = new UserType(strage);
+            }
+            if (userType.getLastDate() - current > limitSeconds) {
+                userType.login();
             }
         } else {
           	//　初回起動(匿名ユーザー登録)
       		users.loginAsAnonymous();
         }
         $rootScope.$broadcast("autologin:success", strage);
-
     }
 });
+
+
 
 // mBaaS接続サービス
 app.service('mBaasService', function ($rootScope) {
