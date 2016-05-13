@@ -16,8 +16,7 @@ app.run(function($rootScope, $http, Current, authService, tabService, geoService
     // 一覧ページの遷移先
 	Current.initialize();
     authService.autoLogin();
-	$rootScope.$on('login_complate', function(event, data) {
-        console.log(aaa);
+	$rootScope.$on('autologin:success', function(event, data) {
         if (data.role) {
         	Current.setCurrent(data, true);
         }

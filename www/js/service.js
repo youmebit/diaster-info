@@ -5,26 +5,35 @@ app.constant('role', {
 			 	'staff' : '1'
 });
 // 認証サービス
-app.service('authService', function(users, $rootScope) {
+app.service('authService', function(users, $rootScope, Current) {
+    var limitSeconds = 1000 * 60 * 60;
     this.autoLogin = function() {
         var strage = users.getCurrentUser();
+        var current = new Date();
         if (strage) {
-            console.debug(strage.sessionToken);
-            if (strage.sessionToken) {
-                $rootScope.$broadcast('login_complate', strage);
-            } else {
-                // 匿名ユーザー判定
-                if (strage.role) {
+            // 匿名ユーザー判定
+            if (strage.role) {
+                var updateDate = Date.parse(strage.updateDate);
+                if (updateDate - current > limitSeconds) {
                     users.loginAsName(strage.userName, strage.password);
-                } else {
-                    users.loginAsAnonymous(strage.authData.anonymous.id);
+                    $rootScope.$on('login_complate', function(event, data) {
+                        console.debug("再ログインしました。");
+                        Current.setUpdateDate(updateDate);
+                	});
                 }
-                console.debug("再ログインしました。");
+            } else {
+                if (Current.getCurrent().updateDate - current > limitSeconds) {
+                    users.loginAsAnonymous(strage.authData.anonymous.id).then(function(data) {
+                        Current.setUpdateDate(new Date());
+                    });
+                }
             }
         } else {
           	//　初回起動(匿名ユーザー登録)
       		users.loginAsAnonymous();
         }
+        $rootScope.$broadcast("autologin:success", strage);
+
     }
 });
 
@@ -111,9 +120,13 @@ app.factory('Current', function(){
 					username : 'ゲスト',
 					isLogin : false,
 					role : 0,
-					objectId : ''
+					objectId : '',
+                    updateDate : new Date()
 				};
 		},
+        setUpdateDate : function(updateDate) {
+            this.current.updateDate = updateDate;
+        },
 		isLogin : function() {
           return this.current.isLogin;
         }
@@ -166,8 +179,13 @@ app.factory('users', function($rootScope, mBaasService, ErrInterceptor) {
 			ncmb.User.logout().then(function(){
 				$rootScope.$broadcast('logout:success');
 			});
-		}
-	}
+		},
+        find : function(username) {
+    		var ncmb = mBaasService.getNcmb();
+            ncmb.User.equalTo("userName", username).fetch().then(function(data) {
+            });
+        }
+    }
 });
 
 // Postsデータストア
