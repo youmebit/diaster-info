@@ -5,28 +5,58 @@ app.constant('role', {
 			 	'staff' : '1'
 });
 // 認証サービス
-app.service('authService', function(users, $rootScope) {
+app.service('authService', function(users, $rootScope, Current) {
+    var limitSeconds = 1000 * 60 * 60;
+    var UserType = function(_strage_) {
+        this.strage = _strage_;
+    };
+    // 一般ユーザー
+    UserType.prototype = {
+        getLastDate : function() {
+            return new Date();
+        },
+        login : function() {
+            users.loginAsAnonymous(this.strage.authData.anonymous.id);
+            Current.setUpdateDate(new Date());
+        }
+    };
+    // 会員
+    var Member = function(_strage_) {
+        this.strage = _strage_;
+    };
+    Member.prototype = new UserType();
+    Member.prototype.getLastDate = function() {
+        return Date.parse(this.strage.updateDate);
+    }
+    Member.prototype.login = function() {
+        users.loginAsEmail(strage.mailAddress, strage.password);
+        $rootScope.$on('login_complate', function(event, data) {
+            console.debug("再ログインしました。");
+        });
+    };
+    
     this.autoLogin = function() {
         var strage = users.getCurrentUser();
+        var current = new Date();
         if (strage) {
-            console.debug(strage.sessionToken);
-            if (strage.sessionToken) {
-                $rootScope.$broadcast('login_complate', strage);
+            var userType;
+            if (strage.role) {
+                userType = new Member(strage);
             } else {
-                // 匿名ユーザー判定
-                if (strage.role) {
-                    users.loginAsName(strage.userName, strage.password);
-                } else {
-                    users.loginAsAnonymous(strage.authData.anonymous.id);
-                }
-                console.debug("再ログインしました。");
+                userType = new UserType(strage);
+            }
+            if (userType.getLastDate() - current > limitSeconds) {
+                userType.login();
             }
         } else {
           	//　初回起動(匿名ユーザー登録)
       		users.loginAsAnonymous();
         }
+        $rootScope.$broadcast("autologin:success", strage);
     }
 });
+
+
 
 // mBaaS接続サービス
 app.service('mBaasService', function ($rootScope) {
@@ -111,9 +141,13 @@ app.factory('Current', function(){
 					username : 'ゲスト',
 					isLogin : false,
 					role : 0,
-					objectId : ''
+					objectId : '',
+                    updateDate : new Date()
 				};
 		},
+        setUpdateDate : function(updateDate) {
+            this.current.updateDate = updateDate;
+        },
 		isLogin : function() {
           return this.current.isLogin;
         }
@@ -166,8 +200,13 @@ app.factory('users', function($rootScope, mBaasService, ErrInterceptor) {
 			ncmb.User.logout().then(function(){
 				$rootScope.$broadcast('logout:success');
 			});
-		}
-	}
+		},
+        find : function(username) {
+    		var ncmb = mBaasService.getNcmb();
+            ncmb.User.equalTo("userName", username).fetch().then(function(data) {
+            });
+        }
+    }
 });
 
 // Postsデータストア

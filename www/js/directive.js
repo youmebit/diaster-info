@@ -41,7 +41,7 @@ app.directive('passType',function(){
         link: function(scope,element,attrs,ngModel){
             ngModel.$validators.passType = function(modelValue){
                 if (modelValue) {
-                    return /^[0-9a-zA-Z]+$/.test(modelValue);
+                    return /^(?=.*[0-9])(?=.*[A-Za-z])[\w]{6,}$/.test(modelValue);
                 }
             };
 
