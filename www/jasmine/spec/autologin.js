@@ -19,15 +19,13 @@ var member = {
 };
 
 var LessThanLimit = function(data, current) {
+  expect(data.userName).toEqual(current.userName);
   expect(data.sessionToken).toEqual(current.sessionToken);
 }
 
 describe('端末にユーザー情報あり', function() {
   var currentDate = new Date();
   currentDate.setHours(currentDate.getHours() + 1);
-  var compare = function(data) {
-    expect(111).toEqual(222);
-  }
   test('ログイン有効期限内_一般ユーザー', anonymous, currentDate, LessThanLimit);
 });
 
@@ -41,6 +39,7 @@ describe('端末にユーザー情報あり', function() {
   var currentDate = new Date();
   currentDate.setHours(currentDate.getHours() + 25);
   var compare = function(data, current) {
+    expect(data.userName).toEqual(current.userName);
     expect(data.sessionToken).toEqual("Pt76QvJX");
   }
   test('ログイン有効期限切れ_一般ユーザー', anonymous, currentDate, compare);
@@ -51,9 +50,18 @@ describe('端末にユーザー情報あり', function() {
   var currentDate = new Date();
   currentDate.setHours(currentDate.getHours() + 25);
   var compare = function(data, current) {
+    expect(data.userName).toEqual(current.userName);
     expect(data.sessionToken).toEqual("Yn8QPGmR");
   }
   test('ログイン有効期限切れ_会員', member, currentDate, compare);
+});
+
+describe('端末にユーザー情報なし', function() {
+  var compare = function(data, current) {
+    expect(data.userName).toEqual("VGeMXn8LavUx");
+    expect(data.sessionToken).toEqual("Pt76QvJX");
+  }
+  test('', null, new Date(), compare);
 });
 
 function test(desc, current, currentDate, compare) {
@@ -61,9 +69,11 @@ function test(desc, current, currentDate, compare) {
     var rootScope, authService;
     beforeEach(function() {
       angular.mock.module('myApp', function($provide) {
-          current.updateDate = currentDate.toISOString();
-          userFactory.setCurrent(current);
+          if (current) {
+            current.updateDate = currentDate.toISOString();
+          }
           mockCurrent.setUpdateDate(currentDate);
+          userFactory.setCurrent(current);
           $provide.factory('users', function(){return userFactory;});
           $provide.factory('Current', function() {return mockCurrent});
       });
