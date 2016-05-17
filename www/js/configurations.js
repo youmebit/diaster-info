@@ -13,10 +13,8 @@ app.config(function($httpProvider) {
 });
 
 app.run(function($rootScope, $http, Current, authService, tabService, geoService) {
-    // 一覧ページの遷移先
-	Current.initialize();
-  authService.autoLogin();
-  $rootScope.$on("autologin:success", function(event, data) {
+    Current.initialize();
+    authService.autoLogin();
     $rootScope.errors = [
         { key: 'required', msg: '必ず入力してください' },
         { key: 'email', msg: 'メールアドレスではありません' },
@@ -27,10 +25,9 @@ app.run(function($rootScope, $http, Current, authService, tabService, geoService
           {key: 'passLength', msg:'6文字以上16文字以下で入力してください'}
       ];
 
-  	tabService.setActiveTab(0);
+    tabService.setActiveTab(0);
 
-  });
-  $http.get('setting.json').success(function(data) {
+    $http.get('setting.json').success(function(data) {
       $rootScope.settings = data;
       $rootScope.settings.isHideTabbar = false;
 			$rootScope.settings.canPost = false;
