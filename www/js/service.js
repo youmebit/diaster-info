@@ -6,18 +6,18 @@ app.constant('role', {
 });
 // 認証サービス
 app.service('authService', function(users, $rootScope, Current) {
-    var limitSeconds = 1000 * 60 * 60;
+    var limitSeconds = 1000 * 60 * 60 * 24;
     var UserType = function(_strage_) {
         this.strage = _strage_;
     };
     // 一般ユーザー
     UserType.prototype = {
         getLastDate : function() {
-            return new Date();
+          return Current.getUpdateDate().getTime();
         },
         login : function() {
-            users.loginAsAnonymous(this.strage.authData.anonymous.id);
-            Current.setUpdateDate(new Date());
+          users.loginAsAnonymous(this.strage.authData.anonymous.id);
+          Current.setUpdateDate(new Date());
         }
     };
     // 会員
@@ -28,13 +28,13 @@ app.service('authService', function(users, $rootScope, Current) {
     Member.prototype.getLastDate = function() {
         return Date.parse(this.strage.updateDate);
     }
-    Member.prototype.login = function() {
-        users.loginAsEmail(strage.mailAddress, strage.password);
+    Member.prototype.login = function(strage) {
+        users.loginAsEmail(this.strage.mailAddress, this.strage.password);
         $rootScope.$on('login_complate', function(event, data) {
             console.debug("再ログインしました。");
         });
     };
-    
+
     this.autoLogin = function() {
         var strage = users.getCurrentUser();
         var current = new Date();
@@ -142,13 +142,16 @@ app.factory('Current', function(){
 					isLogin : false,
 					role : 0,
 					objectId : '',
-                    updateDate : new Date()
+          updateDate : new Date()
 				};
 		},
         setUpdateDate : function(updateDate) {
             this.current.updateDate = updateDate;
         },
-		isLogin : function() {
+        getUpdateDate : function() {
+          return this.current.updateDate;
+        },
+		    isLogin : function() {
           return this.current.isLogin;
         }
 	}
