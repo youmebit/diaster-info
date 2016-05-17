@@ -11,7 +11,7 @@ userFactory.setCurrent = function(_current_) {
 };
 
 userFactory.loginAsEmail = function(address, password) {
-    this.current.sessionToken = "Pt76QvJX";
+    this.current.sessionToken = "Yn8QPGmR";
 }
 
 userFactory.loginAsAnonymous = function(id) {
