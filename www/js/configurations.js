@@ -4,17 +4,15 @@ app.config(function($httpProvider) {
     $httpProvider.interceptors.push(function ($q, $injector) {
         return {
             request : function(config) {
-                var authService = $injector.get('authService');
-                authService.autoLogin();
+                // var authService = $injector.get('authService');
+                // authService.autoLogin();
                 return config;
             }
         }
     });
 });
 
-app.run(function($rootScope, $http, Current, authService, tabService, geoService) {
-    Current.initialize();
-    authService.autoLogin();
+app.run(function($rootScope, $http, Current, users, authService, tabService, geoService) {
     $rootScope.errors = [
         { key: 'required', msg: '必ず入力してください' },
         { key: 'email', msg: 'メールアドレスではありません' },
@@ -44,4 +42,17 @@ app.run(function($rootScope, $http, Current, authService, tabService, geoService
 				});
 			}
 	});
+    
+    // セッション情報の登録
+    Current.initialize();
+    var strage = users.getCurrentUser();
+    if (!strage) {
+        users.loginAsAnonymous();
+    } else {
+        var condition = function() {
+            return true;
+        }
+        Current.setCurrent(strage);
+        authService.autoLogin(condition);
+    }
 });

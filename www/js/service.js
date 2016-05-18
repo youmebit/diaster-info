@@ -4,9 +4,11 @@ app.constant('role', {
     		 	'member' : '0',
 			 	'staff' : '1'
 });
+
 // 認証サービス
 app.service('authService', function(users, $rootScope, Current) {
     var limitSeconds = 1000 * 60 * 60 * 24;
+    
     var UserType = function(_strage_) {
         this.strage = _strage_;
     };
@@ -17,7 +19,9 @@ app.service('authService', function(users, $rootScope, Current) {
         },
         login : function() {
           users.loginAsAnonymous(this.strage.authData.anonymous.id);
-          Current.setUpdateDate(new Date());
+        },
+        getUserName : function() {
+            return 'ゲスト';
         }
     };
     // 会員
@@ -30,29 +34,31 @@ app.service('authService', function(users, $rootScope, Current) {
     }
     Member.prototype.login = function(strage) {
         users.loginAsEmail(this.strage.mailAddress, this.strage.password);
-        $rootScope.$on('login_complate', function(event, data) {
-            console.debug("再ログインしました。");
-        });
-    };
+    }
+    
+    Member.prototype.getUserName = function() {
+        return strage.userName;
+    }
 
-    this.autoLogin = function() {
-        var strage = users.getCurrentUser();
-        var current = new Date();
-        if (strage) {
-            var userType;
-            if (strage.role) {
-                userType = new Member(strage);
-            } else {
-                userType = new UserType(strage);
-            }
-            if (userType.getLastDate() - current > limitSeconds) {
-                userType.login();
-            }
+    this.autoLogin = function(isCondition) {
+        var current = Current.getCurrent();
+        var userType;
+        if (current.role) {
+            userType = new Member(current);
         } else {
-          	//　初回起動(匿名ユーザー登録)
-      		users.loginAsAnonymous();
+            userType = new UserType(current);
         }
-        $rootScope.$broadcast("autologin:success", strage);
+        if (isCondition()) {
+            userType.login();
+            $rootScope.$on('login_complate', function(event, data) {
+                data.userName = userType.getUserName();
+                if (!data.updateDate) {
+                    var now = new Date();
+                    data.updateDate = now.toISOString();
+                }
+                Current.setCurrent(data);
+            });
+        }
     }
 });
 
@@ -128,9 +134,12 @@ app.factory('Current', function(){
 		setCurrent : function(user, isLogin) {
 				this.current = {
 					username : user.userName,
+                    mailAddress : user.mailAddress,
+                    password : user.password,
 					isLogin : isLogin,
 					role : user.role,
-					objectId : user.objectId
+					objectId : user.objectId,
+                    authData : user.authData
 				};
 		},
 		getCurrent : function() {
@@ -188,7 +197,9 @@ app.factory('users', function($rootScope, mBaasService, ErrInterceptor) {
 			});
 		},
 		loginAsAnonymous : function(uuid) {
-			mBaasService.getNcmb().User.loginAsAnonymous(uuid);
+			mBaasService.getNcmb().User.loginAsAnonymous(uuid).then(function(data) {
+				$rootScope.$broadcast('login_complate', data);
+			});
 		},
 		reset : function(mailAddress) {
 				var ncmb = mBaasService.getNcmb();
