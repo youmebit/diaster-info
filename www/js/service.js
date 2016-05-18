@@ -8,7 +8,7 @@ app.constant('role', {
 // 認証サービス
 app.service('authService', function(users, $rootScope, Current) {
     var limitSeconds = 1000 * 60 * 60 * 24;
-    
+
     var UserType = function(_strage_) {
         this.strage = _strage_;
     };
@@ -26,11 +26,11 @@ app.service('authService', function(users, $rootScope, Current) {
         this.strage = _strage_;
     };
     Member.prototype = new UserType();
-    
+
     Member.prototype.login = function(strage) {
         users.loginAsEmail(this.strage.mailAddress, this.strage.password);
     }
-    
+
     Member.prototype.getUserName = function() {
         return this.strage.username;
     }
@@ -43,17 +43,18 @@ app.service('authService', function(users, $rootScope, Current) {
         } else {
             userType = new UserType(current);
         }
-        if (isCondition(current)) {
-            userType.login();
-            $rootScope.$on('login_complate', function(event, data) {
-                data.userName = userType.getUserName();
-                if (!data.updateDate) {
-                    var now = new Date();
-                    data.updateDate = now.toISOString();
-                }
-                $rootScope.$broadcast("autologin:success", data);
-            });
-        }
+        isCondition(current);
+        $rootScope.$on("need:login", function(event, current) {
+          userType.login();
+          $rootScope.$on('login_complate', function(event, data) {
+              data.userName = userType.getUserName();
+              if (!data.updateDate) {
+                  var now = new Date();
+                  data.updateDate = now.toISOString();
+              }
+              $rootScope.$broadcast("autologin:success", data);
+          });
+        });
     }
 });
 

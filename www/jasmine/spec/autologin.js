@@ -18,28 +18,31 @@ var member = {
   "role":"0"
 };
 
-var LessThanLimit = function(data, current) {
-  expect(data.userName).toEqual(current.userName);
-  expect(data.sessionToken).toEqual(current.sessionToken);
-}
-
 describe('端末にユーザー情報あり', function() {
   var currentDate = new Date();
   currentDate.setHours(currentDate.getHours() + 1);
+  var LessThanLimit = function(session, user, rootScope) {
+    expect(rootScope.$broadcast).not.toHaveBeenCalled();
+    expect(session.sessionToken).toEqual("h3GbBMWU");
+  }
   test('ログイン有効期限内_一般ユーザー', anonymous, currentDate, LessThanLimit);
 });
 
 describe('端末にユーザー情報あり', function() {
   var currentDate = new Date();
   currentDate.setHours(currentDate.getHours() + 1);
+  var LessThanLimit = function(session, user, rootScope) {
+    expect(rootScope.$broadcast).not.toHaveBeenCalled();
+    expect(session.sessionToken).toEqual("t8XJZySj");
+  }
   test('ログイン有効期限内_会員', member, currentDate, LessThanLimit);
 });
 
 describe('端末にユーザー情報あり', function() {
   var currentDate = new Date();
   currentDate.setHours(currentDate.getHours() + 25);
-  var compare = function(data, current) {
-    expect(data.userName).toEqual(current.userName);
+  var compare = function(data, current, rootScope) {
+    expect(rootScope.$broadcast).toHaveBeenCalled();
     expect(data.sessionToken).toEqual("Pt76QvJX");
   }
   test('ログイン有効期限切れ_一般ユーザー', anonymous, currentDate, compare);
@@ -49,30 +52,20 @@ describe('端末にユーザー情報あり', function() {
 describe('端末にユーザー情報あり', function() {
   var currentDate = new Date();
   currentDate.setHours(currentDate.getHours() + 25);
-  var compare = function(data, current) {
-    expect(data.userName).toEqual(current.userName);
+  var compare = function(data, current, rootScope) {
+    expect(rootScope.$broadcast).toHaveBeenCalled();
     expect(data.sessionToken).toEqual("Yn8QPGmR");
   }
   test('ログイン有効期限切れ_会員', member, currentDate, compare);
 });
 
-describe('端末にユーザー情報なし', function() {
-  var compare = function(data, current) {
-    expect(data.userName).toEqual("VGeMXn8LavUx");
-    expect(data.sessionToken).toEqual("Pt76QvJX");
-  }
-  test('', null, new Date(), compare);
-});
-
 function test(desc, current, currentDate, compare) {
   describe(desc, function() {
-    var rootScope, authService;
+    var rootScope, authInterceptor, httpProviderIt;
     beforeEach(function() {
-      angular.mock.module('myApp', function($provide) {
-          if (current) {
-            current.updateDate = currentDate.toISOString();
-          }
-          mockCurrent.setUpdateDate(currentDate);
+      angular.mock.module('myApp', function($provide, $httpProvider) {
+          httpProviderIt = $httpProvider;
+          current.updateDate = currentDate.toISOString();
           userFactory.setCurrent(current);
           $provide.factory('users', function(){return userFactory;});
           $provide.factory('Current', function() {return mockCurrent});
@@ -80,20 +73,27 @@ function test(desc, current, currentDate, compare) {
     });
 
     beforeEach(function () {
-      inject(function ($rootScope, _authService_) {
-          authService = _authService_;
+      inject(function ($rootScope, _authInterceptor_) {
+          authInterceptor = _authInterceptor_;
           rootScope = $rootScope;
       })
     });
 
-    it("端末のユーザー情報&セッショントークン", inject(function(authService, mBaasService) {
+    it ('Interceptor確認', function() {
+      expect(authInterceptor).toBeDefined();
+    });
+    it("端末のユーザー情報&セッショントークン", inject(function(mBaasService) {
       spyOn(rootScope, '$broadcast').and.callThrough();
-      rootScope.$on("autologin:success", function(event, data) {
-        expect(data).not.toBeNull();
-        compare(data, current);
-      });
-      authService.autoLogin();
-      expect(rootScope.$broadcast).toHaveBeenCalled();
+      // rootScope.$on("autologin:success", function(event, data) {
+      //   expect(data).not.toBeNull();
+      //   compare(data, current);
+      // });
+      // authInterceptor.request({});
+      authInterceptor.request({header : {}});
+      console.log(JSON.stringify(mockCurrent.getCurrent()));
+      expect(mockCurrent.getCurrent().sessionToken).not.toBeNull();
+      expect(mockCurrent.username).toEqual(userFactory.userName);
+      compare(mockCurrent.getCurrent(), userFactory.getCurrentUser(), rootScope);
     }));
   });
 }

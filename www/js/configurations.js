@@ -1,20 +1,22 @@
 'use strict';
 var app = angular.module('myApp', ['onsen.directives', 'ngMessages']);
-app.factory('authInterceptor', function($q, $injector) {
+app.factory('authInterceptor', function($q, $injector, $rootScope) {
     var authInterceptor = {
         request : function(config) {
             var authService = $injector.get('authService');
             var condition = function(current) {
                 var limitSeconds = 1000 * 60 * 60 * 24;
                 var now = new Date();
-                var lastDate = Date.parse(current.update);
-                return lastDate - now > limitSeconds;
-            }
+                var lastDate = Date.parse(current.updateDate);
+                if (lastDate - now.getTime() > limitSeconds) {
+                  $rootScope.$broadcast("need:login", current);
+                }
+            };
             authService.autoLogin(condition);
             return config;
         }
     };
-    
+
     return authInterceptor;
 });
 
@@ -53,7 +55,7 @@ app.run(function($rootScope, $http, Current, users, authService, tabService, geo
 				});
 			}
 	});
-    
+
     // セッション情報の登録
     Current.initialize();
     var strage = users.getCurrentUser();
@@ -61,7 +63,7 @@ app.run(function($rootScope, $http, Current, users, authService, tabService, geo
         users.loginAsAnonymous();
     } else {
         var condition = function(current) {
-            return true;
+          $rootScope.$broadcast("need:login", current);
         }
         if (strage.mailAddress == null) {
             strage.userName = 'ゲスト';
