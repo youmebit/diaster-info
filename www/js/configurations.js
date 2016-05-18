@@ -68,8 +68,7 @@ app.run(function($rootScope, $http, Current, users, authService, tabService, geo
         if (strage.mailAddress == null) {
             strage.userName = 'ゲスト';
         }
-
-        Current.setCurrent(strage, angular.isUndefined(strage.mailAddress));
+        Current.setCurrent(strage, angular.isDefined(strage.mailAddress));
         authService.autoLogin(condition);
     }
 });
