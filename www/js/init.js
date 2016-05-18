@@ -55,17 +55,17 @@ app.controller('bodyCtrl', function($scope, $rootScope, Current, authService, ta
 		}
 
 		$scope.signOut = function() {
-			dialogService.confirm('ログアウトしてもよろしいですか？');
-			$scope.$on('confirm:ok', function() {
-				users.logout();
-				$scope.$on('logout:success', function(event) {
-					Current.initialize();
+            var signOut = function() {
+                var ok = function() {
+    				Current.initialize();
 					//　初回起動(匿名ユーザー登録)
 					users.loginAsAnonymous();
 					$scope.topInit();
 					$scope.$emit('toHome:success', 'ログアウトしました');
-				});
-			});
+                }
+                users.logout(ok);
+            }
+			dialogService.confirm('ログアウトしてもよろしいですか？', signOut);
 		}
 
 		// トップ画面を初期化した後にダイアログ表示。

@@ -5,6 +5,7 @@ app.factory('authInterceptor', function($q, $injector, $rootScope) {
         request : function(config) {
             var authService = $injector.get('authService');
             var condition = function(current) {
+                console.log(JSON.stringify(current));
                 var limitSeconds = 1000 * 60 * 60 * 24;
                 var now = new Date();
                 var lastDate = Date.parse(current.updateDate);
@@ -21,7 +22,7 @@ app.factory('authInterceptor', function($q, $injector, $rootScope) {
 });
 
 app.config(function($httpProvider) {
-    $httpProvider.interceptors.push('authInterceptor');
+    // $httpProvider.interceptors.push('authInterceptor');
 
 });
 
