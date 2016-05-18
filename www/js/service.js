@@ -14,9 +14,6 @@ app.service('authService', function(users, $rootScope, Current) {
     };
     // 一般ユーザー
     UserType.prototype = {
-        getLastDate : function() {
-          return Current.getUpdateDate().getTime();
-        },
         login : function() {
           users.loginAsAnonymous(this.strage.authData.anonymous.id);
         },
@@ -29,9 +26,7 @@ app.service('authService', function(users, $rootScope, Current) {
         this.strage = _strage_;
     };
     Member.prototype = new UserType();
-    Member.prototype.getLastDate = function() {
-        return Date.parse(this.strage.updateDate);
-    }
+    
     Member.prototype.login = function(strage) {
         users.loginAsEmail(this.strage.mailAddress, this.strage.password);
     }
@@ -48,7 +43,7 @@ app.service('authService', function(users, $rootScope, Current) {
         } else {
             userType = new UserType(current);
         }
-        if (isCondition()) {
+        if (isCondition(current)) {
             userType.login();
             $rootScope.$on('login_complate', function(event, data) {
                 data.userName = userType.getUserName();

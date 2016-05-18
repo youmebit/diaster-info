@@ -1,15 +1,26 @@
 'use strict';
 var app = angular.module('myApp', ['onsen.directives', 'ngMessages']);
-app.config(function($httpProvider) {
-    $httpProvider.interceptors.push(function ($q, $injector) {
-        return {
-            request : function(config) {
-                // var authService = $injector.get('authService');
-                // authService.autoLogin();
-                return config;
+app.factory('authInterceptor', function($q, $injector) {
+    var authInterceptor = {
+        request : function(config) {
+            var authService = $injector.get('authService');
+            var condition = function(current) {
+                var limitSeconds = 1000 * 60 * 60 * 24;
+                var now = new Date();
+                var lastDate = Date.parse(current.update);
+                return lastDate - now > limitSeconds;
             }
+            authService.autoLogin(condition);
+            return config;
         }
-    });
+    };
+    
+    return authInterceptor;
+});
+
+app.config(function($httpProvider) {
+    $httpProvider.interceptors.push('authInterceptor');
+
 });
 
 app.run(function($rootScope, $http, Current, users, authService, tabService, geoService) {
@@ -49,9 +60,13 @@ app.run(function($rootScope, $http, Current, users, authService, tabService, geo
     if (!strage) {
         users.loginAsAnonymous();
     } else {
-        var condition = function() {
+        var condition = function(current) {
             return true;
         }
+        if (strage.mailAddress == null) {
+            strage.userName = 'ゲスト';
+        }
+
         Current.setCurrent(strage, angular.isUndefined(strage.mailAddress));
         authService.autoLogin(condition);
     }
