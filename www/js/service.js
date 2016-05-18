@@ -37,7 +37,7 @@ app.service('authService', function(users, $rootScope, Current) {
     }
     
     Member.prototype.getUserName = function() {
-        return strage.userName;
+        return this.strage.username;
     }
 
     this.autoLogin = function(isCondition) {
@@ -56,7 +56,7 @@ app.service('authService', function(users, $rootScope, Current) {
                     var now = new Date();
                     data.updateDate = now.toISOString();
                 }
-                Current.setCurrent(data);
+                $rootScope.$broadcast("autologin:success", data);
             });
         }
     }

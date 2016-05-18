@@ -52,7 +52,7 @@ app.run(function($rootScope, $http, Current, users, authService, tabService, geo
         var condition = function() {
             return true;
         }
-        Current.setCurrent(strage);
+        Current.setCurrent(strage, angular.isUndefined(strage.mailAddress));
         authService.autoLogin(condition);
     }
 });

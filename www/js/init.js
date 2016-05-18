@@ -1,13 +1,13 @@
 'use strict';
 
-app.controller('bodyCtrl', function($scope, $rootScope, Current, tabService, dialogService, users, posts) {
+app.controller('bodyCtrl', function($scope, $rootScope, Current, authService, tabService, dialogService, users, posts) {
 	$scope.topInit = function() {
-		$scope.$apply(function() {
+            $scope.$apply(function() {
 				$rootScope.displayPage = 'list_ghest';
-				$rootScope.user = Current.getCurrent();
 				if (Current.isLogin()) {
 					$rootScope.displayPage = 'list_select';
 				}
+        		$rootScope.user = Current.getCurrent();
 
 				// 対応完了のお知らせを取得
 				$scope.isLoad = false;
@@ -20,6 +20,12 @@ app.controller('bodyCtrl', function($scope, $rootScope, Current, tabService, dia
 				});
 		});
 	}
+    $scope.$on("autologin:success", function(event, data) {
+    	$scope.$apply(function() {
+            Current.setCurrent(data, data.mailAddress != null);
+			$rootScope.user = Current.getCurrent();
+    	});
+    });
 
 	$scope.toHome = function() {
         tabService.setActiveTab(0);
