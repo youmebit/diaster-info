@@ -58,7 +58,7 @@ app.controller('imgSelectCtrl', function ($scope, mBaasService, geoService, $tim
     }
 });
 
-app.controller('postCtrl', function ($scope, users, mBaasService, dialogService) {
+app.controller('postCtrl', function ($scope, users, dialogService, fileStore, posts) {
     // 画像縮小処理
     $scope.init = function () {
         $scope.piece = {};
@@ -116,7 +116,6 @@ app.controller('postCtrl', function ($scope, users, mBaasService, dialogService)
         var post = function() {
             modal.show();
     		var blob = b64ToBlob(piece.imageURI);
-			var ncmb = mBaasService.getNcmb();
 			var fileName = getFileName();
 
 			// データストア登録成功
@@ -125,41 +124,18 @@ app.controller('postCtrl', function ($scope, users, mBaasService, dialogService)
 				myNavigator.pushPage('post/post_info.html');
 			}
 
-			// ファイルアップロード成功
+			// ファイルアップロード成功→データストアへの登録
 			var uploadSuccess = function () {
-  				var Posts = ncmb.DataStore("Posts");
-  				var data = new Posts();
-  				data.set("userID", piece.userId);
-  				data.set("username", piece.name);
-  				data.set("photo", fileName);
-  				data.set("address", piece.address);
-  				data.set("comment", piece.comment);
-  				var geopoint = new ncmb.GeoPoint(piece.latitude, piece.longitude);
-  				data.set("point", geopoint);
-  				data.set("correspond", 0);
-  				data.set("response", null);
-
-  				data.save().then(function (data) {
-  					saveSuccess();
-  				}).catch(function (err) {
-  					onFail(err);
-  				});
+  				posts.postInfo(piece, fileName, saveSuccess, onFail);
   			};
 
   			var onFail = function (err) {
                 modal.hide();
   				console.error(err);
   			}
-
-  			ncmb.File.upload(fileName, blob).then(
-  				function (data) {
-  					uploadSuccess();
-  				}
-  			).catch(function (err) {
-  				onFail(err);
-  			});
-            setInterval(function() {
-            }, 2000);
+            
+            // ファイルアップロード
+            fileStore.upload(fileName, blob, uploadSuccess, onFail);
         };
     	dialogService.confirm('投稿してもよろしいですか？', post);
     }
