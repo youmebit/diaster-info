@@ -8,3 +8,20 @@
     width: 60%;
     margin: 0 auto 70px;
 }
+
+.thumbnail {
+	width: 100%;
+	color: white;
+	text-align: center;
+}
+
+.thumbnail span {
+	min-height: 200px;
+	position: relative;
+	display: inline-block;
+}
+
+.thumbnail span > * {
+	position: absolute;
+	top:50%;
+}

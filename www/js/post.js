@@ -58,107 +58,93 @@ app.controller('imgSelectCtrl', function ($scope, mBaasService, geoService, $tim
     }
 });
 
-app.controller('postCtrl', function ($scope, users, mBaasService, dialogService) {
+app.controller('postCtrl', function ($scope, users, dialogService, fileStore, posts, $q, $timeout) {
     // 画像縮小処理
     $scope.init = function () {
         $scope.piece = {};
+        $scope.isLoad = false;
         var image = new Image();
         image.onload = function (e) {
-            $scope.$apply(function () {
-                var imgWidth = image.naturalWidth;
-                var imgHeight = image.naturalHeight;
-                var rate = 0;
-                if (imgWidth >= imgHeight) {
-                    rate = 540 / imgWidth;
-                } else {
-                    rate = 540 / imgHeight;
-                }
-
-                EXIF.getData(image, function () {
-                    var canvas = document.createElement('canvas');
-                    var drawWidth = imgWidth * rate;
-                    var drawHeight = imgHeight * rate;
-                    canvas.width = drawWidth;
-                    canvas.height = drawHeight;
-                    var ctx = canvas.getContext('2d');
-                    var orientation = EXIF.getTag(image, "Orientation");
-                    if (orientation) {
-                        var angles = {
-                            '3': 180,
-                            '6': 90,
-                            '8': 270
-                        };
-                        ctx.translate(drawWidth / 2, drawHeight / 2);
-                        ctx.rotate((angles[orientation] * Math.PI) / 180);
-                        ctx.translate(-drawWidth / 2, -drawHeight / 2);
-                    }
-                    ctx.drawImage(image, 0, 0, imgWidth, imgHeight, 0, 0, drawWidth, drawHeight);
-                    $scope.piece.imageURI = canvas.toDataURL();
-                    modal.hide();
-                });
-            })
+        	var q = $q.defer();
+        	$timeout(function() {
+	            $scope.$apply(function () {
+	                var imgWidth = image.naturalWidth;
+	                var imgHeight = image.naturalHeight;
+	                var rate = 0;
+	                if (imgWidth >= imgHeight) {
+	                    rate = 540 / imgWidth;
+	                } else {
+	                    rate = 540 / imgHeight;
+	                }
+	
+	                EXIF.getData(image, function () {
+	                    var canvas = document.createElement('canvas');
+	                    var drawWidth = imgWidth * rate;
+	                    var drawHeight = imgHeight * rate;
+	                    canvas.width = drawWidth;
+	                    canvas.height = drawHeight;
+	                    var ctx = canvas.getContext('2d');
+	                    var orientation = EXIF.getTag(image, "Orientation");
+	                    if (orientation) {
+	                        var angles = {
+	                            '3': 180,
+	                            '6': 90,
+	                            '8': 270
+	                        };
+	                        ctx.translate(drawWidth / 2, drawHeight / 2);
+	                        ctx.rotate((angles[orientation] * Math.PI) / 180);
+	                        ctx.translate(-drawWidth / 2, -drawHeight / 2);
+	                    }
+	                    ctx.drawImage(image, 0, 0, imgWidth, imgHeight, 0, 0, drawWidth, drawHeight);
+	                    $scope.piece.imageURI = canvas.toDataURL();
+	                    $scope.isLoad = true;
+	                    return q.promise;
+	                });
+	            });
+        	}, 1000);
         }
         var options = $scope.myNavigator.getCurrentPage().options;
         $scope.piece.address = options.address;
         $scope.piece.latitude = options.latitude;
         $scope.piece.longitude = options.longitude;
-    		$scope.piece.userId = null;
-    		if ($scope.user.isLogin) {
-    			var current = users.getCurrentUser();
-    			$scope.piece.userId = current.objectId;
-    			$scope.piece.name = current.userName;
-    		}
+		$scope.piece.userId = null;
+		if ($scope.user.isLogin) {
+			var current = users.getCurrentUser();
+			$scope.piece.userId = current.objectId;
+			$scope.piece.name = current.userName;
+		}
+        modal.hide();
         image.src = options.image;
+
     }
 
     // ファイルアップロード→データストア登録の順で登録する。
     $scope.post = function (piece) {
-		dialogService.confirm('投稿してもよろしいですか？');
-		$scope.$on('confirm:ok', function() {
-			var blob = b64ToBlob(piece.imageURI);
-			var ncmb = mBaasService.getNcmb();
+        var post = function() {
+            modal.show();
+    		var blob = b64ToBlob(piece.imageURI);
 			var fileName = getFileName();
 
 			// データストア登録成功
 			var saveSuccess = function () {
+                modal.hide();
 				myNavigator.pushPage('post/post_info.html');
 			}
 
-			// ファイルアップロード成功
+			// ファイルアップロード成功→データストアへの登録
 			var uploadSuccess = function () {
-  				var Posts = ncmb.DataStore("Posts");
-  				var data = new Posts();
-  				data.set("userID", piece.userId);
-  				data.set("username", piece.name);
-  				data.set("photo", fileName);
-  				data.set("address", piece.address);
-  				data.set("comment", piece.comment);
-  				var geopoint = new ncmb.GeoPoint(piece.latitude, piece.longitude);
-  				data.set("point", geopoint);
-  				data.set("correspond", 0);
-  				data.set("response", null);
-
-  				data.save().then(function (data) {
-  					saveSuccess();
-  				}).catch(function (err) {
-  					onFail(err);
-  				});
-  			}
+  				posts.postInfo(piece, fileName, saveSuccess, onFail);
+  			};
 
   			var onFail = function (err) {
+                modal.hide();
   				console.error(err);
-  				dialogService.error('申し訳ありませんが、電波の届くところでもう一度投稿してください。');
   			}
-
-  			ncmb.File.upload(fileName, blob).then(
-  				function (data) {
-  					uploadSuccess();
-  				}
-  			).catch(function (err) {
-  				onFail(err);
-  			});
-  		});
-
+            
+            // ファイルアップロード
+            fileStore.upload(fileName, blob, uploadSuccess, onFail);
+        };
+    	dialogService.confirm('投稿してもよろしいですか？', post);
     }
 });
 

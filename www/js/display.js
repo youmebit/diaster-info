@@ -63,7 +63,7 @@ app.controller('listCtrl', function($scope, correspond, posts, dialogService) {
 	// 対応状況更新後の処理
 	$scope.$on('update:success', function(e, msg) {
 		$scope.init();
-		dialogService.complete("更新しました。");
+		dialogService.complete(msg);
 	});
 
 	// 詳細ページへ遷移する
@@ -130,21 +130,23 @@ app.controller('detailCtrl', function($scope, $rootScope, $timeout, posts, corre
 
 	// 対応状況更新処理
 	$scope.update = function() {
-		dialogService.confirm('更新してもよろしいですか?');
-		$scope.$on('confirm:ok', function() {
-			var update = function(result) {
+		var update = function() {
+			modal.show();
+			var ok = function(result) {
 				result.set("correspond", $scope.form.correspond).set("response", $scope.toNull($scope.form.response)).update().then(function() {
+					modal.hide();
 					myNavigator.popPage();
 					$rootScope.$broadcast('update:success', '更新しました。');
 				}).catch(function(err) {
-                    ErrInterceptor.responseErr(err);
-                    $scope.$on('process:fail', function(event, err) {
-                        console.error(err);
-                    });
+	                ErrInterceptor.responseErr(err);
+	                $scope.$on('process:fail', function(event, err) {
+	                    console.error(err);
+	                });
 				});
 			}
-			posts.findById($scope.obj.objectId, update);
-		});
+			posts.findById($scope.obj.objectId, ok);
+		};
+		dialogService.confirm('更新してもよろしいですか?', update);
 	}
 
 	$scope.toNull = function(value) {
