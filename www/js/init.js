@@ -1,6 +1,6 @@
 'use strict';
 
-app.controller('bodyCtrl', function($scope, $rootScope, Current, authService, tabService, dialogService, users, posts) {
+app.controller('bodyCtrl', function($scope, $rootScope, Current, tabService, dialogService, users, posts) {
 	$scope.topInit = function() {
             $scope.$apply(function() {
 				$rootScope.displayPage = 'list_ghest';
@@ -43,7 +43,7 @@ app.controller('bodyCtrl', function($scope, $rootScope, Current, authService, ta
         if (!navigator.geolocation) {
             dialogService.error('位置情報が取得できないため、この機能は使用できません。');
         } else if (!$rootScope.settings.isDebug) {
-								dialogService.error('宝塚市内ではないため投稿できません');
+					dialogService.error('宝塚市内ではないため投稿できません');
 				} else {
 					tabService.setActiveTab(1);
 				}
@@ -58,8 +58,6 @@ app.controller('bodyCtrl', function($scope, $rootScope, Current, authService, ta
             var signOut = function() {
                 var ok = function() {
     				Current.initialize();
-					//　初回起動(匿名ユーザー登録)
-					users.loginAsAnonymous();
 					$scope.topInit();
 					$scope.$emit('toHome:success', 'ログアウトしました');
                 }

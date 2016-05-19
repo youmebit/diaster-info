@@ -150,7 +150,7 @@ app.factory('Current', function(){
 					isLogin : false,
 					role : 0,
 					objectId : '',
-          updateDate : new Date()
+                    updateDate : new Date()
 				};
 		},
         setUpdateDate : function(updateDate) {
@@ -214,7 +214,10 @@ app.factory('users', function($rootScope, mBaasService, ErrInterceptor) {
 		logout : function(ok) {
 			var ncmb = mBaasService.getNcmb();
 			ncmb.User.logout().then(function(){
-                ok();
+				//　匿名ユーザー再登録
+                mBaasService.getNcmb().User.loginAsAnonymous().then(function(data) {
+                    ok();
+                });
 			});
 		},
         find : function(username) {
