@@ -117,11 +117,11 @@ app.factory('dialogService', function($rootScope){
 // NCMBでエラーが発生したときのInterceptor
 app.factory('ErrInterceptor', function($rootScope, $filter, dialogService) {
     return {
-        responseErr : function (err) {
+        responseErr : function (err, fail) {
             if (!err.status) {
-        		$rootScope.$broadcast('line:off', err);
+                dialogService.error('電波の届くところでもう一度やり直してください');
             } else {
-    			$rootScope.$broadcast('process:fail', err);
+                fail(err);
             }
         }
     }
@@ -181,8 +181,8 @@ app.factory('users', function($rootScope, mBaasService, ErrInterceptor) {
 			ncmb.User.loginWithMailAddress(address, password).then(function (data) {
 					ok(data);
 				})
-				.catch(function (err) {
-                    fail(err);
+				.catch(function(err) {
+    			    ErrInterceptor.responseErr(err, fail);
 				});
 		},
 		// 名前とパスワードでログイン

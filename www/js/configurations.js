@@ -3,7 +3,6 @@ var app = angular.module('myApp', ['onsen.directives', 'ngMessages']);
 app.factory('authInterceptor', function($q, $injector, $rootScope) {
     var authInterceptor = {
         request : function(config) {
-            console.log(111);
             var authService = $injector.get('authService');
             var condition = function(current) {
                 console.log(JSON.stringify(current));
@@ -16,14 +15,6 @@ app.factory('authInterceptor', function($q, $injector, $rootScope) {
             };
             authService.autoLogin(condition);
             return config;
-        },
-        response : function(response) {
-            console.log(JSON.stringify(response));
-            return response;
-        },
-        responseError : function(rejection) {
-            console.log("error:" + JSON.stringify(rejection));
-            return $q.reject(rejection);
         }
     };
 
