@@ -3,7 +3,6 @@ app.controller('loginCtrl', function($scope, Current, users, dialogService) {
     $scope.signIn = function() {
         var login = function() {
             var ok = function(data) {
-                console.log(Current.getCurrent());
     			Current.setCurrent(data, true);
 				$scope.toHome();
                 $scope.$emit('toHome:success', 'ログインしました');

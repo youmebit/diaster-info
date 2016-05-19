@@ -166,7 +166,7 @@ app.factory('Current', function(){
 });
 
 // Usersデータストア
-app.factory('users', function($rootScope, mBaasService, ErrInterceptor) {
+app.factory('users', function($rootScope, mBaasService, ErrInterceptor, role) {
 	return {
 		hasCurrent : function() {
 			var user = this.getCurrentUser();
@@ -185,21 +185,27 @@ app.factory('users', function($rootScope, mBaasService, ErrInterceptor) {
     			    ErrInterceptor.responseErr(err, fail);
 				});
 		},
-		// 名前とパスワードでログイン
-		loginAsName : function(name, password) {
-			mBaasService.getNcmb().User.login(name, password)
-				.then(function(data) {
-					$rootScope.$broadcast('login_complate', data);
-				})
-			.catch(function(err){
-                ErrInterceptor.responseErr(err);
-			});
-		},
 		loginAsAnonymous : function(uuid, ok) {
 			mBaasService.getNcmb().User.loginAsAnonymous(uuid).then(function(data) {
                 ok(data);
 			});
 		},
+        // 会員追加
+        add : function(signup, ok, fail) {
+			var ncmb = mBaasService.getNcmb();
+			var user = new ncmb.User();
+			user.set("userName", signup.username)
+				.set("password", signup.password)
+				.set("mailAddress", signup.email)
+				.set("role", role.member);
+			user.signUpByAccount()
+			.then(function () {
+                ok();
+			})
+			.catch(function (err) {
+                ErrInterceptor.responseErr(err, fail);
+			});
+        },
         addAsAnonymous : function() {
             mBaasService.getNcmb().User.loginAsAnonymous();
         },
