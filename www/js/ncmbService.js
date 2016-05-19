@@ -108,7 +108,7 @@ app.factory('posts', function(mBaasService, $q, $timeout, ErrInterceptor) {
                   //プロミスオブジェクトを参照もとに返す
                   return d.promise;
                 }).catch(function(err) {
-                    ErrInterceptor.responseErr(err);
+                    ErrInterceptor.responseErr(err, {});
                 });
             }, 2000);
     
@@ -138,7 +138,7 @@ app.factory('posts', function(mBaasService, $q, $timeout, ErrInterceptor) {
   			data.save().then(function (data) {
   				saveSuccess();
   			}).catch(function (err) {
-  				onFail(err);
+	             ErrInterceptor.responseErr(err, onFail);
   			});
 
 	    }
