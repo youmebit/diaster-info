@@ -244,33 +244,49 @@ app.factory('posts', function(mBaasService, $q, $timeout, ErrInterceptor) {
 			});
 		},
 
-    find : function(dataStore, success) {
-        dataStore.order("updateDate", true).fetchAll().then(function(results) {
-          success(results);
-        });
-    },
-    // 非同期でデータを取得する
-    findAsync : function(dataStore) {
-        var d = $q.defer();
-        $timeout(function(){
+        find : function(dataStore, success) {
             dataStore.order("updateDate", true).fetchAll().then(function(results) {
-              d.resolve(results);
-              //プロミスオブジェクトを参照もとに返す
-              return d.promise;
-            }).catch(function(err) {
-                ErrInterceptor.responseErr(err);
+              success(results);
             });
-        }, 2000);
+        },
+        // 非同期でデータを取得する
+        findAsync : function(dataStore) {
+            var d = $q.defer();
+            $timeout(function(){
+                dataStore.order("updateDate", true).fetchAll().then(function(results) {
+                  d.resolve(results);
+                  //プロミスオブジェクトを参照もとに返す
+                  return d.promise;
+                }).catch(function(err) {
+                    ErrInterceptor.responseErr(err);
+                });
+            }, 2000);
+    
+            //プロミスオブジェクトを参照もとに返す
+            return d.promise;
+        },
 
-        //プロミスオブジェクトを参照もとに返す
-        return d.promise;
-    },
+        getPosts : function() {
+            var ncmb = mBaasService.getNcmb();
+        		return ncmb.DataStore("Posts");
+            }
+    	};
+});
 
-    getPosts : function() {
-        var ncmb = mBaasService.getNcmb();
-    		return ncmb.DataStore("Posts");
-          }
-	};
+app.factory('fileStore', function(mBaasService) {
+    return {
+        upload : function(fileName, blob, uploadSuccess, onFail) {
+            var ncmb = mBaasService.getNcmb();
+            ncmb.File.upload(fileName, blob).then(
+  				function (data) {
+  					uploadSuccess();
+  				}
+  			).catch(function (err) {
+  				onFail(err);
+  			});
+
+        }
+    }
 });
 
 // 位置情報から住所を取得するサービス

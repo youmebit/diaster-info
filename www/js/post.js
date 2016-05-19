@@ -113,14 +113,15 @@ app.controller('postCtrl', function ($scope, users, mBaasService, dialogService)
 
     // ファイルアップロード→データストア登録の順で登録する。
     $scope.post = function (piece) {
-		dialogService.confirm('投稿してもよろしいですか？');
-		$scope.$on('confirm:ok', function() {
-			var blob = b64ToBlob(piece.imageURI);
+        var post = function() {
+            modal.show();
+    		var blob = b64ToBlob(piece.imageURI);
 			var ncmb = mBaasService.getNcmb();
 			var fileName = getFileName();
 
 			// データストア登録成功
 			var saveSuccess = function () {
+                modal.hide();
 				myNavigator.pushPage('post/post_info.html');
 			}
 
@@ -143,11 +144,11 @@ app.controller('postCtrl', function ($scope, users, mBaasService, dialogService)
   				}).catch(function (err) {
   					onFail(err);
   				});
-  			}
+  			};
 
   			var onFail = function (err) {
+                modal.hide();
   				console.error(err);
-  				dialogService.error('申し訳ありませんが、電波の届くところでもう一度投稿してください。');
   			}
 
   			ncmb.File.upload(fileName, blob).then(
@@ -157,8 +158,10 @@ app.controller('postCtrl', function ($scope, users, mBaasService, dialogService)
   			).catch(function (err) {
   				onFail(err);
   			});
-  		});
-
+            setInterval(function() {
+            }, 2000);
+        };
+    	dialogService.confirm('投稿してもよろしいですか？', post);
     }
 });
 
