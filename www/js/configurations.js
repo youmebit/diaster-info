@@ -31,8 +31,7 @@ app.factory('authInterceptor', function($q, $injector, $rootScope) {
 });
 
 app.config(function($httpProvider) {
-   // $httpProvider.interceptors.push('authInterceptor');
-
+   $httpProvider.interceptors.push('authInterceptor');
 });
 
 app.run(function($rootScope, $http, Current, users, authService, tabService, geoService) {
@@ -70,27 +69,16 @@ app.run(function($rootScope, $http, Current, users, authService, tabService, geo
     Current.initialize();
     var strage = users.getCurrentUser();
     if (!strage) {
-       users.addAsAnonymous();
+        users.addAsAnonymous();
     } else {
-        // var condition = function(current) {
-        //   $rootScope.$broadcast("need:login", current);
-        // }
-        // if (strage.mailAddress == null) {
-        //     strage.userName = 'ゲスト';
-        // }
-        // Current.setCurrent(strage, angular.isDefined(strage.mailAddress));
-        // authService.autoLogin(condition);
+        var condition = function(current) {
+          $rootScope.$broadcast("need:login", current);
+        }
+        if (strage.mailAddress == null) {
+            strage.userName = 'ゲスト';
+        }
+        Current.setCurrent(strage, angular.isDefined(strage.mailAddress));
+        authService.autoLogin(condition);
     }
 });
 
-function objectId() {
-    var l = 16;
-    // 生成する文字列に含める文字セット
-    var c = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    var cl = c.length;
-    var r = "";
-    for(var i=0; i<l; i++){
-        r += c[Math.floor(Math.random()*cl)];
-    }
-    return r;
-}
