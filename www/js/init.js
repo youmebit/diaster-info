@@ -9,15 +9,15 @@ app.controller('bodyCtrl', function($scope, $rootScope, Current, authService, ta
 				}
         		$rootScope.user = Current.getCurrent();
 
-				// 対応完了のお知らせを取得
-				$scope.isLoad = false;
-				var dataStore = posts.getPosts().equalTo("correspond", "2").limit(5);
-				var promise = posts.findAsync(dataStore);
-				promise.then(function(results){
-					//成功時
-					$scope.items = results;
-					$scope.isLoad = true;
-				});
+				// // 対応完了のお知らせを取得
+				// $scope.isLoad = false;
+				// var dataStore = posts.getPosts().equalTo("correspond", "2").limit(5);
+				// var promise = posts.findAsync(dataStore);
+				// promise.then(function(results){
+				// 	//成功時
+				// 	$scope.items = results;
+				// 	$scope.isLoad = true;
+				// });
 		});
 	}
     $scope.$on("autologin:success", function(event, data) {

@@ -2,8 +2,7 @@
 app.controller('userCtrl', function ($scope, role, dialogService, mBaasService, ErrInterceptor) {
     $scope.user = {};
     $scope.signUp = function () {
-		dialogService.confirm('登録してもよろしいですか?');
-		$scope.$on('confirm:ok', function() {
+		var add = function() {
 			// 会員追加
 			var ncmb = mBaasService.getNcmb();
 			var user = new ncmb.User();
@@ -23,6 +22,7 @@ app.controller('userCtrl', function ($scope, role, dialogService, mBaasService, 
     				}
                 });
 			});
-		});
+		};
+    	dialogService.confirm('登録してもよろしいですか?', add);
     }
 });

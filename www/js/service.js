@@ -81,6 +81,7 @@ app.service('tabService', function(){
         });
     }
 });
+
 app.factory('dialogService', function($rootScope){
     return {
         complete : function(msg) {
@@ -199,10 +200,9 @@ app.factory('users', function($rootScope, mBaasService, ErrInterceptor) {
                 ok(data);
 			});
 		},
-    	loginAsAnonymous : function() {
-			mBaasService.getNcmb().User.loginAsAnonymous();
-		},
-
+        addAsAnonymous : function() {
+            mBaasService.getNcmb().User.loginAsAnonymous();
+        },
         reset : function(mailAddress) {
 				var ncmb = mBaasService.getNcmb();
 				var current = new ncmb.User();
