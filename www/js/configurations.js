@@ -1,20 +1,30 @@
 'use strict';
 var app = angular.module('myApp', ['onsen.directives', 'ngMessages']);
-app.config(function($httpProvider) {
-    $httpProvider.interceptors.push(function ($q, $injector) {
-        return {
-            request : function(config) {
-                var authService = $injector.get('authService');
-                authService.autoLogin();
-                return config;
-            }
+app.factory('authInterceptor', function($q, $injector, $rootScope) {
+    var authInterceptor = {
+        request : function(config) {
+            var authService = $injector.get('authService');
+            var condition = function(current) {
+                var limitSeconds = 1000 * 60 * 60 * 24;
+                var now = new Date();
+                var lastDate = Date.parse(current.updateDate);
+                if (lastDate - now.getTime() > limitSeconds) {
+                  $rootScope.$broadcast("need:login", current);
+                }
+            };
+            authService.autoLogin(condition);
+            return config;
         }
-    });
+    };
+
+    return authInterceptor;
 });
 
-app.run(function($rootScope, $http, Current, authService, tabService, geoService) {
-    Current.initialize();
-    authService.autoLogin();
+app.config(function($httpProvider) {
+   $httpProvider.interceptors.push('authInterceptor');
+});
+
+app.run(function($rootScope, $http, Current, users, authService, tabService, geoService) {
     $rootScope.errors = [
         { key: 'required', msg: '必ず入力してください' },
         { key: 'email', msg: 'メールアドレスではありません' },
@@ -44,4 +54,21 @@ app.run(function($rootScope, $http, Current, authService, tabService, geoService
 				});
 			}
 	});
+
+    // セッション情報の登録
+    Current.initialize();
+    var strage = users.getCurrentUser();
+    if (!strage) {
+        users.addAsAnonymous();
+    } else {
+        var condition = function(current) {
+          $rootScope.$broadcast("need:login", current);
+        }
+        if (strage.mailAddress == null) {
+            strage.userName = 'ゲスト';
+        }
+        Current.setCurrent(strage, angular.isDefined(strage.mailAddress));
+        authService.autoLogin(condition);
+    }
 });
+

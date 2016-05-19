@@ -4,20 +4,21 @@ app.constant('role', {
     		 	'member' : '0',
 			 	'staff' : '1'
 });
+
 // 認証サービス
 app.service('authService', function(users, $rootScope, Current) {
     var limitSeconds = 1000 * 60 * 60 * 24;
+
     var UserType = function(_strage_) {
         this.strage = _strage_;
     };
     // 一般ユーザー
     UserType.prototype = {
-        getLastDate : function() {
-          return Current.getUpdateDate().getTime();
+        login : function(ok) {
+          users.loginAsAnonymous(this.strage.authData.anonymous.id, ok);
         },
-        login : function() {
-          users.loginAsAnonymous(this.strage.authData.anonymous.id);
-          Current.setUpdateDate(new Date());
+        getUserName : function() {
+            return 'ゲスト';
         }
     };
     // 会員
@@ -25,49 +26,35 @@ app.service('authService', function(users, $rootScope, Current) {
         this.strage = _strage_;
     };
     Member.prototype = new UserType();
-    Member.prototype.getLastDate = function() {
-        return Date.parse(this.strage.updateDate);
-    }
-    Member.prototype.login = function(strage) {
-        users.loginAsEmail(this.strage.mailAddress, this.strage.password);
-        $rootScope.$on('login_complate', function(event, data) {
-            console.debug("再ログインしました。");
-        });
-    };
 
-    this.autoLogin = function() {
-        var strage = users.getCurrentUser();
-        var current = new Date();
-        if (strage) {
-            var userType;
-            if (strage.role) {
-                userType = new Member(strage);
-            } else {
-                userType = new UserType(strage);
-            }
-            if (userType.getLastDate() - current > limitSeconds) {
-                userType.login();
-            }
+    Member.prototype.login = function(ok) {
+        users.loginAsEmail(this.strage.mailAddress, this.strage.password, ok);
+    }
+
+    Member.prototype.getUserName = function() {
+        return this.strage.username;
+    }
+
+    this.autoLogin = function(isCondition) {
+        var current = Current.getCurrent();
+        var userType;
+        if (current.role) {
+            userType = new Member(current);
         } else {
-          	//　初回起動(匿名ユーザー登録)
-      		users.loginAsAnonymous();
+            userType = new UserType(current);
         }
-        $rootScope.$broadcast("autologin:success", strage);
-    }
-});
-
-
-
-// mBaaS接続サービス
-app.service('mBaasService', function ($rootScope) {
-    var ncmb = null;
-    this.getNcmb = function () {
-        if (!ncmb) {
-            var APP_KEY = '536ea833c07c98ed2cf1b836739a9729ad7544fc3a9e282e875f99e93bd8eb47';
-            var CLIENT_KEY = 'c47f0f99bc98940357aeb142158515adbca19f165f49b579f1cce020a3135583';
-            ncmb = new NCMB(APP_KEY, CLIENT_KEY);
-        }
-        return ncmb;
+        isCondition(current);
+        $rootScope.$on("need:login", function(event, current) {
+            var ok = function(data) {
+              data.userName = userType.getUserName();
+              if (!data.updateDate) {
+                  var now = new Date();
+                  data.updateDate = now.toISOString();
+              }
+              $rootScope.$broadcast("autologin:success", data);
+            }
+          userType.login(ok);
+        });
     }
 });
 
@@ -79,44 +66,47 @@ app.service('tabService', function(){
         });
     }
 });
-app.service('dialogService', function($rootScope){
-	this.complete = function(msg) {
-		ons.createAlertDialog('template/dialog.html', {parentScope: $rootScope}).then(function(dialog) {
-			$rootScope.msg = msg;
-			$rootScope.dialogTitle = "OK";
-			alertDialog.show();
-		});
-	},
-	this.error = function (msg) {
-		ons.createAlertDialog('template/dialog.html', {parentScope: $rootScope}).then(function(dialog) {
-			$rootScope.msg = msg;
-			$rootScope.dialogTitle = "申し訳ありません";
-			alertDialog.show();
-		});
-	}
-	this.confirm = function(msg) {
-		ons.notification.confirm({
-			title:'確認',
-			message: msg,
-			primaryButtonIndex: 1,
-			cancelable:true,
-			callback: function(answer) {
-				if (answer == 1) {
-					$rootScope.$broadcast('confirm:ok');
-				}
-			}
-	  });
-	}
+
+app.factory('dialogService', function($rootScope){
+    return {
+        complete : function(msg) {
+        	ons.createAlertDialog('template/dialog.html', {parentScope: $rootScope}).then(function(dialog) {
+    			$rootScope.msg = msg;
+    			$rootScope.dialogTitle = "OK";
+    			alertDialog.show();
+    		});
+        },
+        error : function(msg) {
+        	ons.createAlertDialog('template/dialog.html', {parentScope: $rootScope}).then(function(dialog) {
+            	$rootScope.msg = msg;
+    			$rootScope.dialogTitle = "申し訳ありません";
+    			alertDialog.show();
+    		});
+        },
+        confirm : function(msg, success) {
+        	ons.notification.confirm({
+    			title:'確認',
+    			message: msg,
+    			primaryButtonIndex: 1,
+    			cancelable:true,
+    			callback: function(answer) {
+    				if (answer == 1) {
+                        success();
+    				}
+    			}
+    	  });
+        }
+    }
 });
 
 // NCMBでエラーが発生したときのInterceptor
 app.factory('ErrInterceptor', function($rootScope, $filter, dialogService) {
     return {
-        responseErr : function (err) {
+        responseErr : function (err, fail) {
             if (!err.status) {
-        		$rootScope.$broadcast('line:off', err);
+                dialogService.error('電波の届くところでもう一度やり直してください');
             } else {
-    			$rootScope.$broadcast('process:fail', err);
+                fail(err);
             }
         }
     }
@@ -128,9 +118,12 @@ app.factory('Current', function(){
 		setCurrent : function(user, isLogin) {
 				this.current = {
 					username : user.userName,
+                    mailAddress : user.mailAddress,
+                    password : user.password,
 					isLogin : isLogin,
 					role : user.role,
-					objectId : user.objectId
+					objectId : user.objectId,
+                    authData : user.authData
 				};
 		},
 		getCurrent : function() {
@@ -142,7 +135,7 @@ app.factory('Current', function(){
 					isLogin : false,
 					role : 0,
 					objectId : '',
-          updateDate : new Date()
+                    updateDate : new Date()
 				};
 		},
         setUpdateDate : function(updateDate) {
@@ -155,100 +148,6 @@ app.factory('Current', function(){
           return this.current.isLogin;
         }
 	}
-});
-
-// Usersデータストア
-app.factory('users', function($rootScope, mBaasService, ErrInterceptor) {
-	return {
-		hasCurrent : function() {
-			var user = this.getCurrentUser();
-			return user != null;
-		},
-		getCurrentUser : function() {
-			return mBaasService.getNcmb().User.getCurrentUser();
-		},
-		// メールアドレスとパスワードでログイン
-		loginAsEmail: function (address, password) {
-			var ncmb = mBaasService.getNcmb();
-			ncmb.User.loginWithMailAddress(address, password).then(function (data) {
-					$rootScope.$broadcast('login_complate', data);
-				})
-				.catch(function (err) {
-                    ErrInterceptor.responseErr(err);
-				});
-		},
-		// 名前とパスワードでログイン
-		loginAsName : function(name, password) {
-			mBaasService.getNcmb().User.login(name, password)
-				.then(function(data) {
-					$rootScope.$broadcast('login_complate', data);
-				})
-			.catch(function(err){
-                ErrInterceptor.responseErr(err);
-			});
-		},
-		loginAsAnonymous : function(uuid) {
-			mBaasService.getNcmb().User.loginAsAnonymous(uuid);
-		},
-		reset : function(mailAddress) {
-				var ncmb = mBaasService.getNcmb();
-				var current = new ncmb.User();
-				current.set("mailAddress", mailAddress);
-				current.requestPasswordReset(function(data) {
-					$rootScope.$broadcast("reset:success");
-				});
-		},
-		logout : function() {
-			var ncmb = mBaasService.getNcmb();
-			ncmb.User.logout().then(function(){
-				$rootScope.$broadcast('logout:success');
-			});
-		},
-        find : function(username) {
-    		var ncmb = mBaasService.getNcmb();
-            ncmb.User.equalTo("userName", username).fetch().then(function(data) {
-            });
-        }
-    }
-});
-
-// Postsデータストア
-app.factory('posts', function(mBaasService, $q, $timeout, ErrInterceptor) {
-	return {
-		findById : function(id, success) {
-			var Posts = this.getPosts();
-			Posts.equalTo("objectId", id).fetch().then(function(result) {
-				success(result);
-			});
-		},
-
-    find : function(dataStore, success) {
-        dataStore.order("updateDate", true).fetchAll().then(function(results) {
-          success(results);
-        });
-    },
-    // 非同期でデータを取得する
-    findAsync : function(dataStore) {
-        var d = $q.defer();
-        $timeout(function(){
-            dataStore.order("updateDate", true).fetchAll().then(function(results) {
-              d.resolve(results);
-              //プロミスオブジェクトを参照もとに返す
-              return d.promise;
-            }).catch(function(err) {
-                ErrInterceptor.responseErr(err);
-            });
-        }, 2000);
-
-        //プロミスオブジェクトを参照もとに返す
-        return d.promise;
-    },
-
-    getPosts : function() {
-        var ncmb = mBaasService.getNcmb();
-    		return ncmb.DataStore("Posts");
-          }
-	};
 });
 
 // 位置情報から住所を取得するサービス

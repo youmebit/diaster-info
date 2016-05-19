@@ -27,6 +27,14 @@ userFactory.loginAsAnonymous = function(id, undefined) {
 // Currentのモッククラス
 var mockCurrent = {};
 mockCurrent.user = {};
+mockCurrent.setCurrent = function(_user_) {
+  this.user = _user_;
+}
+
+mockCurrent.getCurrent = function() {
+  return this.user;
+}
+
 mockCurrent.initialize = function() {
   return this.user;
 }
