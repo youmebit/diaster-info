@@ -2,12 +2,12 @@
 
 app.controller('bodyCtrl', function($scope, $rootScope, Current, tabService, dialogService, users, posts) {
 	$scope.topInit = function() {
-		$scope.$apply(function() {
+            $scope.$apply(function() {
 				$rootScope.displayPage = 'list_ghest';
-				$rootScope.user = Current.getCurrent();
 				if (Current.isLogin()) {
 					$rootScope.displayPage = 'list_select';
 				}
+        		$rootScope.user = Current.getCurrent();
 
 				// 対応完了のお知らせを取得
 				$scope.isLoad = false;
@@ -20,6 +20,12 @@ app.controller('bodyCtrl', function($scope, $rootScope, Current, tabService, dia
 				});
 		});
 	}
+    $scope.$on("autologin:success", function(event, data) {
+    	$scope.$apply(function() {
+            Current.setCurrent(data, data.mailAddress != null);
+			$rootScope.user = Current.getCurrent();
+    	});
+    });
 
 	$scope.toHome = function() {
         tabService.setActiveTab(0);
@@ -37,7 +43,7 @@ app.controller('bodyCtrl', function($scope, $rootScope, Current, tabService, dia
         if (!navigator.geolocation) {
             dialogService.error('位置情報が取得できないため、この機能は使用できません。');
         } else if (!$rootScope.settings.isDebug) {
-								dialogService.error('宝塚市内ではないため投稿できません');
+					dialogService.error('宝塚市内ではないため投稿できません');
 				} else {
 					tabService.setActiveTab(1);
 				}
@@ -49,17 +55,15 @@ app.controller('bodyCtrl', function($scope, $rootScope, Current, tabService, dia
 		}
 
 		$scope.signOut = function() {
-			dialogService.confirm('ログアウトしてもよろしいですか？');
-			$scope.$on('confirm:ok', function() {
-				users.logout();
-				$scope.$on('logout:success', function(event) {
-					Current.initialize();
-					//　初回起動(匿名ユーザー登録)
-					users.loginAsAnonymous();
+            var signOut = function() {
+                var ok = function() {
+    				Current.initialize();
 					$scope.topInit();
 					$scope.$emit('toHome:success', 'ログアウトしました');
-				});
-			});
+                }
+                users.logout(ok);
+            }
+			dialogService.confirm('ログアウトしてもよろしいですか？', signOut);
 		}
 
 		// トップ画面を初期化した後にダイアログ表示。
