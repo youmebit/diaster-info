@@ -64,6 +64,9 @@ h2 {
     color: #444;
 }
 
+.list {
+	margin-bottom: 2%;
+}
 ons-list-item {
     font-size: 13px;
     color: #666;
@@ -79,7 +82,7 @@ ons-list-item {
 }
 
 .contents .info {
-    padding: 0 0 25px 0;
+    padding: 0;
     margin: 0;
     width: 100%;
     font-size: 1.2em;
@@ -87,6 +90,7 @@ ons-list-item {
 
 .info {
     padding: 3%;
+    padding-bottom: 5%;
 }
 .info div {
     line-height: 1.3;

@@ -4,6 +4,10 @@
     padding-bottom: 0px;
 }
 
+.list_button_position {
+	padding-top:10px;
+}
+
 .button--post {
     width: 60%;
     margin: 0 auto 70px;
