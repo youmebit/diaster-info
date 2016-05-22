@@ -2,17 +2,17 @@
 
 //　職員
 var staff = {
-  "userName":"hoge@職員",
+  "username":"hoge@職員",
   "password":"hogehoge01",
-  "mailAddress":"<職員用メールアドレス>",
+  "email":"<職員用メールアドレス>",
   "role":"1"
 };
 
 //　会員
 var member = {
-  "userName":"foo@会員",
+  "username":"foo@会員",
   "password":"foofoo02",
-  "mailAddress":"<会員用メールアドレス>",
+  "email":"<会員用メールアドレス>",
   "role":"0"
 };
 
@@ -28,19 +28,14 @@ function test(u) {
   describe("", function() {
     beforeEach(module("myApp"));
     it("ユーザー追加", inject(function($rootScope, mBaasService, users){
-      var ncmb = mBaasService.getNcmb();
-      users.loginAsAnonymous();
-      var user = new ncmb.User();
-      user.set("userName", u.userName)
-        .set("password", u.password)
-        .set("mailAddress", u.mailAddress)
-        .set("role", u.role);
-      user.signUpByAccount()
-      .catch(function (err) {
-          if (err.status == 409) {
-            console.error('会員名もしくはメールアドレスが既に登録されています。');
-          }
-        });
+      users.addAsAnonymous();
+      var ok = function() {
+
+      };
+      var fail = function(err) {
+        console.error(err);
+      }
+      users.add(u, ok, fail);
     }));
   });
 }
