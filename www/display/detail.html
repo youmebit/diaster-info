@@ -25,7 +25,7 @@
 	  <div class="thumbnail">
 		<img class="img-resize" ng-src="https://mb.api.cloud.nifty.com/2013-09-01/applications/TOjZsCJbSJeKWALV/publicFiles/{{obj.photo}}">
 		</div>
-		<ons-list>
+		<ons-list class="tab_list">
 			<ons-row>
 				<ons-col class="action-col" ng-click="toMap()" ng-class="{active_tab:tab == 'map'}">
 					<div class="action-icon"><ons-icon icon="fa fa-map-o"></ons-icon></div>
@@ -53,7 +53,7 @@
 				<p ng-if="$root.user.role == 0" ng-bind="obj.response">
 
 				</p>
-				<form name="updateForm" class="contents" ng-if="$root.user.role == 1">
+				<form name="updateForm" ng-if="$root.user.role == 1">
 					<dl>
 						<dt class="tag">対応状況</dt>
 						<dd>

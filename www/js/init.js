@@ -27,8 +27,8 @@ app.controller('bodyCtrl', function($scope, $rootScope, Current,
 							$scope.list_error = '表示する情報がありません';
 						} else {
 							$scope.items = results;
-							$scope.isLoad = true;
 						}
+						$scope.isLoad = true;
 					});
 				};
 				RequestService.request(success, lineFail);
