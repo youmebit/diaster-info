@@ -67,7 +67,7 @@ app.service('tabService', function(){
     }
 });
 
-app.factory('dialogService', function($rootScope){
+app.factory('dialogService', function($rootScope, RequestService){
     return {
         complete : function(msg) {
         	ons.createAlertDialog('template/dialog.html', {parentScope: $rootScope}).then(function(dialog) {
@@ -91,23 +91,34 @@ app.factory('dialogService', function($rootScope){
     			cancelable:true,
     			callback: function(answer) {
     				if (answer == 1) {
-                        success();
+    					var fail = function() {
+				        	ons.createAlertDialog('template/dialog.html', {parentScope: $rootScope}).then(function(dialog) {
+				          $rootScope.msg = "電波の届くところでもう一度やり直してください";
+				    			$rootScope.dialogTitle = "申し訳ありません";
+				    			alertDialog.show();
+				    		});
+    					};
+    					RequestService.request(success, fail);
     				}
     			}
     	  });
+        },
+        line_off : function() {
+        	this.error("電波の届くところでもう一度やり直してください");
         }
     }
 });
 
-// NCMBでエラーが発生したときのInterceptor
-app.factory('ErrInterceptor', function($rootScope, $filter, dialogService) {
+// 電波状況チェックを行うサービス
+app.factory('RequestService', function($rootScope) {
     return {
-        responseErr : function (err, fail) {
-            if (!err.status) {
-                dialogService.error('電波の届くところでもう一度やり直してください');
-            } else {
-                fail(err);
-            }
+        request : function (success, fail) {
+        	var networkState = navigator.connection.type;
+        	if (networkState == "none") {
+        		fail();
+        	} else {
+                success();
+        	}
         }
     }
 });

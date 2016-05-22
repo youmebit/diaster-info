@@ -14,9 +14,8 @@ app.service('mBaasService', function ($rootScope) {
     }
 });
 
-
 // Usersデータストア
-app.factory('users', function($rootScope, mBaasService, ErrInterceptor, role) {
+app.factory('users', function($rootScope, mBaasService, role) {
 	return {
 		hasCurrent : function() {
 			var user = this.getCurrentUser();
@@ -32,7 +31,7 @@ app.factory('users', function($rootScope, mBaasService, ErrInterceptor, role) {
 					ok(data);
 				})
 				.catch(function(err) {
-    			    ErrInterceptor.responseErr(err, fail);
+					fail(err);
 				});
 		},
 		loginAsAnonymous : function(uuid, ok) {
@@ -53,7 +52,7 @@ app.factory('users', function($rootScope, mBaasService, ErrInterceptor, role) {
                 ok();
 			})
 			.catch(function (err) {
-                ErrInterceptor.responseErr(err, fail);
+				fail(err);
 			});
         },
         addAsAnonymous : function() {
@@ -85,7 +84,7 @@ app.factory('users', function($rootScope, mBaasService, ErrInterceptor, role) {
 });
 
 // Postsデータストア
-app.factory('posts', function(mBaasService, $q, $timeout, ErrInterceptor) {
+app.factory('posts', function(mBaasService, $q, $timeout) {
 	return {
 		findById : function(id, success) {
 			var Posts = this.getPosts();
@@ -108,10 +107,9 @@ app.factory('posts', function(mBaasService, $q, $timeout, ErrInterceptor) {
                   //プロミスオブジェクトを参照もとに返す
                   return d.promise;
                 }).catch(function(err) {
-                    ErrInterceptor.responseErr(err, {});
                 });
             }, 2000);
-    
+
             //プロミスオブジェクトを参照もとに返す
             return d.promise;
         },
@@ -120,7 +118,7 @@ app.factory('posts', function(mBaasService, $q, $timeout, ErrInterceptor) {
             var ncmb = mBaasService.getNcmb();
     		return ncmb.DataStore("Posts");
 	    },
-			    
+
 	    postInfo : function(piece, fileName, saveSuccess, onFail) {
 	    	var Posts = this.getPosts();
 	    	var data = new Posts();
@@ -138,9 +136,8 @@ app.factory('posts', function(mBaasService, $q, $timeout, ErrInterceptor) {
   			data.save().then(function (data) {
   				saveSuccess();
   			}).catch(function (err) {
-	             ErrInterceptor.responseErr(err, onFail);
+  				onFail(err);
   			});
-
 	    }
 	}
 });
@@ -163,5 +160,3 @@ app.factory('fileStore', function(mBaasService) {
         }
     }
 });
-
-

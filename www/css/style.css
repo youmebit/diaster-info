@@ -197,6 +197,14 @@ div .fin_contents h2:before {
   border-top: none;
 }
 
+.list_error {
+    padding-left: 5%;
+	text-align: left;
+    padding: 3% 5%;
+    font-family: 'Noto400';
+    font-size: 0.8em;
+}
+
 #func-navi {
     width: 100%;
     overflow: hidden;
