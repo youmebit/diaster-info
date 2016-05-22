@@ -33,7 +33,7 @@ function test(u) {
 
       };
       var fail = function(err) {
-        console.error(err);
+        console.error(err.status);
       }
       users.add(u, ok, fail);
     }));
