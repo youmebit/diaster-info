@@ -43,7 +43,10 @@
 		</ons-list>
 		<div class="map info" ng-if="tab == 'map'">
 			<span class="address" ng-bind="obj.address"></span>
-			<div id="gmap" style="width:99%; height:300px;"></div>
+			<span ng-bind="map != null"></span>
+			<div>
+				<div id="gmap"></div>
+			</div>
 		</div>
 		<div class="detail_contents" ng-if="tab == 'comment'">
 			<p ng-bind="obj.comment"></p>

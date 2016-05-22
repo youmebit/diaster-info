@@ -106,39 +106,36 @@ app.controller('detailCtrl', function($scope, $rootScope, $timeout, posts, corre
 				$scope.obj = result;
 				$scope.form.correspond = result.correspond;
 				$scope.form.response = result.response;
-				$scope.$broadcast('viewMap', result);
 				$scope.toMap();
 			});
 		}
 		posts.findById(options.id, onSuccess);
-
-		// データが取れたタイミングで地図を表示。
-		$scope.$on('viewMap', function(event, result) {
-			$timeout(function() {
-				var geocoder = new google.maps.Geocoder();
-				var centerLatlng = new google.maps.LatLng(result.point.latitude ,result.point.longitude);
-				var myOptions = {
-					zoom: 16,
-					center: centerLatlng,
-					mapTypeId: google.maps.MapTypeId.ROADMAP,
-					disableDefaultUI: true
-				};
-				$scope.map = new google.maps.Map(document.getElementById("gmap"), myOptions);
-				$scope.element = document.getElementById('gmap');
-				var latlng = new google.maps.LatLng(result.point.latitude ,result.point.longitude);
-
-				// マーカーをmap内に表示
-				var marker = new google.maps.Marker({
-					position: latlng,
-					map: $scope.map
-				});
-			}, 100);
-		});
 	}
 
 	// 地図タブ表示
 	$scope.toMap = function() {
 		$scope.tab = 'map';
+		var point = $scope.obj.point;
+		$timeout(function() {
+			var geocoder = new google.maps.Geocoder();
+			var centerLatlng = new google.maps.LatLng(point.latitude ,point.longitude);
+			var myOptions = {
+				zoom: 16,
+				center: centerLatlng,
+				mapTypeId: google.maps.MapTypeId.ROADMAP,
+				disableDefaultUI: true,
+				draggable: false
+			};
+			$scope.map = new google.maps.Map(document.getElementById("gmap"), myOptions);
+			$scope.element = document.getElementById('gmap');
+			var latlng = new google.maps.LatLng(point.latitude, point.longitude);
+
+			// マーカーをmap内に表示
+			var marker = new google.maps.Marker({
+				position: latlng,
+				map: $scope.map
+			});
+		}, 100);
 	}
 
 

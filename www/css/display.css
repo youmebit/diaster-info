@@ -239,13 +239,19 @@ info .photo img {
 	padding-bottom: 20px;
 }
 
+#gmap {
+	width:90%;
+	height:300px;
+	position: absolute;
+}
+
 /*詳細画面の余白設定*/
 .detail_contents {
 	padding-top: 10px;
 	width: 90%;
 	margin: 0 auto;
 	font-family: 'Noto400', sans-serif;
-	min-height: 70%;
+	min-height: 250px;
 	padding-bottom: 50px;
 }
 
