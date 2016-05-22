@@ -24,7 +24,7 @@ app.controller('bodyCtrl', function($scope, $rootScope, Current,
 					promise.then(function(results){
 						//成功時
 						if (results.length == 0) {
-							$scope.list_error = '表示する情報はありません';
+							$scope.list_error = '表示する情報がありません';
 						} else {
 							$scope.items = results;
 							$scope.isLoad = true;
