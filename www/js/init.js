@@ -24,11 +24,11 @@ app.controller('bodyCtrl', function($scope, $rootScope, Current,
 					promise.then(function(results){
 						//成功時
 						if (results.length == 0) {
-							$scope.list_error = '表示する情報はありません';
+							$scope.list_error = '表示する情報がありません';
 						} else {
 							$scope.items = results;
-							$scope.isLoad = true;
 						}
+						$scope.isLoad = true;
 					});
 				};
 				RequestService.request(success, lineFail);
@@ -46,7 +46,10 @@ app.controller('bodyCtrl', function($scope, $rootScope, Current,
     }
 
 	$scope.toDisplayPage = function() {
-		tabService.setActiveTab(2);
+		var fail = function() {
+			dialogService.line_off();
+		};
+		RequestService.request(function() {tabService.setActiveTab(2);}, fail);
 	}
 
     $scope.toLoginPage = function() {
@@ -64,8 +67,10 @@ app.controller('bodyCtrl', function($scope, $rootScope, Current,
     }
 
 		$scope.toDetail = function (objectId) {
-			myNavigator.pushPage('display/detail.html', {id : objectId});
-
+			var fail = function() {
+				dialogService.line_off();
+			};
+			RequestService.request(function() {myNavigator.pushPage('display/detail.html', {id : objectId});}, fail);
 		}
 
 		$scope.signOut = function() {
