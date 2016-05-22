@@ -211,6 +211,10 @@ info .photo img {
 	font-size: 0.9em;
 }
 
+.tab_list {
+	margin-bottom: 0;
+}
+
 .action-col:last-of-type {
     border-right: none;
 }
@@ -241,13 +245,15 @@ info .photo img {
 	width: 90%;
 	margin: 0 auto;
 	font-family: 'Noto400', sans-serif;
-	min-height: 30%;
+	min-height: 70%;
 	padding-bottom: 50px;
 }
 
 .detail_contents p {
 	line-height: 1.3em;
 }
+
+/*詳細画面の余白設定ここまで*/
 
 .tag:before {
 	content: '\f02b';

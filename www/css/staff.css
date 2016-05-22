@@ -1,0 +1,36 @@
+.form_bg {
+	display: block;
+	background-color: #f2f2f2;
+	overflow: hidden;
+	padding-bottom: 50px;
+}
+
+/*詳細画面-職員用対応状況*/
+.button-bar__item {
+	background-color: #fffffa;
+}
+.button-bar__item > .staff_toggle {
+	border: 1px solid #808080;
+	border-bottom: none;
+	text-align: left;
+	padding-left: 10px;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.button-bar__item:first-child > .button-bar__button,.button-bar__item:last-child > .button-bar__button {
+	border-left: 1px solid #808080;
+	border-right: 1px solid #808080;
+}
+
+.button-bar__item:first-child > .button-bar__button {
+	border-top-left-radius: 3px;
+	border-top-right-radius: 3px;
+}
+
+.button-bar__item:last-child > .button-bar__button {
+	border-bottom: 1px solid #808080;
+	border-bottom-left-radius: 3px;
+	border-bottom-right-radius: 3px;
+}
