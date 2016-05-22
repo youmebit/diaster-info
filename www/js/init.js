@@ -1,7 +1,9 @@
 'use strict';
 
-app.controller('bodyCtrl', function($scope, $rootScope, Current, tabService, dialogService, users, posts) {
+app.controller('bodyCtrl', function($scope, $rootScope, Current,
+				tabService, dialogService, users, posts, RequestService) {
 	$scope.topInit = function() {
+			$scope.list_error = '';
             $scope.$apply(function() {
 				$rootScope.displayPage = 'list_ghest';
 				if (Current.isLogin()) {
@@ -12,12 +14,24 @@ app.controller('bodyCtrl', function($scope, $rootScope, Current, tabService, dia
 				// 対応完了のお知らせを取得
 				$scope.isLoad = false;
 				var dataStore = posts.getPosts().equalTo("correspond", "2").limit(5);
-				var promise = posts.findAsync(dataStore);
-				promise.then(function(results){
-					//成功時
-					$scope.items = results;
+				var lineFail = function() {
+					$scope.list_error = '電波が届かないため表示できません';
+					$scope.items = [];
 					$scope.isLoad = true;
-				});
+				};
+				var success = function() {
+					var promise = posts.findAsync(dataStore);
+					promise.then(function(results){
+						//成功時
+						if (results.length == 0) {
+							$scope.list_error = '表示する情報はありません';
+						} else {
+							$scope.items = results;
+							$scope.isLoad = true;
+						}
+					});
+				};
+				RequestService.request(success, lineFail);
 		});
 	}
     $scope.$on("autologin:success", function(event, data) {
