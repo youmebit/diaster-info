@@ -28,7 +28,8 @@
         <h2>対応完了のお知らせ</h2>
         <div class="list_loading" ng-hide="isLoad"><ons-icon icon="ion-load-c" spin="true"></ons-icon></div>
         <div ng-show="isLoad">
-          <ons-list modifier="fin_list">
+		  <p ng-bind="list_error" ng-show="list_error" class="list_error"></p>
+          <ons-list modifier="fin_list" ng-if="items.length > 0">
         		<ons-list-item modifier="chevron" class="info" ng-click="toDetail(p.objectId)" ng-repeat="p in items">
         			<ons-row class="date right">
         				<span ng-bind="p.updateDate | date:'yyyy/MM/dd HH:mm'"></span>

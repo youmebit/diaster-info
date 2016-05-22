@@ -1,14 +1,24 @@
 'use strict';
-app.controller('selectCtrl', function($scope, Current, posts) {
+app.controller('selectCtrl', function($scope, Current, posts, RequestService, dialogService) {
+	var fail = function() {
+		dialogService.line_off();
+	};
+
 	$scope.toMyReport = function () {
-		var id = Current.getCurrent().objectId;
-		var dataStore = posts.getPosts().equalTo('userID', id);
-		myNavigator.pushPage('display/list.html', {dataStore:dataStore});
+		var success = function() {
+			var id = Current.getCurrent().objectId;
+			var dataStore = posts.getPosts().equalTo('userID', id);
+			myNavigator.pushPage('display/list.html', {dataStore:dataStore});
+		};
+		RequestService.request(success, fail);
 	}
 
 	$scope.toAllInfo = function() {
+		var success = function() {
 		var dataStore = posts.getPosts();
 		myNavigator.pushPage('display/list.html', {dataStore:dataStore});
+		}
+		RequestService.request(success, fail);
 	}
 });
 
@@ -34,19 +44,32 @@ app.filter('listMatch', function(){
 	}
 });
 
-app.controller('listCtrl', function($scope, correspond, posts, dialogService) {
+app.controller('listCtrl', function($scope, correspond, posts, dialogService, RequestService) {
 	$scope.init = function() {
 		$scope.showFilter = true;
 		$scope.toggle = correspond;
+		$scope.list_error = null;
 		$scope.cor = {selected : '-1'};
-		var options = $scope.myNavigator.getCurrentPage().options;
-		if (!options.dataStore) {
-			options.dataStore = posts.getPosts();
-		}
-		get_data(options.dataStore);
-		$scope.$watch('cor.selected', function(value) {
-			$scope.showFilter = true;
-		});
+		var success = function() {
+			var options = $scope.myNavigator.getCurrentPage().options;
+			if (!options.dataStore) {
+				options.dataStore = posts.getPosts();
+			}
+			get_data(options.dataStore);
+			$scope.$watch('cor.selected', function(value) {
+				$scope.showFilter = true;
+			});
+		};
+		var fail = function() {
+			$scope.list_error = '電波が届かないため表示できません';
+			$scope.items = [];
+			$scope.isLoad = true;
+		};
+		RequestService.request(success, fail);
+	}
+
+	$scope.isShowList = function() {
+		return $scope.isLoad && $scope.list_error == null;
 	}
 
 	var get_data = function(dataStore){
@@ -54,7 +77,7 @@ app.controller('listCtrl', function($scope, correspond, posts, dialogService) {
 		$scope.isLoad = false;
 		var promise = posts.findAsync(dataStore);
 		promise.then(function(results){
-		  //成功時
+			  //成功時
 			$scope.posts = results;
 			$scope.isLoad = true;
 		});
@@ -72,7 +95,7 @@ app.controller('listCtrl', function($scope, correspond, posts, dialogService) {
 	}
 });
 
-app.controller('detailCtrl', function($scope, $rootScope, $timeout, posts, correspond, dialogService, ErrInterceptor) {
+app.controller('detailCtrl', function($scope, $rootScope, $timeout, posts, correspond, dialogService) {
 //	詳細画面表示
 	$scope.init = function() {
 		var options = $scope.myNavigator.getCurrentPage().options;
@@ -138,7 +161,6 @@ app.controller('detailCtrl', function($scope, $rootScope, $timeout, posts, corre
 					myNavigator.popPage();
 					$rootScope.$broadcast('update:success', '更新しました。');
 				}).catch(function(err) {
-	                ErrInterceptor.responseErr(err);
 	                $scope.$on('process:fail', function(event, err) {
 	                    console.error(err);
 	                });

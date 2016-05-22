@@ -8,7 +8,8 @@
 		</div>
 	</ons-toolbar>
   	<main ng-controller="listCtrl" ng-init="init()">
-	  <div class="count" ng-show="isLoad">
+	  <p ng-bind="list_error" ng-show="list_error" class="list_error"></p>
+	  <div class="count" ng-show="isShowList()">
 		<div>
 			<p>情報件数:{{(posts | listMatch:cor.selected).length}}件</p>
 		</div>
@@ -32,9 +33,9 @@
 		  </div>
 		</div>
 	  </div>
-	  <p class="count msg" ng-if="(posts | listMatch:cor.selected).length == 0">該当する情報はありません</p>
+	  <p class="count msg" ng-if="(posts | listMatch:cor.selected).length == 0">表示する情報がありません</p>
 	 <p class="list_loading" ng-hide="isLoad"><ons-icon icon="ion-load-c" spin="true"></ons-icon></p>
-	<ons-list modifier="" ng-if="(posts | listMatch:cor.selected).length != 0" ng-show="isLoad">
+	<ons-list modifier="" ng-if="(posts | listMatch:cor.selected).length != 0" ng-show="isShowList()">
 		<ons-list-item modifier="chevron" class="info" ng-click="toDetail(p.objectId)" ng-repeat="p in filterd = (posts | listMatch:cor.selected)" event-finished>
 			<ons-row class="date right">
 				<span ng-bind="p.updateDate | date:'yyyy/MM/dd HH:mm'"></span>

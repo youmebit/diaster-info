@@ -10,11 +10,6 @@
     border-top:none;
 }
 
-.list__item {
-    line-height: 0;
-    padding: 0;
-}
-
 .top_icon {
     text-align: center;
     padding-top: 10px;
@@ -79,6 +74,35 @@ input[type="password"], textarea {
     text-align: center;
 }
 
+.btn {
+    width: 60%;
+}
+
+form dt:before {
+    margin-right: 1px;
+}
+
+/*必須タグ*/
+form dt:after {
+    content: '必須';
+    font-family: 'Noto400';
+    background-color: #ea553a;
+    color: #fffffa;
+    font-size: 0.7em;
+    border-radius: 3px;
+    margin-left: 2px;
+    padding: 3px;
+    vertical-align: middle;
+    margin-left: 5px;
+}
+
+form dt.any:after {
+	content: '';
+	background-color: transparent;
+	padding: 0;
+	margin: 0;
+}
+
 /*詳細画面-職員用対応状況*/
 .button-bar__item {
 	background-color: #fffffa;
@@ -107,33 +131,4 @@ input[type="password"], textarea {
 	border-bottom: 1px solid #808080;
 	border-bottom-left-radius: 3px;
 	border-bottom-right-radius: 3px;
-}
-
-.btn {
-    width: 60%;
-}
-
-form dt:before {
-    margin-right: 1px;
-}
-
-/*必須タグ*/
-form dt:after {
-    content: '必須';
-    font-family: 'Noto400';
-    background-color: #ea553a;
-    color: #fffffa;
-    font-size: 0.7em;
-    border-radius: 3px;
-    margin-left: 2px;
-    padding: 3px;
-    vertical-align: middle;
-    margin-left: 5px;
-}
-
-form dt.any:after {
-	content: '';
-	background-color: transparent;
-	padding: 0;
-	margin: 0;
 }
