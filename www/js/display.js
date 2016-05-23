@@ -126,8 +126,8 @@ app.controller('detailCtrl', function($scope, $rootScope, $timeout, posts, corre
 				disableDefaultUI: true,
 				draggable: false
 			};
-			$scope.map = new google.maps.Map(document.getElementById("gmap"), myOptions);
-			$scope.element = document.getElementById('gmap');
+			var element = document.getElementById('gmap');
+			$scope.map = new google.maps.Map(element, myOptions);
 			var latlng = new google.maps.LatLng(point.latitude, point.longitude);
 	
 			// マーカーをmap内に表示
