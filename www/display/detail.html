@@ -7,7 +7,7 @@
 			災害情報詳細
 		</div>
 	</ons-toolbar>
-  	<section>
+  	<main>
   		<div class="sub_info">
 		  <div class="left_info">
 			<div ng-switch="obj.correspond">
@@ -43,19 +43,19 @@
 		</ons-list>
 		<div class="map info" ng-if="tab == 'map'">
 			<span class="address" ng-bind="obj.address"></span>
-			<div id="gmap"></div>
+			<div id="gmap" style="width:99%; height:300px;"></div>
 		</div>
 		<div class="detail_contents" ng-if="tab == 'comment'">
 			<p ng-bind="obj.comment"></p>
 		</div>
 		<div ng-if="tab == 'staff'" ng-class="{form_bg: $root.user.role == 1}">
 			<div class="detail_contents">
-				<span>{{}}</span>
 				<div ng-if="$root.user.role == 0 || $root.user.role == null">
 					<p ng-bind="obj.response" ng-show="obj.response">
+	
 					</p>
 					<p ng-hide="obj.response">
-						市役所からの返信はありません。
+						市役所からの返信はありません
 					</p>
 				</div>
 				<form name="updateForm" ng-if="$root.user.role == 1">
@@ -85,7 +85,7 @@
 			</div>
 		</div>
       <div my-include="template/modal.html"></div>
-  </section>
+  </main>
 	<link rel="stylesheet" href="css/display.css">
 	<link rel="stylesheet" href="css/form.css">
 </ons-page>
