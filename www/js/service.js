@@ -1,9 +1,14 @@
 'use strict';
 
+// ユーザー種別
 app.constant('role', {
     		 	'member' : '0',
 			 	'staff' : '1'
 });
+
+// タブ番号
+app.constant('tabIndex', {'home' : 0, 'post' : 1,
+'list' : 2, 'login' : '3'});
 
 // 認証サービス
 app.service('authService', function(users, $rootScope, Current) {
