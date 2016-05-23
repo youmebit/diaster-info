@@ -50,9 +50,14 @@
 		</div>
 		<div ng-if="tab == 'staff'" ng-class="{form_bg: $root.user.role == 1}">
 			<div class="detail_contents">
-				<p ng-if="$root.user.role == 0" ng-bind="obj.response">
-
-				</p>
+				<div ng-if="$root.user.role == 0 || $root.user.role == null">
+					<p ng-bind="obj.response" ng-show="obj.response">
+	
+					</p>
+					<p ng-hide="obj.response">
+						市役所からの返信はありません
+					</p>
+				</div>
 				<form name="updateForm" ng-if="$root.user.role == 1">
 					<dl>
 						<dt class="tag">対応状況</dt>
