@@ -1,9 +1,14 @@
 'use strict';
 
+// ユーザー種別
 app.constant('role', {
     		 	'member' : '0',
 			 	'staff' : '1'
 });
+
+// タブ番号
+app.constant('tabIndex', {'home' : 0, 'post' : 1,
+'list' : 2, 'login' : '3'});
 
 // 認証サービス
 app.service('authService', function(users, $rootScope, Current) {
@@ -113,12 +118,13 @@ app.factory('dialogService', function($rootScope, RequestService){
 app.factory('RequestService', function($rootScope) {
     return {
         request : function (success, fail) {
-        	var networkState = navigator.connection.type;
-        	if (networkState == "none") {
-        		fail();
-        	} else {
-                success();
-        	}
+        	// var networkState = navigator.connection.type;
+        	// if (networkState == "none") {
+        	// 	fail();
+        	// } else {
+         //        success();
+        	// }
+            success();
         }
     }
 });

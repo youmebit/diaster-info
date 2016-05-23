@@ -54,7 +54,7 @@ app.run(function($rootScope, $http, Current, users, authService, tabService, geo
 				});
 			}
 	});
-
+	
     // セッション情報の登録
     Current.initialize();
     var strage = users.getCurrentUser();
