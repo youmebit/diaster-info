@@ -229,6 +229,7 @@ info .photo img {
 	font-family: 'Noto400', sans-serif;
 }
 
+/* 地図タブ */
 .map {
 	min-height: 60%;
 	padding-bottom: 30px;
@@ -236,7 +237,12 @@ info .photo img {
 
 .map span {
 	display: block;
-	padding-bottom: 20px;
+	padding-bottom: 13px;
+}
+
+#gmap {
+	width:99%;
+	height:250px;
 }
 
 /*詳細画面の余白設定*/
@@ -245,7 +251,7 @@ info .photo img {
 	width: 90%;
 	margin: 0 auto;
 	font-family: 'Noto400', sans-serif;
-	min-height: 70%;
+	min-height: 250px;
 	padding-bottom: 50px;
 }
 
