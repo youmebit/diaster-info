@@ -7,7 +7,7 @@
 			災害情報詳細
 		</div>
 	</ons-toolbar>
-  	<main>
+  	<section>
   		<div class="sub_info">
 		  <div class="left_info">
 			<div ng-switch="obj.correspond">
@@ -43,10 +43,7 @@
 		</ons-list>
 		<div class="map info" ng-if="tab == 'map'">
 			<span class="address" ng-bind="obj.address"></span>
-			<span ng-bind="map != null"></span>
-			<div>
-				<div id="gmap"></div>
-			</div>
+			<div id="gmap"></div>
 		</div>
 		<div class="detail_contents" ng-if="tab == 'comment'">
 			<p ng-bind="obj.comment"></p>
@@ -83,7 +80,7 @@
 			</div>
 		</div>
       <div my-include="template/modal.html"></div>
-  </main>
+  </section>
 	<link rel="stylesheet" href="css/display.css">
 	<link rel="stylesheet" href="css/form.css">
 </ons-page>

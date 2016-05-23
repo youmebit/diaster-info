@@ -113,12 +113,13 @@ app.factory('dialogService', function($rootScope, RequestService){
 app.factory('RequestService', function($rootScope) {
     return {
         request : function (success, fail) {
-        	var networkState = navigator.connection.type;
-        	if (networkState == "none") {
-        		fail();
-        	} else {
-                success();
-        	}
+        	// var networkState = navigator.connection.type;
+        	// if (networkState == "none") {
+        	// 	fail();
+        	// } else {
+         //        success();
+        	// }
+            success();
         }
     }
 });

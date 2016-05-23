@@ -129,7 +129,7 @@ app.controller('detailCtrl', function($scope, $rootScope, $timeout, posts, corre
 			$scope.map = new google.maps.Map(document.getElementById("gmap"), myOptions);
 			$scope.element = document.getElementById('gmap');
 			var latlng = new google.maps.LatLng(point.latitude, point.longitude);
-
+	
 			// マーカーをmap内に表示
 			var marker = new google.maps.Marker({
 				position: latlng,
