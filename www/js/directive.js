@@ -104,7 +104,7 @@ app.filter('abbreviate', function () {
     return function (text, len, end) {
       if (len === undefined) {
         // デフォルトは10文字
-        len = 20;
+        len = 21;
       }
       if (end === undefined) {
         end = "…";
