@@ -38,21 +38,23 @@ app.run(function($rootScope, $http, Current, users, authService, tabService, geo
     tabService.setActiveTab(0);
 
     $http.get('setting.json').success(function(data) {
-      $rootScope.settings = data;
-      $rootScope.settings.isHideTabbar = false;
-			$rootScope.settings.canPost = false;
-			if ($rootScope.settings.isDebug) {
-				$rootScope.settings.canPost = true;
-			} else {
-				geoService.currentPosition();
-				$rootScope.$on("geocode:success", function(event, point) {
-					angular.forEach(point.address, function (a) {
-							if (a.long_name.indexOf('宝塚市') != -1) {
-									$rootScope.settings.canPost = true;
-							}
-					});
+		$rootScope.settings = data;
+		$rootScope.settings.isHideTabbar = false;
+		$rootScope.settings.canPost = false;
+		if ($rootScope.settings.isDebug) {
+			$rootScope.settings.canPost = true;
+		} else {
+			geoService.currentPosition();
+			$rootScope.$on("geocode:success", function(event, point) {
+				angular.forEach(point.address, function (a) {
+						if (a.long_name.indexOf('宝塚市') != -1) {
+								$rootScope.settings.canPost = true;
+						}
 				});
-			}
+			});
+		}
+		
+		$rootScope.imgUrl = "https://mb.api.cloud.nifty.com/2013-09-01/applications/" + data.appliID + "/publicFiles"
 	});
 	
     // セッション情報の登録
