@@ -35,13 +35,13 @@
     padding-top: 10px;
 }
 
+.form_padding {
+	padding-top: 10px;
+}
+
 p.reset_desc {
 	line-height: 1.4;
 	padding-bottom: 5px;
-}
-
-.contents {
-    padding-top: 10px;
 }
 
 form dt {

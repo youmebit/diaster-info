@@ -1,7 +1,24 @@
 'use strict';
 
 app.controller('bodyCtrl', function($scope, $rootScope, Current,
-				tabService, dialogService, users, posts, RequestService) {
+				tabService, dialogService, users, posts, RequestService, tabIndex) {
+	ons.ready(function() {
+		tabbar.on('prechange', function(event) {
+			if (JSON.stringify(event.index) == tabIndex.post) {
+				var msg;
+		        if (!navigator.geolocation) {
+		        	msg = '位置情報が取得できないため、この機能は使用できません。';
+		        } else if (!$rootScope.settings.isDebug) {
+		        	msg = '宝塚市内ではないため投稿できません';
+				}
+				if (msg) {
+		            dialogService.error(msg);
+		            event.cancel();
+				}
+			}
+		});
+	});
+					
 	$scope.topInit = function() {
 			$scope.list_error = '';
             $scope.$apply(function() {
@@ -42,28 +59,22 @@ app.controller('bodyCtrl', function($scope, $rootScope, Current,
     });
 
 	$scope.toHome = function() {
-        tabService.setActiveTab(0);
+        tabService.setActiveTab(tabIndex.home);
     }
 
 	$scope.toDisplayPage = function() {
 		var fail = function() {
 			dialogService.line_off();
 		};
-		RequestService.request(function() {tabService.setActiveTab(2);}, fail);
+		RequestService.request(function() {tabService.setActiveTab(tabIndex.list);}, fail);
 	}
 
     $scope.toLoginPage = function() {
-        tabService.setActiveTab(3);
+        tabService.setActiveTab(tabIndex.login);
     }
 
     $scope.toPostPage = function() {
-        if (!navigator.geolocation) {
-            dialogService.error('位置情報が取得できないため、この機能は使用できません。');
-        } else if (!$rootScope.settings.isDebug) {
-					dialogService.error('宝塚市内ではないため投稿できません');
-				} else {
-					tabService.setActiveTab(1);
-				}
+		tabService.setActiveTab(tabIndex.post);
     }
 
 		$scope.toDetail = function (objectId) {
