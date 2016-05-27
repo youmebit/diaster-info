@@ -187,15 +187,12 @@ app.service('geoService', function($rootScope, dialogService) {
 					}, function (results, status) {
 							// ステータスがOK（成功）
 							if (status == google.maps.GeocoderStatus.OK) {
-									var point = {
-										lat:position.coords.latitude,
-										long:position.coords.longitude,
-										address:results[0].address_components
-									};
-									$rootScope.$broadcast("geocode:success", point);
-							} else {
-									console.log('位置情報取得ステータス:' + status);
-									dialogService.error("位置情報の取得に失敗しました。申し訳ありませんがもう一度送信してください。");
+								var point = {
+									lat:position.coords.latitude,
+									long:position.coords.longitude,
+									address:results[0].address_components
+								};
+								$rootScope.$broadcast("geocode:success", point);
 							}
 					});
 
