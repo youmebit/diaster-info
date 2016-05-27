@@ -29,12 +29,11 @@ app.controller('imgSelectCtrl', function ($scope, mBaasService, geoService, $tim
         var onSuccess = function (imageURI) {
             // 読み込み中の画面表示
             modal.show();
-            // 住所を取得する
-            geoService.currentPosition();
             // 住所が取れた場合
-            $scope.$on("geocode:success", function(event, point) {
+            var success = function(point) {
                 var longAddress = "";
                 var isAppend = true;
+                console.log(point.lat + ":" + point.long);
                 angular.forEach(point.address, function (a) {
                     if (a.long_name.indexOf('市') != -1) {
                         isAppend = false;
@@ -49,9 +48,11 @@ app.controller('imgSelectCtrl', function ($scope, mBaasService, geoService, $tim
                     latitude: point.lat,
                     longitude: point.long
                 });
-            });
+            };
+            // 住所を取得する
+            geoService.currentPosition(success, function(error) {console.log(error.message);});
           }
-        var onFail = function () {}
+        var onFail = function () {};
         navigator.camera.getPicture(function (imageURI) {
             onSuccess(imageURI);
         }, onFail, options);

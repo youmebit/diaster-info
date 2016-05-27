@@ -6,7 +6,6 @@ app.controller('bodyCtrl', function($scope, $rootScope, Current,
 	ons.ready(function() {
 		tabbar.on('prechange', function(event) {
 			if (JSON.stringify(event.index) == tabIndex.post) {
-				console.log($rootScope.post_error);
 				if ($rootScope.post_error) {
 					var err = filterFilter($rootScope.errors, function(obj) {
 						return obj.key == $rootScope.post_error;
@@ -30,7 +29,6 @@ app.controller('bodyCtrl', function($scope, $rootScope, Current,
 
 				var success = function(point) {
 					if (!$rootScope.settings.isDebug) {
-						console.log(111);
 						var isTarget = false;
 						angular.forEach(point.address, function (a) {
 							if (a.long_name.indexOf('宝塚市') != -1) {
@@ -46,10 +44,8 @@ app.controller('bodyCtrl', function($scope, $rootScope, Current,
 				var fail = function(error) {
 					$rootScope.post_error = 'cannotGeocode';
 				};
-				if (!navigator.geolocation) {
-					console.log(111);
-				}
-				geoService.currentPosition(success, fail);
+
+				geoService.currentPosition(success, function(error) {});
 
 				// 対応完了のお知らせを取得
 				$scope.isLoad = false;

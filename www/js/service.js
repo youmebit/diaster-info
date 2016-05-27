@@ -176,7 +176,7 @@ app.service('geoService', function($rootScope, dialogService) {
 	  this.currentPosition = function(success, fail) {
 			var geoOptions = {
 					maximumAge: 5000,
-					timeout: 2000,
+					timeout: 6000,
 					enableHighAccuracy: true
 			};
 			navigator.geolocation.getCurrentPosition(function (position) {
