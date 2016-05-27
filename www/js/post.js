@@ -33,7 +33,6 @@ app.controller('imgSelectCtrl', function ($scope, mBaasService, geoService, $tim
             var success = function(point) {
                 var longAddress = "";
                 var isAppend = true;
-                console.log(point.lat + ":" + point.long);
                 angular.forEach(point.address, function (a) {
                     if (a.long_name.indexOf('市') != -1) {
                         isAppend = false;
