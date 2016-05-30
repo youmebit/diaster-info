@@ -32,7 +32,9 @@ app.run(function($rootScope, $http, Current, users, authService, tabService, geo
           {key: 'passType', msg:'アルファベットと数字のみを入力してください'},
           {key: 'nameLength', msg:'16文字以下で入力してください'},
           {key: 'emailLength', msg:'256文字以下で入力してください'},
-          {key: 'passLength', msg:'6文字以上16文字以下で入力してください'}
+          {key: 'passLength', msg:'6文字以上16文字以下で入力してください'},
+          {key: 'outOfArea', msg:'宝塚市内ではないため投稿できません'},
+          {key: 'cannotGeocode', msg:'位置情報が取得できないため、この機能は使用できません。'}
       ];
 
     tabService.setActiveTab(0);
@@ -41,19 +43,6 @@ app.run(function($rootScope, $http, Current, users, authService, tabService, geo
 		$rootScope.settings = data;
 		$rootScope.settings.isHideTabbar = false;
 		$rootScope.settings.canPost = false;
-		if ($rootScope.settings.isDebug) {
-			$rootScope.settings.canPost = true;
-		} else {
-			geoService.currentPosition();
-			$rootScope.$on("geocode:success", function(event, point) {
-				angular.forEach(point.address, function (a) {
-						if (a.long_name.indexOf('宝塚市') != -1) {
-								$rootScope.settings.canPost = true;
-						}
-				});
-			});
-		}
-		
 		$rootScope.imgUrl = "https://mb.api.cloud.nifty.com/2013-09-01/applications/" + data.appliID + "/publicFiles"
 	});
 	

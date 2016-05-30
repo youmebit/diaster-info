@@ -147,7 +147,6 @@ app.factory('posts', function(mBaasService, $q, $timeout) {
 app.factory('fileStore', function(mBaasService) {
     return {
         upload : function(fileName, blob, uploadSuccess, onFail) {
-        	console.log(111);
             var ncmb = mBaasService.getNcmb();
             ncmb.File.upload(fileName, blob).then(
   				function (data) {

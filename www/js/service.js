@@ -118,13 +118,12 @@ app.factory('dialogService', function($rootScope, RequestService){
 app.factory('RequestService', function($rootScope) {
     return {
         request : function (success, fail) {
-        	// var networkState = navigator.connection.type;
-        	// if (networkState == "none") {
-        	// 	fail();
-        	// } else {
-         //        success();
-        	// }
-            success();
+        	var networkState = navigator.connection.type;
+        	if (networkState == "none") {
+        		fail();
+        	} else {
+                success();
+        	}
         }
     }
 });
@@ -173,7 +172,7 @@ app.service('geoService', function($rootScope, dialogService) {
     this.loadAddress = function(latitude, longitude) {
     },
 		// 現在位置から位置情報と住所を取得する。
-	  this.currentPosition = function() {
+	  this.currentPosition = function(success, fail) {
 			var geoOptions = {
 					maximumAge: 5000,
 					timeout: 6000,
@@ -185,29 +184,20 @@ app.service('geoService', function($rootScope, dialogService) {
 					geocoder.geocode({
 							'latLng': latlng
 					}, function (results, status) {
-							// ステータスがOK（成功）
-							if (status == google.maps.GeocoderStatus.OK) {
-								var point = {
-									lat:position.coords.latitude,
-									long:position.coords.longitude,
-									address:results[0].address_components
-								};
-								$rootScope.$broadcast("geocode:success", point);
-							}
+						// ステータスがOK（成功）
+						if (status == google.maps.GeocoderStatus.OK) {
+							var point = {
+								lat:position.coords.latitude,
+								long:position.coords.longitude,
+								address:results[0].address_components
+							};
+							success(point);
+						}
 					});
 
 					},
 					function (error) {
-							var errorMessage = {
-									0: "原因不明のエラーが発生しました。",
-									1: "位置情報の取得が許可されませんでした。",
-									2: "電波状況などで位置情報が取得できませんでした。",
-									3: "位置情報の取得に時間がかかり過ぎてタイムアウトしました。",
-							};
-
-							// エラーコードに合わせたエラー内容をアラート表示
-							alert(errorMessage[error.code]);
-					modal.hide();
+						fail(error);
 					}, geoOptions);
     }
 });
