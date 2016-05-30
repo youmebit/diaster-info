@@ -48,10 +48,11 @@ app.controller('imgSelectCtrl', function ($scope, mBaasService, geoService, $tim
                     longitude: point.long
                 });
             };
-            // 住所を取得する
+
+		// 住所を取得する
             geoService.currentPosition(success, function(error) {console.log(error.message);});
           }
-        var onFail = function () {};
+        var onFail = function (err) {console.error(err.message)};
         navigator.camera.getPicture(function (imageURI) {
             onSuccess(imageURI);
         }, onFail, options);
@@ -121,13 +122,13 @@ app.controller('postCtrl', function ($scope, users, dialogService, fileStore, po
     // ファイルアップロード→データストア登録の順で登録する。
     $scope.post = function (piece) {
         var post = function() {
-            modal.show();
+            postModal.show();
     		var blob = b64ToBlob(piece.imageURI);
 			var fileName = getFileName();
 
 			// データストア登録成功
 			var saveSuccess = function () {
-                modal.hide();
+                postModal.hide();
 				myNavigator.pushPage('post/post_info.html');
 			}
 
@@ -137,7 +138,7 @@ app.controller('postCtrl', function ($scope, users, dialogService, fileStore, po
   			};
 
   			var onFail = function (err) {
-                modal.hide();
+                postModal.hide();
   				console.error(err);
   			}
             
