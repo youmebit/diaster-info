@@ -99,6 +99,16 @@ app.directive('myInclude', function($http, $compile) {
   };
 });
 
+app.directive('modalInclude', function() {
+	return {
+		restrict : 'E',
+		scope : {
+			var : '@'
+		},
+		templateUrl : 'template/modal.html'
+	};
+});
+
 
 app.filter('abbreviate', function () {
     return function (text, len, end) {
