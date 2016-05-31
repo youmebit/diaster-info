@@ -15,7 +15,7 @@
     padding-top: 10px;
     font-size: 1.3em;
     font-family: 'Noto700';
-    padding-bottom: 5px;
+    padding-bottom: 10px;
     background-color: #ffffff;
 }
 
@@ -28,6 +28,10 @@
 .top_icon .icon {
 	font-size: 70px;
 	padding: 20px 0;
+}
+
+.top_icon .form_icon {
+	padding: 6px 0;
 }
 
 .form_contents {
