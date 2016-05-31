@@ -1,4 +1,4 @@
-app.controller('imgSelectCtrl', function ($scope, mBaasService, geoService, $timeout) {
+app.controller('imgSelectCtrl', function ($scope, geoService, dialogService) {
     $scope.showCamera = function () {
         var options = {
             quality: 70,
@@ -29,6 +29,7 @@ app.controller('imgSelectCtrl', function ($scope, mBaasService, geoService, $tim
         var onSuccess = function (imageURI) {
             // 読み込み中の画面表示
             modal.show();
+            
             // 住所が取れた場合
             var success = function(point) {
                 var longAddress = "";
@@ -52,7 +53,10 @@ app.controller('imgSelectCtrl', function ($scope, mBaasService, geoService, $tim
 		// 住所を取得する
             geoService.currentPosition(success, function(error) {console.log(error.message);});
           }
-        var onFail = function (err) {console.error(err.message)};
+        var onFail = function (err) {
+        	dialogService.error("この画像は投稿できません。他の画像を選択してください。");
+        	modal.hide();
+        };
         navigator.camera.getPicture(function (imageURI) {
             onSuccess(imageURI);
         }, onFail, options);
