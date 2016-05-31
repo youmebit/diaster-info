@@ -108,7 +108,7 @@ app.factory('posts', function(mBaasService, $q, $timeout) {
                   return d.promise;
                 }).catch(function(err) {
                 });
-            }, 2000);
+            }, 1500);
 
             //プロミスオブジェクトを参照もとに返す
             return d.promise;
