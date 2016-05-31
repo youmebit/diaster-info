@@ -1,19 +1,18 @@
 'use strict';
 
 app.controller('bodyCtrl', function($scope, $rootScope, Current,
-				tabService, dialogService, users, posts, RequestService, tabIndex) {
+				tabService, dialogService, users, posts, RequestService, geoService, tabIndex, filterFilter) {
+	$rootScope.post_error = '';
 	ons.ready(function() {
 		tabbar.on('prechange', function(event) {
 			if (JSON.stringify(event.index) == tabIndex.post) {
-				var msg;
-		        if (!navigator.geolocation) {
-		        	msg = '位置情報が取得できないため、この機能は使用できません。';
-		        } else if (!$rootScope.settings.isDebug) {
-		        	msg = '宝塚市内ではないため投稿できません';
-				}
-				if (msg) {
-		            dialogService.error(msg);
+				if ($rootScope.post_error) {
+					var err = filterFilter($rootScope.errors, function(obj) {
+						return obj.key == $rootScope.post_error;
+					});
+		            dialogService.error(err[0].msg);
 		            event.cancel();
+		            $rootScope.post_error = '';
 				}
 			}
 		});
@@ -27,6 +26,26 @@ app.controller('bodyCtrl', function($scope, $rootScope, Current,
 					$rootScope.displayPage = 'list_select';
 				}
         		$rootScope.user = Current.getCurrent();
+
+				var success = function(point) {
+					if (!$rootScope.settings.isDebug) {
+						var isTarget = false;
+						angular.forEach(point.address, function (a) {
+							if (a.long_name.indexOf('宝塚市') != -1) {
+								isTarget = true;
+							}
+						});
+						if (!isTarget) {
+							$rootScope.post_error = 'outOfArea';
+						}
+					}
+				};
+		
+				var fail = function(error) {
+					$rootScope.post_error = 'cannotGeocode';
+				};
+
+				geoService.currentPosition(success, function(error) {});
 
 				// 対応完了のお知らせを取得
 				$scope.isLoad = false;

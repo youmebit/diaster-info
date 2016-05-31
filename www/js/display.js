@@ -151,10 +151,10 @@ app.controller('detailCtrl', function($scope, $rootScope, $timeout, posts, corre
 	// 対応状況更新処理
 	$scope.update = function() {
 		var update = function() {
-			modal.show();
+			detailModal.show();
 			var ok = function(result) {
 				result.set("correspond", $scope.form.correspond).set("response", $scope.toNull($scope.form.response)).update().then(function() {
-					modal.hide();
+					detailModal.hide();
 					myNavigator.popPage();
 					$rootScope.$broadcast('update:success', '更新しました。');
 				}).catch(function(err) {

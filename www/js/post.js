@@ -1,4 +1,4 @@
-app.controller('imgSelectCtrl', function ($scope, mBaasService, geoService, $timeout) {
+app.controller('imgSelectCtrl', function ($scope, geoService, dialogService) {
     $scope.showCamera = function () {
         var options = {
             quality: 70,
@@ -29,10 +29,9 @@ app.controller('imgSelectCtrl', function ($scope, mBaasService, geoService, $tim
         var onSuccess = function (imageURI) {
             // 読み込み中の画面表示
             modal.show();
-            // 住所を取得する
-            geoService.currentPosition();
+            
             // 住所が取れた場合
-            $scope.$on("geocode:success", function(event, point) {
+            var success = function(point) {
                 var longAddress = "";
                 var isAppend = true;
                 angular.forEach(point.address, function (a) {
@@ -49,9 +48,15 @@ app.controller('imgSelectCtrl', function ($scope, mBaasService, geoService, $tim
                     latitude: point.lat,
                     longitude: point.long
                 });
-            });
+            };
+
+		// 住所を取得する
+            geoService.currentPosition(success, function(error) {console.log(error.message);});
           }
-        var onFail = function () {}
+        var onFail = function (err) {
+        	dialogService.error("この画像は投稿できません。他の画像を選択してください。");
+        	modal.hide();
+        };
         navigator.camera.getPicture(function (imageURI) {
             onSuccess(imageURI);
         }, onFail, options);
@@ -121,13 +126,13 @@ app.controller('postCtrl', function ($scope, users, dialogService, fileStore, po
     // ファイルアップロード→データストア登録の順で登録する。
     $scope.post = function (piece) {
         var post = function() {
-            modal.show();
+            postModal.show();
     		var blob = b64ToBlob(piece.imageURI);
 			var fileName = getFileName();
 
 			// データストア登録成功
 			var saveSuccess = function () {
-                modal.hide();
+                postModal.hide();
 				myNavigator.pushPage('post/post_info.html');
 			}
 
@@ -137,7 +142,7 @@ app.controller('postCtrl', function ($scope, users, dialogService, fileStore, po
   			};
 
   			var onFail = function (err) {
-                modal.hide();
+                postModal.hide();
   				console.error(err);
   			}
             

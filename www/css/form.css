@@ -13,20 +13,25 @@
 .top_icon {
     text-align: center;
     padding-top: 10px;
-    font-size: 1.1em;
+    font-size: 1.3em;
     font-family: 'Noto700';
-    padding-bottom: 15px;
+    padding-bottom: 10px;
     background-color: #ffffff;
 }
 
-.top_icon .top {
-    font-size: 4.3em;
-    padding: 15px 0 10px;
-}
 
 .top_icon .reset_icon {
 	font-size: 2.3em;
 	padding: 10px 0 8px;
+}
+
+.top_icon .icon {
+	font-size: 70px;
+	padding: 20px 0;
+}
+
+.top_icon .form_icon {
+	padding: 6px 0;
 }
 
 .form_contents {
@@ -39,7 +44,7 @@
 	padding-top: 10px;
 }
 
-p.reset_desc {
+p.desc {
 	line-height: 1.4;
 	padding-bottom: 5px;
 }
