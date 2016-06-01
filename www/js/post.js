@@ -16,11 +16,9 @@ GalleryImgFormatter.prototype.getImageData = function(image) {
 	var canvas = document.createElement('canvas');
     var width = image.naturalWidth;
     var height = image.naturalHeight;
-	var orientation = image.exifdata.Orientation;
 	var src = image.src.split("?")[0];
-	var ctx = canvas.getContext('2d');
 
-    var rate = 0;
+	var rate = 0;
     var size = 640;
     if (width >= height) {
         rate = size / width;
@@ -30,21 +28,19 @@ GalleryImgFormatter.prototype.getImageData = function(image) {
 
     var drawWidth = width * rate;
     var drawHeight = height * rate;
-
 	canvas.width = drawWidth;
     canvas.height = drawHeight;
-	console.log(drawWidth + ":" + drawHeight);
-    if (orientation) {
-
-		var angles = {
-            '3': 180,
-            '6': 90,
-            '8': 270
-        };
-        // ctx.translate(drawWidth / 2, drawHeight / 2);
-        // ctx.rotate((angles[orientation] * Math.PI) / 180);
-        // ctx.translate(-drawWidth / 2, -drawHeight / 2);
-    }
+	var mpImg = new MegaPixImage(src);
+	var orientation = image.exifdata.Orientation;
+	console.log(JSON.stringify(image.exifdata));
+	var options = {
+		orientation: orientation,
+		width : drawWidth,
+		height:drawHeight
+	};
+	mpImg.render(canvas, options);
+	
+	var ctx = canvas.getContext('2d');
     ctx.drawImage(image, 0, 0, drawWidth, drawHeight);
 	return canvas.toDataURL();
 };
@@ -63,6 +59,7 @@ app.controller('imgSelectCtrl', function ($scope, geoService, dialogService) {
             targetWidth:640,
     		targetHeight:480
         }
+    	options.correctOrientation = true;
         getPicture(options, new CameraImgFormatter());
     }
 
@@ -78,8 +75,7 @@ app.controller('imgSelectCtrl', function ($scope, geoService, dialogService) {
 
     // ギャラリーorカメラから画像を投稿フォームに表示する。
     function getPicture(options, formatter) {
-    	options.quality = 60;
-    	options.correctOrientation = true;
+    	options.quality = 70;
         options.encodingType = Camera.EncodingType.JPEG;
     	
         var onSuccess = function (imageURI) {
