@@ -3,6 +3,9 @@ var CameraImgFormatter = function() {};
 CameraImgFormatter.prototype = {
 	getImageData : function(image) {
 		return image.src;
+	},
+	getUrl : function(imageURI) {
+		return "data:image/jpeg;base64," + imageURI;
 	}
 };
 
@@ -10,15 +13,22 @@ CameraImgFormatter.prototype = {
 var GalleryImgFormatter = function() {};
 GalleryImgFormatter.prototype = new CameraImgFormatter();
 GalleryImgFormatter.prototype.getImageData = function(image) {
-		return image.src;
+    EXIF.getData(image, function () {
+    	console.log(JSON.stringify(image.exifdata));
+	});
+	return image.src;
 };
 
+GalleryImgFormatter.prototype.getUrl = function(imageURI) {
+	return imageURI;
+};
 
 app.controller('imgSelectCtrl', function ($scope, geoService, dialogService) {
     $scope.showCamera = function () {
         var options = {
             sourceType: Camera.PictureSourceType.CAMERA,
             saveToPhotoAlbum: true,
+        	destinationType: Camera.DestinationType.DATA_URL,
             cameraDirection: Camera.Direction.BACK
         }
         getPicture(options, new CameraImgFormatter());
@@ -26,7 +36,8 @@ app.controller('imgSelectCtrl', function ($scope, geoService, dialogService) {
 
     $scope.showGallery = function () {
         var options = {
-            sourceType: Camera.PictureSourceType.PHOTOLIBRARY
+            sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+            destinationType: Camera.DestinationType.FILE_URI
         }
 
         getPicture(options, new GalleryImgFormatter());
@@ -38,7 +49,6 @@ app.controller('imgSelectCtrl', function ($scope, geoService, dialogService) {
     	options.targetWidth = 640;
     	options.targetHeight = 480;
     	options.correctOrientation = true;
-        options.destinationType = Camera.DestinationType.DATA_URL;
         options.encodingType = Camera.EncodingType.JPEG;
     	
         var onSuccess = function (imageURI) {
@@ -58,7 +68,7 @@ app.controller('imgSelectCtrl', function ($scope, geoService, dialogService) {
                     }
                 });
                 myNavigator.pushPage('post/post.html', {
-                    image: "data:image/jpeg;base64," + imageURI,
+                    image: formatter.getUrl(imageURI),
                     address: longAddress,
                     latitude: point.lat,
                     longitude: point.long, 
