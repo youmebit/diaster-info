@@ -35,7 +35,7 @@
 	  </div>
 	  <p class="count msg" ng-if="(posts | listMatch:cor.selected).length == 0">表示する情報がありません</p>
 	 <p class="list_loading" ng-hide="isLoad"><ons-icon icon="ion-load-c" spin="true"></ons-icon></p>
-	<ons-list modifier="" ng-if="(posts | listMatch:cor.selected).length != 0" ng-show="isShowList()">
+	<ons-list ng-if="(posts | listMatch:cor.selected).length != 0" ng-show="isShowList()">
 		<ons-list-item modifier="chevron" class="info" ng-click="toDetail(p.objectId)" ng-repeat="p in filterd = (posts | listMatch:cor.selected)" event-finished>
 			<ons-row class="date right">
 				<span ng-bind="p.updateDate | date:'yyyy/MM/dd HH:mm'"></span>
