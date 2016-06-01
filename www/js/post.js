@@ -1,3 +1,19 @@
+// カメラで撮影した画像を加工するクラス
+var CameraImgFormatter = function() {};
+CameraImgFormatter.prototype = {
+	getImageData : function(image) {
+		return image.src;
+	}
+};
+
+// ギャラリーから取得した画像を加工するクラス
+var GalleryImgFormatter = function() {};
+GalleryImgFormatter.prototype = new CameraImgFormatter();
+GalleryImgFormatter.prototype.getImageData = function(image) {
+		return image.src;
+};
+
+
 app.controller('imgSelectCtrl', function ($scope, geoService, dialogService) {
     $scope.showCamera = function () {
         var options = {
@@ -5,8 +21,7 @@ app.controller('imgSelectCtrl', function ($scope, geoService, dialogService) {
             saveToPhotoAlbum: true,
             cameraDirection: Camera.Direction.BACK
         }
-
-        getPicture(options);
+        getPicture(options, new CameraImgFormatter());
     }
 
     $scope.showGallery = function () {
@@ -14,11 +29,11 @@ app.controller('imgSelectCtrl', function ($scope, geoService, dialogService) {
             sourceType: Camera.PictureSourceType.PHOTOLIBRARY
         }
 
-        getPicture(options);
+        getPicture(options, new GalleryImgFormatter());
     }
 
     // ギャラリーorカメラから画像を投稿フォームに表示する。
-    function getPicture(options) {
+    function getPicture(options, formatter) {
     	options.quality = 60;
     	options.targetWidth = 640;
     	options.targetHeight = 480;
@@ -46,7 +61,8 @@ app.controller('imgSelectCtrl', function ($scope, geoService, dialogService) {
                     image: "data:image/jpeg;base64," + imageURI,
                     address: longAddress,
                     latitude: point.lat,
-                    longitude: point.long
+                    longitude: point.long, 
+                    formatter : formatter
                 });
             };
 
@@ -66,24 +82,22 @@ app.controller('imgSelectCtrl', function ($scope, geoService, dialogService) {
 });
 
 app.controller('postCtrl', function ($scope, users, dialogService, fileStore, posts, $q, $timeout) {
-    // 画像縮小処理
+    // 初期表示
     $scope.init = function () {
         $scope.piece = {};
         $scope.isLoad = false;
+        var options = $scope.myNavigator.getCurrentPage().options;
         var image = new Image();
         image.onload = function (e) {
         	var q = $q.defer();
         	$timeout(function() {
 	            $scope.$apply(function () {
-	                EXIF.getData(image, function () {
-	                    $scope.piece.imageURI = image.src;
-	                    $scope.isLoad = true;
-	                    return q.promise;
-	                });
+                    $scope.piece.imageURI = options.formatter.getImageData(image);
+                    $scope.isLoad = true;
+                    return q.promise;
 	            });
         	}, 1000);
         }
-        var options = $scope.myNavigator.getCurrentPage().options;
         $scope.piece = options;
 		$scope.piece.userId = null;
 		if ($scope.user.isLogin) {
