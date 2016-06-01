@@ -13,10 +13,26 @@ CameraImgFormatter.prototype = {
 var GalleryImgFormatter = function() {};
 GalleryImgFormatter.prototype = new CameraImgFormatter();
 GalleryImgFormatter.prototype.getImageData = function(image) {
-    EXIF.getData(image, function () {
-    	console.log(JSON.stringify(image.exifdata));
-	});
-	return image.src;
+	var canvas = document.createElement('canvas');
+	var width = image.exifdata.ImageWidth;
+    var height = image.exifdata.ImageHeight;
+	var orientation = image.exifdata.Orientation;
+	var src = image.src.split("?")[0];
+	var ctx = canvas.getContext('2d');
+	console.log(JSON.stringify(image.exifdata));
+    if (orientation) {
+        var angles = {
+        	'1':0,
+            '3': 180,
+            '6': 90,
+            '8': 270
+        };
+        ctx.translate(width / 2, height / 2);
+        ctx.rotate((angles[orientation] * Math.PI) / 180);
+        ctx.translate(-width / 2, -height / 2);
+    }
+    ctx.drawImage(image, 0, 0, width, height);
+	return canvas.toDataURL("image/jpeg", 1.0);
 };
 
 GalleryImgFormatter.prototype.getUrl = function(imageURI) {
@@ -101,11 +117,15 @@ app.controller('postCtrl', function ($scope, users, dialogService, fileStore, po
         image.onload = function (e) {
         	var q = $q.defer();
         	$timeout(function() {
-	            $scope.$apply(function () {
-                    $scope.piece.imageURI = options.formatter.getImageData(image);
-                    $scope.isLoad = true;
-                    return q.promise;
-	            });
+        		EXIF.getData(image, function () {
+		            $scope.$apply(function () {
+	                    $scope.piece.imageURI = options.formatter.getImageData(image);
+	                    $scope.isLoad = true;
+	                    return q.promise;
+		            });
+				});
+
+        		
         	}, 1000);
         }
         $scope.piece = options;
