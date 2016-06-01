@@ -59,7 +59,6 @@ app.controller('imgSelectCtrl', function ($scope, geoService, dialogService) {
             targetWidth:640,
     		targetHeight:480
         }
-    	options.correctOrientation = true;
         getPicture(options, new CameraImgFormatter());
     }
 
@@ -76,6 +75,7 @@ app.controller('imgSelectCtrl', function ($scope, geoService, dialogService) {
     // ギャラリーorカメラから画像を投稿フォームに表示する。
     function getPicture(options, formatter) {
     	options.quality = 70;
+    	options.correctOrientation = true;
         options.encodingType = Camera.EncodingType.JPEG;
     	
         var onSuccess = function (imageURI) {
