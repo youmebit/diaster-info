@@ -84,9 +84,7 @@ app.controller('postCtrl', function ($scope, users, dialogService, fileStore, po
         	}, 1000);
         }
         var options = $scope.myNavigator.getCurrentPage().options;
-        $scope.piece.address = options.address;
-        $scope.piece.latitude = options.latitude;
-        $scope.piece.longitude = options.longitude;
+        $scope.piece = options;
 		$scope.piece.userId = null;
 		if ($scope.user.isLogin) {
 			var current = users.getCurrentUser();
@@ -95,7 +93,6 @@ app.controller('postCtrl', function ($scope, users, dialogService, fileStore, po
 		}
         modal.hide();
         image.src = options.image;
-
     }
 
     // ファイルアップロード→データストア登録の順で登録する。
