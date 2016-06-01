@@ -14,25 +14,39 @@ var GalleryImgFormatter = function() {};
 GalleryImgFormatter.prototype = new CameraImgFormatter();
 GalleryImgFormatter.prototype.getImageData = function(image) {
 	var canvas = document.createElement('canvas');
-	var width = image.exifdata.ImageWidth;
-    var height = image.exifdata.ImageHeight;
+    var width = image.naturalWidth;
+    var height = image.naturalHeight;
 	var orientation = image.exifdata.Orientation;
 	var src = image.src.split("?")[0];
 	var ctx = canvas.getContext('2d');
-	console.log(JSON.stringify(image.exifdata));
+
+    var rate = 0;
+    var size = 640;
+    if (width >= height) {
+        rate = size / width;
+    } else {
+        rate = size / height;
+    }
+
+    var drawWidth = width * rate;
+    var drawHeight = height * rate;
+
+	canvas.width = drawWidth;
+    canvas.height = drawHeight;
+	console.log(drawWidth + ":" + drawHeight);
     if (orientation) {
-        var angles = {
-        	'1':0,
+
+		var angles = {
             '3': 180,
             '6': 90,
             '8': 270
         };
-        ctx.translate(width / 2, height / 2);
-        ctx.rotate((angles[orientation] * Math.PI) / 180);
-        ctx.translate(-width / 2, -height / 2);
+        // ctx.translate(drawWidth / 2, drawHeight / 2);
+        // ctx.rotate((angles[orientation] * Math.PI) / 180);
+        // ctx.translate(-drawWidth / 2, -drawHeight / 2);
     }
-    ctx.drawImage(image, 0, 0, width, height);
-	return canvas.toDataURL("image/jpeg", 1.0);
+    ctx.drawImage(image, 0, 0, drawWidth, drawHeight);
+	return canvas.toDataURL();
 };
 
 GalleryImgFormatter.prototype.getUrl = function(imageURI) {
@@ -45,7 +59,9 @@ app.controller('imgSelectCtrl', function ($scope, geoService, dialogService) {
             sourceType: Camera.PictureSourceType.CAMERA,
             saveToPhotoAlbum: true,
         	destinationType: Camera.DestinationType.DATA_URL,
-            cameraDirection: Camera.Direction.BACK
+            cameraDirection: Camera.Direction.BACK,
+            targetWidth:640,
+    		targetHeight:480
         }
         getPicture(options, new CameraImgFormatter());
     }
@@ -53,7 +69,8 @@ app.controller('imgSelectCtrl', function ($scope, geoService, dialogService) {
     $scope.showGallery = function () {
         var options = {
             sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
-            destinationType: Camera.DestinationType.FILE_URI
+            destinationType: Camera.DestinationType.FILE_URI,
+            targetWidth:640
         }
 
         getPicture(options, new GalleryImgFormatter());
@@ -62,8 +79,6 @@ app.controller('imgSelectCtrl', function ($scope, geoService, dialogService) {
     // ギャラリーorカメラから画像を投稿フォームに表示する。
     function getPicture(options, formatter) {
     	options.quality = 60;
-    	options.targetWidth = 640;
-    	options.targetHeight = 480;
     	options.correctOrientation = true;
         options.encodingType = Camera.EncodingType.JPEG;
     	
