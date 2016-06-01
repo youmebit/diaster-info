@@ -1,12 +1,8 @@
 app.controller('imgSelectCtrl', function ($scope, geoService, dialogService) {
     $scope.showCamera = function () {
         var options = {
-            quality: 70,
-            destinationType: Camera.DestinationType.DATA_URL,
             sourceType: Camera.PictureSourceType.CAMERA,
             saveToPhotoAlbum: true,
-            correntOrientation: true,
-            encodingType: Camera.EncodingType.JPEG,
             cameraDirection: Camera.Direction.BACK
         }
 
@@ -15,10 +11,7 @@ app.controller('imgSelectCtrl', function ($scope, geoService, dialogService) {
 
     $scope.showGallery = function () {
         var options = {
-            quality: 70,
-            destinationType: Camera.DestinationType.DATA_URL,
-            sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
-            encodingType: Camera.EncodingType.JPEG
+            sourceType: Camera.PictureSourceType.PHOTOLIBRARY
         }
 
         getPicture(options);
@@ -26,6 +19,13 @@ app.controller('imgSelectCtrl', function ($scope, geoService, dialogService) {
 
     // ギャラリーorカメラから画像を投稿フォームに表示する。
     function getPicture(options) {
+    	options.quality = 60;
+    	options.targetWidth = 640;
+    	options.targetHeight = 480;
+    	options.correctOrientation = true;
+        options.destinationType = Camera.DestinationType.DATA_URL;
+        options.encodingType = Camera.EncodingType.JPEG;
+    	
         var onSuccess = function (imageURI) {
             // 読み込み中の画面表示
             modal.show();
@@ -54,7 +54,9 @@ app.controller('imgSelectCtrl', function ($scope, geoService, dialogService) {
             geoService.currentPosition(success, function(error) {console.log(error.message);});
           }
         var onFail = function (err) {
-        	dialogService.error("この画像は投稿できません。他の画像を選択してください。");
+        	if (err === 'Unable to retrieve path to picture!')  {
+	        	dialogService.error("この画像は投稿できません。他の画像を選択してください。");
+        	}
         	modal.hide();
         };
         navigator.camera.getPicture(function (imageURI) {
@@ -73,35 +75,8 @@ app.controller('postCtrl', function ($scope, users, dialogService, fileStore, po
         	var q = $q.defer();
         	$timeout(function() {
 	            $scope.$apply(function () {
-	                var imgWidth = image.naturalWidth;
-	                var imgHeight = image.naturalHeight;
-	                var rate = 0;
-	                if (imgWidth >= imgHeight) {
-	                    rate = 540 / imgWidth;
-	                } else {
-	                    rate = 540 / imgHeight;
-	                }
-	
 	                EXIF.getData(image, function () {
-	                    var canvas = document.createElement('canvas');
-	                    var drawWidth = imgWidth * rate;
-	                    var drawHeight = imgHeight * rate;
-	                    canvas.width = drawWidth;
-	                    canvas.height = drawHeight;
-	                    var ctx = canvas.getContext('2d');
-	                    var orientation = EXIF.getTag(image, "Orientation");
-	                    if (orientation) {
-	                        var angles = {
-	                            '3': 180,
-	                            '6': 90,
-	                            '8': 270
-	                        };
-	                        ctx.translate(drawWidth / 2, drawHeight / 2);
-	                        ctx.rotate((angles[orientation] * Math.PI) / 180);
-	                        ctx.translate(-drawWidth / 2, -drawHeight / 2);
-	                    }
-	                    ctx.drawImage(image, 0, 0, imgWidth, imgHeight, 0, 0, drawWidth, drawHeight);
-	                    $scope.piece.imageURI = canvas.toDataURL();
+	                    $scope.piece.imageURI = image.src;
 	                    $scope.isLoad = true;
 	                    return q.promise;
 	                });
