@@ -75,34 +75,7 @@ app.controller('postCtrl', function ($scope, users, dialogService, fileStore, po
         	var q = $q.defer();
         	$timeout(function() {
 	            $scope.$apply(function () {
-	                var imgWidth = image.naturalWidth;
-	                var imgHeight = image.naturalHeight;
-	                var rate = 0;
-	                if (imgWidth >= imgHeight) {
-	                    rate = 540 / imgWidth;
-	                } else {
-	                    rate = 540 / imgHeight;
-	                }
-	
 	                EXIF.getData(image, function () {
-	                    var canvas = document.createElement('canvas');
-	                    var drawWidth = imgWidth * rate;
-	                    var drawHeight = imgHeight * rate;
-	                    canvas.width = drawWidth;
-	                    canvas.height = drawHeight;
-	                    var ctx = canvas.getContext('2d');
-	                    // var orientation = EXIF.getTag(image, "Orientation");
-	                    // if (orientation) {
-	                    //     var angles = {
-	                    //         '3': 180,
-	                    //         '6': 90,
-	                    //         '8': 270
-	                    //     };
-	                    //     ctx.translate(drawWidth / 2, drawHeight / 2);
-	                    //     ctx.rotate((angles[orientation] * Math.PI) / 180);
-	                    //     ctx.translate(-drawWidth / 2, -drawHeight / 2);
-	                    // }
-	                    ctx.drawImage(image, 0, 0, imgWidth, imgHeight);
 	                    $scope.piece.imageURI = image.src;
 	                    $scope.isLoad = true;
 	                    return q.promise;
