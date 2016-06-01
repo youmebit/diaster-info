@@ -1,15 +1,9 @@
 app.controller('imgSelectCtrl', function ($scope, geoService, dialogService) {
     $scope.showCamera = function () {
         var options = {
-            quality: 60,
-            destinationType: Camera.DestinationType.DATA_URL,
             sourceType: Camera.PictureSourceType.CAMERA,
             saveToPhotoAlbum: true,
-            correctOrientation: true,
-            encodingType: Camera.EncodingType.JPEG,
-            cameraDirection: Camera.Direction.BACK,
-            targetWidth : 640,
-            targetHeight: 480
+            cameraDirection: Camera.Direction.BACK
         }
 
         getPicture(options);
@@ -17,10 +11,7 @@ app.controller('imgSelectCtrl', function ($scope, geoService, dialogService) {
 
     $scope.showGallery = function () {
         var options = {
-            quality: 70,
-            destinationType: Camera.DestinationType.DATA_URL,
-            sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
-            encodingType: Camera.EncodingType.JPEG
+            sourceType: Camera.PictureSourceType.PHOTOLIBRARY
         }
 
         getPicture(options);
@@ -28,6 +19,13 @@ app.controller('imgSelectCtrl', function ($scope, geoService, dialogService) {
 
     // ギャラリーorカメラから画像を投稿フォームに表示する。
     function getPicture(options) {
+    	options.quality = 60;
+    	options.targetWidth = 640;
+    	options.targetHeight = 480;
+    	options.correctOrientation = true;
+        options.destinationType = Camera.DestinationType.DATA_URL;
+        options.encodingType = Camera.EncodingType.JPEG;
+    	
         var onSuccess = function (imageURI) {
             // 読み込み中の画面表示
             modal.show();
