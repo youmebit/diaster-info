@@ -1,13 +1,15 @@
 app.controller('imgSelectCtrl', function ($scope, geoService, dialogService) {
     $scope.showCamera = function () {
         var options = {
-            quality: 70,
+            quality: 60,
             destinationType: Camera.DestinationType.DATA_URL,
             sourceType: Camera.PictureSourceType.CAMERA,
             saveToPhotoAlbum: true,
             correctOrientation: true,
             encodingType: Camera.EncodingType.JPEG,
-            cameraDirection: Camera.Direction.BACK
+            cameraDirection: Camera.Direction.BACK,
+            targetWidth : 640,
+            targetHeight: 480
         }
 
         getPicture(options);
@@ -102,8 +104,8 @@ app.controller('postCtrl', function ($scope, users, dialogService, fileStore, po
 	                    //     ctx.rotate((angles[orientation] * Math.PI) / 180);
 	                    //     ctx.translate(-drawWidth / 2, -drawHeight / 2);
 	                    // }
-	                    ctx.drawImage(image, 0, 0, imgWidth, imgHeight, 0, 0, drawWidth, drawHeight);
-	                    $scope.piece.imageURI = canvas.toDataURL();
+	                    ctx.drawImage(image, 0, 0, imgWidth, imgHeight);
+	                    $scope.piece.imageURI = image.src;
 	                    $scope.isLoad = true;
 	                    return q.promise;
 	                });
