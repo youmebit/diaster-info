@@ -1,31 +1,83 @@
+// カメラで撮影した画像を加工するクラス
+var CameraImgFormatter = function() {};
+CameraImgFormatter.prototype = {
+	getImageData : function(image) {
+		return image.src;
+	},
+	getUrl : function(imageURI) {
+		return "data:image/jpeg;base64," + imageURI;
+	}
+};
+
+// ギャラリーから取得した画像を加工するクラス
+var GalleryImgFormatter = function() {};
+GalleryImgFormatter.prototype = new CameraImgFormatter();
+GalleryImgFormatter.prototype.getImageData = function(image) {
+	var canvas = document.createElement('canvas');
+    var width = image.naturalWidth;
+    var height = image.naturalHeight;
+	var src = image.src.split("?")[0];
+
+	var rate = 0;
+    var size = 640;
+    if (width >= height) {
+        rate = size / width;
+    } else {
+        rate = size / height;
+    }
+
+    var drawWidth = width * rate;
+    var drawHeight = height * rate;
+	canvas.width = drawWidth;
+    canvas.height = drawHeight;
+	var mpImg = new MegaPixImage(src);
+	var orientation = image.exifdata.Orientation;
+	console.log(JSON.stringify(image.exifdata));
+	var options = {
+		orientation: orientation,
+		width : drawWidth,
+		height:drawHeight
+	};
+	mpImg.render(canvas, options);
+	
+	var ctx = canvas.getContext('2d');
+    ctx.drawImage(image, 0, 0, drawWidth, drawHeight);
+	return canvas.toDataURL();
+};
+
+GalleryImgFormatter.prototype.getUrl = function(imageURI) {
+	return imageURI;
+};
+
 app.controller('imgSelectCtrl', function ($scope, geoService, dialogService) {
     $scope.showCamera = function () {
         var options = {
-            quality: 70,
-            destinationType: Camera.DestinationType.DATA_URL,
             sourceType: Camera.PictureSourceType.CAMERA,
             saveToPhotoAlbum: true,
-            correntOrientation: true,
-            encodingType: Camera.EncodingType.JPEG,
-            cameraDirection: Camera.Direction.BACK
+        	destinationType: Camera.DestinationType.DATA_URL,
+            cameraDirection: Camera.Direction.BACK,
+            targetWidth:640,
+    		targetHeight:480
         }
-
-        getPicture(options);
+        getPicture(options, new CameraImgFormatter());
     }
 
     $scope.showGallery = function () {
         var options = {
-            quality: 70,
-            destinationType: Camera.DestinationType.DATA_URL,
             sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
-            encodingType: Camera.EncodingType.JPEG
+            destinationType: Camera.DestinationType.FILE_URI,
+            targetWidth:640
         }
 
-        getPicture(options);
+        getPicture(options, new GalleryImgFormatter());
     }
 
     // ギャラリーorカメラから画像を投稿フォームに表示する。
-    function getPicture(options) {
+    function getPicture(options, formatter) {
+    	options.quality = 70;
+    	options.correctOrientation = true;
+        options.encodingType = Camera.EncodingType.JPEG;
+    	
         var onSuccess = function (imageURI) {
             // 読み込み中の画面表示
             modal.show();
@@ -43,10 +95,11 @@ app.controller('imgSelectCtrl', function ($scope, geoService, dialogService) {
                     }
                 });
                 myNavigator.pushPage('post/post.html', {
-                    image: "data:image/jpeg;base64," + imageURI,
+                    image: formatter.getUrl(imageURI),
                     address: longAddress,
                     latitude: point.lat,
-                    longitude: point.long
+                    longitude: point.long, 
+                    formatter : formatter
                 });
             };
 
@@ -54,7 +107,9 @@ app.controller('imgSelectCtrl', function ($scope, geoService, dialogService) {
             geoService.currentPosition(success, function(error) {console.log(error.message);});
           }
         var onFail = function (err) {
-        	dialogService.error("この画像は投稿できません。他の画像を選択してください。");
+        	if (err === 'Unable to retrieve path to picture!')  {
+	        	dialogService.error("この画像は投稿できません。他の画像を選択してください。");
+        	}
         	modal.hide();
         };
         navigator.camera.getPicture(function (imageURI) {
@@ -64,54 +119,27 @@ app.controller('imgSelectCtrl', function ($scope, geoService, dialogService) {
 });
 
 app.controller('postCtrl', function ($scope, users, dialogService, fileStore, posts, $q, $timeout) {
-    // 画像縮小処理
+    // 初期表示
     $scope.init = function () {
         $scope.piece = {};
         $scope.isLoad = false;
+        var options = $scope.myNavigator.getCurrentPage().options;
         var image = new Image();
         image.onload = function (e) {
         	var q = $q.defer();
         	$timeout(function() {
-	            $scope.$apply(function () {
-	                var imgWidth = image.naturalWidth;
-	                var imgHeight = image.naturalHeight;
-	                var rate = 0;
-	                if (imgWidth >= imgHeight) {
-	                    rate = 540 / imgWidth;
-	                } else {
-	                    rate = 540 / imgHeight;
-	                }
-	
-	                EXIF.getData(image, function () {
-	                    var canvas = document.createElement('canvas');
-	                    var drawWidth = imgWidth * rate;
-	                    var drawHeight = imgHeight * rate;
-	                    canvas.width = drawWidth;
-	                    canvas.height = drawHeight;
-	                    var ctx = canvas.getContext('2d');
-	                    var orientation = EXIF.getTag(image, "Orientation");
-	                    if (orientation) {
-	                        var angles = {
-	                            '3': 180,
-	                            '6': 90,
-	                            '8': 270
-	                        };
-	                        ctx.translate(drawWidth / 2, drawHeight / 2);
-	                        ctx.rotate((angles[orientation] * Math.PI) / 180);
-	                        ctx.translate(-drawWidth / 2, -drawHeight / 2);
-	                    }
-	                    ctx.drawImage(image, 0, 0, imgWidth, imgHeight, 0, 0, drawWidth, drawHeight);
-	                    $scope.piece.imageURI = canvas.toDataURL();
+        		EXIF.getData(image, function () {
+		            $scope.$apply(function () {
+	                    $scope.piece.imageURI = options.formatter.getImageData(image);
 	                    $scope.isLoad = true;
 	                    return q.promise;
-	                });
-	            });
+		            });
+				});
+
+        		
         	}, 1000);
         }
-        var options = $scope.myNavigator.getCurrentPage().options;
-        $scope.piece.address = options.address;
-        $scope.piece.latitude = options.latitude;
-        $scope.piece.longitude = options.longitude;
+        $scope.piece = options;
 		$scope.piece.userId = null;
 		if ($scope.user.isLogin) {
 			var current = users.getCurrentUser();
@@ -120,7 +148,6 @@ app.controller('postCtrl', function ($scope, users, dialogService, fileStore, po
 		}
         modal.hide();
         image.src = options.image;
-
     }
 
     // ファイルアップロード→データストア登録の順で登録する。
