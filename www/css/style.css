@@ -375,7 +375,6 @@ div .error {
 	height: expression(this.width <= this.height ? "280px" : "auto");
     margin: 0 auto;
     display: block;
-    background-color: #ff8080;
 }
 
 .msg, .dialog_title {

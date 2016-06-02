@@ -9,8 +9,9 @@ app.factory('authInterceptor', function($q, $injector, $rootScope) {
                 var now = new Date();
                 var lastDate = Date.parse(current.updateDate);
                 if (lastDate - now.getTime() > limitSeconds) {
-                  $rootScope.$broadcast("need:login", current);
+                  return true;
                 }
+                return false;
             };
             authService.autoLogin(condition);
             return config;
@@ -45,7 +46,7 @@ app.run(function($rootScope, $http, Current, users, authService, tabService, geo
 		$rootScope.settings.canPost = false;
 		$rootScope.imgUrl = "https://mb.api.cloud.nifty.com/2013-09-01/applications/" + data.appliID + "/publicFiles"
 	});
-	
+
     // セッション情報の登録
     Current.initialize();
     var strage = users.getCurrentUser();
@@ -53,7 +54,7 @@ app.run(function($rootScope, $http, Current, users, authService, tabService, geo
         users.addAsAnonymous();
     } else {
         var condition = function(current) {
-          $rootScope.$broadcast("need:login", current);
+          return true;
         }
         if (strage.mailAddress == null) {
             strage.userName = 'ゲスト';
@@ -62,4 +63,3 @@ app.run(function($rootScope, $http, Current, users, authService, tabService, geo
         authService.autoLogin(condition);
     }
 });
-

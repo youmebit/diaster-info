@@ -34,10 +34,12 @@ app.factory('users', function($rootScope, mBaasService, role) {
 					fail(err);
 				});
 		},
-		loginAsAnonymous : function(uuid, ok) {
+		loginAsAnonymous : function(uuid, ok, fail) {
 			mBaasService.getNcmb().User.loginAsAnonymous(uuid).then(function(data) {
                 ok(data);
-			});
+			}, function(err) {
+        fail(err);
+      });
 		},
         // 会員追加
         add : function(signup, ok, fail) {
