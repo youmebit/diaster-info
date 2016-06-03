@@ -41,7 +41,26 @@ app.directive('passType',function(){
         link: function(scope,element,attrs,ngModel){
             ngModel.$validators.passType = function(modelValue){
                 if (modelValue) {
-                    return /^(?=.*[0-9])(?=.*[A-Za-z])[\w]{6,}$/.test(modelValue);
+                  return expression(modelValue, /^(?=.*[0-9])(?=.*[A-Za-z])[\w]{6,}$/);
+                }
+            };
+
+            scope.$watch("modelValue", function() {
+                ngModel.$validate();
+            });
+        }
+    }
+});
+
+// メールアドレスの文字種をチェックするバリデーション
+app.directive('email',function(){
+    return{
+        restrict: "A",
+        require: "ngModel",
+        link: function(scope,element,attrs,ngModel){
+            ngModel.$validators.email = function(modelValue){
+                if (modelValue) {
+                  return expression(modelValue, /^(\w)+[a-zA-Z0-9._-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/);
                 }
             };
 
@@ -130,21 +149,26 @@ app.directive('modalInclude', function() {
 
 
 app.filter('abbreviate', function () {
-    return function (text, len, end) {
-      if (len === undefined) {
-        // デフォルトは10文字
-        len = 21;
+  return function (text, len, end) {
+    if (len === undefined) {
+      // デフォルトは10文字
+      len = 21;
+    }
+    if (end === undefined) {
+      end = "…";
+    }
+    if(text !== undefined) {
+      if(text.length > len) {
+        return text.substring(0, len - 1) + end;
       }
-      if (end === undefined) {
-        end = "…";
+      else {
+        return text;
       }
-      if(text !== undefined) {
-        if(text.length > len) {
-          return text.substring(0, len - 1) + end;
-        }
-        else {
-          return text;
-        }
-      }
-    };
-  });
+    }
+  };
+});
+
+// 正規表現による文字列チェックを行う。
+function expression(value, regex) {
+  return regex.test(value);
+}

@@ -20,7 +20,7 @@
             </dd>
             <dt class="email">メールアドレス</dt>
             <dd>
-                <input type="email" name="email" ng-model="signup.email" hide-tabbar required email-length />
+                <input type="email" name="email" ng-model="signup.email" hide-tabbar required email-length email/>
                 <div class="error" ng-messages="signUpForm.email.$error" ng-messages-multiple ng-if="signUpForm.email.$touched">
                   <div ng-repeat="error in errors">
                     <span ng-message-exp="error.key">{{error.msg}}</span>
