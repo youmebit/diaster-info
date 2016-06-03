@@ -41,10 +41,10 @@ app.run(function($rootScope, $http, Current, users, authService, tabService, geo
     tabService.setActiveTab(0);
 
     $http.get('setting.json').success(function(data) {
-		$rootScope.settings = data;
-		$rootScope.settings.isHideTabbar = false;
-		$rootScope.settings.canPost = false;
-		$rootScope.imgUrl = "https://mb.api.cloud.nifty.com/2013-09-01/applications/" + data.appliID + "/publicFiles"
+  		$rootScope.settings = data;
+  		$rootScope.settings.isHideTabbar = false;
+  		$rootScope.settings.canPost = false;
+  		$rootScope.imgUrl = "https://mb.api.cloud.nifty.com/2013-09-01/applications/" + data.appliID + "/publicFiles"
 	});
 
     // セッション情報の登録
