@@ -52,6 +52,25 @@ app.directive('passType',function(){
     }
 });
 
+// 名前の文字数をチェックするバリデーション
+app.directive('nameLength',function(){
+    return{
+        restrict: "A",
+        require: "ngModel",
+        link: function(scope,element,attrs,ngModel){
+            ngModel.$validators.nameLength = function(modelValue){
+                if (modelValue) {
+                    return modelValue.length <= 16;
+                }
+            };
+
+            scope.$watch("modelValue", function() {
+                ngModel.$validate();
+            });
+        }
+    }
+});
+
 // パスワードの文字数をチェックするバリデーション
 app.directive('passLength',function(){
     return{
