@@ -20,7 +20,13 @@ app.service('authService', function(users, $rootScope, Current) {
     // 一般ユーザー
     UserType.prototype = {
         login : function(ok) {
-          users.loginAsAnonymous(this.strage.authData.anonymous.id, ok);
+          var fail = function(err) {
+            if (err.status == 401) {
+              users.logout();
+              users.addAsAnonymous();
+            }
+          };
+          users.loginAsAnonymous(this.strage.authData.anonymous.id, ok, fail);
         },
         getUserName : function() {
             return 'ゲスト';
@@ -48,18 +54,17 @@ app.service('authService', function(users, $rootScope, Current) {
         } else {
             userType = new UserType(current);
         }
-        isCondition(current);
-        $rootScope.$on("need:login", function(event, current) {
-            var ok = function(data) {
-              data.userName = userType.getUserName();
-              if (!data.updateDate) {
-                  var now = new Date();
-                  data.updateDate = now.toISOString();
-              }
-              $rootScope.$broadcast("autologin:success", data);
+        if (isCondition(current)) {
+          var ok = function(data) {
+            data.userName = userType.getUserName();
+            if (!data.updateDate) {
+                var now = new Date();
+                data.updateDate = now.toISOString();
             }
+            $rootScope.$broadcast("autologin:success", data);
+          }
           userType.login(ok);
-        });
+        }
     }
 });
 
@@ -118,12 +123,16 @@ app.factory('dialogService', function($rootScope, RequestService){
 app.factory('RequestService', function($rootScope) {
     return {
         request : function (success, fail) {
-        	var networkState = navigator.connection.type;
-        	if (networkState == "none") {
-        		fail();
-        	} else {
+          if (!navigator.connection) {
+            success();
+          } else {
+              var networkState = navigator.connection.type;
+            	if (networkState == "none") {
+            		fail();
+            	} else {
                 success();
-        	}
+            	}
+          }
         }
     }
 });

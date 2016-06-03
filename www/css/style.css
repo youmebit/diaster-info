@@ -329,6 +329,7 @@ div .fin_contents h2:before {
 .user:before {
     content: '\f007';
     font-family: 'FontAwesome';
+    padding-right: 6px;
 }
 
 /*email*/

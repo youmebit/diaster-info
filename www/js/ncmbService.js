@@ -34,10 +34,12 @@ app.factory('users', function($rootScope, mBaasService, role) {
 					fail(err);
 				});
 		},
-		loginAsAnonymous : function(uuid, ok) {
+		loginAsAnonymous : function(uuid, ok, fail) {
 			mBaasService.getNcmb().User.loginAsAnonymous(uuid).then(function(data) {
                 ok(data);
-			});
+			}, function(err) {
+        fail(err);
+      });
 		},
         // 会員追加
         add : function(signup, ok, fail) {
@@ -64,7 +66,9 @@ app.factory('users', function($rootScope, mBaasService, role) {
 				current.set("mailAddress", mailAddress);
 				current.requestPasswordReset(function(data) {
 					$rootScope.$broadcast("reset:success");
-				});
+				}, function(err) {
+          console.error(err);
+        });
 		},
 		logout : function(ok) {
 			var ncmb = mBaasService.getNcmb();
@@ -108,7 +112,7 @@ app.factory('posts', function(mBaasService, $q, $timeout) {
                   return d.promise;
                 }).catch(function(err) {
                 });
-            }, 2000);
+            }, 1500);
 
             //プロミスオブジェクトを参照もとに返す
             return d.promise;

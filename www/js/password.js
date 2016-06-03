@@ -1,10 +1,11 @@
 'use strict';
 app.controller('mailCtrl', function($scope, users, dialogService) {
+  $scope.mailAddress;
   $scope.sendMail = function(reset) {
-      dialogService.confirm("パスワードをリセットしてもよろしいですか？");
-      $scope.$on('confirm:ok', function() {
-          users.reset(reset.email);
-          $scope.$on("reset:success", myNavigator.pushPage('reset/mail_info.html'));
-      });
+      var reset = function() {
+          users.reset($scope.mailAddress);
+          myNavigator.pushPage('reset/mail_info.html');
+      };
+      dialogService.confirm("パスワードをリセットしてもよろしいですか？", reset);
   }
 });
