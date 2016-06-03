@@ -66,7 +66,9 @@ app.factory('users', function($rootScope, mBaasService, role) {
 				current.set("mailAddress", mailAddress);
 				current.requestPasswordReset(function(data) {
 					$rootScope.$broadcast("reset:success");
-				});
+				}, function(err) {
+          console.error(err);
+        });
 		},
 		logout : function(ok) {
 			var ncmb = mBaasService.getNcmb();
