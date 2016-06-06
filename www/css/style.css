@@ -237,6 +237,7 @@ div .fin_contents h2:before {
     border-bottom: 1px solid #808080;
     background-color:#fff;
     padding: 13px 0 13px 20px;
+    font-family: 'Noto400';
 }
 
 #logout_navi {
