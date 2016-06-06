@@ -8,15 +8,11 @@
     "plugin_settings": {
         "cordova-plugin-camera": {
             "variables": []
-        },
-        "ncmb-push-monaca-plugin": {
-            "variables": []
         }
     },
     "external_plugins": [
         "cordova-plugin-whitelist@1.0.0",
         "cordova-plugin-splashscreen@2.1.0",
-        "ncmb-push-monaca-plugin@2.0.0",
         "cordova-plugin-camera@1.2.0",
         "cordova-plugin-geolocation@1.0.1",
         "cordova-plugin-network-information@1.0.1"
