@@ -23,7 +23,7 @@
 		  </div>
   		</div>
 	  <div class="thumbnail">
-		<img class="img-resize" ng-src="https://mb.api.cloud.nifty.com/2013-09-01/applications/TOjZsCJbSJeKWALV/publicFiles/{{obj.photo}}">
+		<img class="img-resize" ng-src="{{$root.imgUrl}}/{{obj.photo}}">
 		</div>
 		<ons-list class="tab_list">
 			<ons-row>
@@ -52,7 +52,7 @@
 			<div class="detail_contents">
 				<div ng-if="$root.user.role == 0 || $root.user.role == null">
 					<p ng-bind="obj.response" ng-show="obj.response">
-	
+
 					</p>
 					<p ng-hide="obj.response">
 						市役所からの返信はありません
